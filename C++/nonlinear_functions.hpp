@@ -17,6 +17,9 @@ long double sigmoid(long double x) {
 // --> Alternative to sigmoid function, except range is from
 //     -1 to 1
 long double hyperbolic_tangent(long double x) {
+    if (x <= -20) return -1;
+    if (x >= 20) return 1;
+
     long double e_neg_x = std::exp(-x);
     long double e_pos_x = std::exp(x);
 
