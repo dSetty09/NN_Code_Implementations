@@ -8,7 +8,7 @@
 #include <cmath>
 
 // Linear Activation Function
-long double linear(long double x) {
+float linear(float x) {
     return x;
 }
 

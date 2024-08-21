@@ -10,23 +10,23 @@
 #include "nonlinear_functions.hpp"
 
 // Function for rounding to a certain number of decimal places
-long double round_to_place(long double val, long double place) {
-    long double multiple = std::powl(10, place);
+float round_to_place(float val, float place) {
+    float multiple = std::powl(10, place);
     return std::round(val * multiple) / multiple;
 }
 
 // Test function that conducts tests for a specific activation function 
-void activation_function_test(long double (*activation_function) (long double), const char* func_name, 
-                              long double inputs[], long double correct_outputs[], int num_tests,
+void activation_function_test(float (*activation_function) (float), const char* func_name, 
+                              float inputs[], float correct_outputs[], int num_tests,
                               std::ofstream& output_file) {
 
-    long double rounded_place = 5;
+    float rounded_place = 5;
 
     output_file << func_name << " Function Tests:" << std::endl;
 
     for (int i = 0; i < num_tests; ++i) {
-        long double my_func_output = round_to_place(activation_function(inputs[i]), rounded_place);
-        long double actual_func_output = round_to_place(correct_outputs[i], rounded_place);
+        float my_func_output = round_to_place(activation_function(inputs[i]), rounded_place);
+        float actual_func_output = round_to_place(correct_outputs[i], rounded_place);
 
         output_file << "\t> Test " << i << ':' << std::endl;
 
@@ -46,35 +46,35 @@ void activation_function_test(long double (*activation_function) (long double), 
 int main() {
     std::ofstream output_file("function_tests.txt");
 
-    long double input_vals[7] = {0, -0.4, -16, 0.7, 22, -std::numeric_limits<long double>::infinity(),
-                                 std::numeric_limits<long double>::infinity()};
+    float input_vals[7] = {0, -0.4, -16, 0.7, 22, -std::numeric_limits<float>::infinity(),
+                                 std::numeric_limits<float>::infinity()};
 
     int num_tests = 7;
 
-    long double linear_test_vals[7] = {0, -0.4, -16, 0.7, 22, 
-                                       -std::numeric_limits<long double>::infinity(),
-                                       std::numeric_limits<long double>::infinity()};
+    float linear_test_vals[7] = {0, -0.4, -16, 0.7, 22, 
+                                       -std::numeric_limits<float>::infinity(),
+                                       std::numeric_limits<float>::infinity()};
     activation_function_test(linear, "Linear", input_vals, linear_test_vals, num_tests, output_file); 
      
-    long double sigmoid_test_vals[7] = {0.5, 0.40131, 0, 0.66819, 1, 0, 1};
+    float sigmoid_test_vals[7] = {0.5, 0.40131, 0, 0.66819, 1, 0, 1};
     activation_function_test(sigmoid, "Sigmoid", input_vals, sigmoid_test_vals, num_tests, output_file); 
 
-    long double tanh_test_vals[7] = {0, -0.37995, -1, 0.60437, 1, -1, 1};
+    float tanh_test_vals[7] = {0, -0.37995, -1, 0.60437, 1, -1, 1};
     activation_function_test(hyperbolic_tangent, "Tanh", input_vals, tanh_test_vals, num_tests, output_file);
 
-    long double step_test_vals[7] = {0, 0, 0, 1, 1, 0, 1};
+    float step_test_vals[7] = {0, 0, 0, 1, 1, 0, 1};
     activation_function_test(step, "Step", input_vals, step_test_vals, num_tests, output_file);
 
-    long double relu_test_vals[7] = {0, 0, 0, 0.7, 22, 0, std::numeric_limits<long double>::infinity()};
+    float relu_test_vals[7] = {0, 0, 0, 0.7, 22, 0, std::numeric_limits<float>::infinity()};
     activation_function_test(relu, "ReLU", input_vals, relu_test_vals, num_tests, output_file);
 
-    long double leaky_relu_test_vals[7] = {0, -0.004, -0.16, 0.7, 22,
-                                           -std::numeric_limits<long double>::infinity(),
-                                           std::numeric_limits<long double>::infinity()};
+    float leaky_relu_test_vals[7] = {0, -0.004, -0.16, 0.7, 22,
+                                           -std::numeric_limits<float>::infinity(),
+                                           std::numeric_limits<float>::infinity()};
     activation_function_test(leaky_relu, "LeakyReLU", input_vals, leaky_relu_test_vals, num_tests, output_file);
 
-    long double softplus_test_vals[7] = {0.69315, 0.51302, 0, 1.10319, 22, 0, 
-                                         std::numeric_limits<long double>::infinity()};
+    float softplus_test_vals[7] = {0.69315, 0.51302, 0, 1.10319, 22, 0, 
+                                         std::numeric_limits<float>::infinity()};
     activation_function_test(softplus, "SoftPlus", input_vals, softplus_test_vals, num_tests, output_file);
 
     output_file.close();
