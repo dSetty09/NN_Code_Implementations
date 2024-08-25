@@ -5,12 +5,12 @@
 #ifndef NONLINEAR_FUNCTIONS_H
 #define NONLINEAR_FUNCTIONS_H
 
-#include <cmath>
+#include <math.h>
 
 // Sigmoid Activation Function
 // --> Used for models where have to predict probability as output
 float sigmoid(float x) {
-    return 1 / (1 + std::exp(-x));
+    return 1 / (1 + expf(-x));
 }
 
 // Hyperbolic Tangent (tanh) Function
@@ -20,8 +20,8 @@ float hyperbolic_tangent(float x) {
     if (x <= -20) return -1;
     if (x >= 20) return 1;
 
-    float e_neg_x = std::exp(-x);
-    float e_pos_x = std::exp(x);
+    float e_neg_x = expf(-x);
+    float e_pos_x = expf(x);
 
     return (e_pos_x - e_neg_x) / (e_pos_x + e_neg_x);
 }
@@ -49,7 +49,7 @@ float leaky_relu(float x) {
 // SoftPlus Activation Function
 // --> Smoother approximation of ReLU
 float softplus(float x) {
-    return std::log(1 + std::exp(x));
+    return log(1 + expf(x));
 }
 
 // SoftMax Activation Function
@@ -61,11 +61,11 @@ float* softmax(float* v, unsigned int n) {
     float denominator = 0;
 
     for (int j = 0; j < n; ++j) {
-        denominator += std::exp(v[j]);
+        denominator += expf(v[j]);
     }
 
     for (int i = 0; i < n; ++i) {
-        v[i] = std::exp(v[i]) / denominator;
+        v[i] = expf(v[i]) / denominator;
     }
 
     return v;
