@@ -6,8 +6,8 @@
 #define LINEAR_FUNCTIONS_HPP
 
 // Linear Activation Function
-float linear(float x) {
-    return x;
+float linear(float x, int deriv) {
+    return (deriv) ? 1 : x;
 }
 
 #endif

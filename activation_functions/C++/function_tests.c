@@ -7,6 +7,9 @@
 #include "linear_functions.h"
 #include "nonlinear_functions.h"
 
+#define TRUE 1
+#define FALSE 0
+
 // Function for rounding to a certain number of decimal places
 float round_to_place(float val, float place) {
     float multiple = powl(10, place);
@@ -14,27 +17,27 @@ float round_to_place(float val, float place) {
 }
 
 // Test function that conducts tests for a specific activation function 
-void activation_function_test(float (*activation_function) (float), const char* func_name, 
+void activation_function_test(float (*activation_function) (float, int), const char* func_name, 
                               float inputs[], float correct_outputs[], int num_tests,
-                              FILE* output_file) {
+                              FILE* output_file, int deriv) {
 
     float rounded_place = 5;
 
     fprintf(output_file, "%s Function Tests:\n", func_name);
 
     for (int i = 0; i < num_tests; ++i) {
-        float my_func_output = round_to_place(activation_function(inputs[i]), rounded_place);
+        float my_func_output = round_to_place(activation_function(inputs[i], deriv), rounded_place);
         float actual_func_output = round_to_place(correct_outputs[i], rounded_place);
 
         fprintf(output_file, "\t> Test %d:\n", i);
-        fprintf(output_file, "\t\t- Mine: %s(%f) ==> %f\n", 
-                func_name, inputs[i], activation_function(inputs[i]));
-        fprintf(output_file, "\t\t- Actual: %s(%f) ==> %f\n",
-                func_name, inputs[i], correct_outputs[i]);
+        fprintf(output_file, "\t\t- Mine: %s(%f) ==> %f\n", func_name, inputs[i], my_func_output);
+        fprintf(output_file, "\t\t- Actual: %s(%f) ==> %f\n", func_name, inputs[i], actual_func_output);
 
-        assert(my_func_output == actual_func_output);
+        if (isnan(my_func_output)) assert(isnan(actual_func_output));
+        else assert(my_func_output == actual_func_output);
+
         fprintf(output_file, "\t\t- %s function with %f as argument evaluates to %f\n",
-                func_name, inputs[i], correct_outputs[i]);
+                func_name, inputs[i], actual_func_output);
     }
 }
 
@@ -47,25 +50,39 @@ int main() {
     int num_tests = 7;
 
     float linear_test_vals[7] = {0, -0.4, -16, 0.7, 22, -INFINITY, INFINITY};
-    activation_function_test(linear, "Linear", input_vals, linear_test_vals, num_tests, output_file); 
+    float linear_deriv_vals[7] = {1, 1, 1, 1, 1, 1, 1};
+    activation_function_test(linear, "Linear", input_vals, linear_test_vals, num_tests, output_file, FALSE);
+    activation_function_test(linear, "LinearDerivative", input_vals, linear_deriv_vals, num_tests, output_file, TRUE); 
      
     float sigmoid_test_vals[7] = {0.5, 0.40131, 0, 0.66819, 1, 0, 1};
-    activation_function_test(sigmoid, "Sigmoid", input_vals, sigmoid_test_vals, num_tests, output_file); 
+    float sigmoid_deriv_vals[7] = {0.25, 0.24026, 0, 0.22171, 0, NAN, 0};
+    activation_function_test(sigmoid, "Sigmoid", input_vals, sigmoid_test_vals, num_tests, output_file, FALSE); 
+    activation_function_test(sigmoid, "SigmoidDerivative", input_vals, sigmoid_deriv_vals, num_tests, output_file, TRUE);
 
     float tanh_test_vals[7] = {0, -0.37995, -1, 0.60437, 1, -1, 1};
-    activation_function_test(hyperbolic_tangent, "Tanh", input_vals, tanh_test_vals, num_tests, output_file);
+    float tanh_deriv_vals[7] = {1, 0.85564, 0, 0.63474, 0, 0, 0};
+    activation_function_test(hyperbolic_tangent, "Tanh", input_vals, tanh_test_vals, num_tests, output_file, FALSE);
+    activation_function_test(hyperbolic_tangent, "TanhDerivative", input_vals, tanh_deriv_vals, num_tests, output_file, TRUE);
 
     float step_test_vals[7] = {0, 0, 0, 1, 1, 0, 1};
-    activation_function_test(step, "Step", input_vals, step_test_vals, num_tests, output_file);
+    float step_deriv_vals[7] = {NAN, 0, 0, 0, 0, 0, 0};
+    activation_function_test(step, "Step", input_vals, step_test_vals, num_tests, output_file, FALSE);
+    activation_function_test(step, "StepDerivative", input_vals, step_deriv_vals, num_tests, output_file, TRUE);
 
     float relu_test_vals[7] = {0, 0, 0, 0.7, 22, 0, INFINITY};
-    activation_function_test(relu, "ReLU", input_vals, relu_test_vals, num_tests, output_file);
+    float relu_deriv_vals[7] = {NAN, 0, 0, 1, 1, 0, 1};
+    activation_function_test(relu, "ReLU", input_vals, relu_test_vals, num_tests, output_file, FALSE);
+    activation_function_test(relu, "ReLUDerivative", input_vals, relu_deriv_vals, num_tests, output_file, TRUE);
 
     float leaky_relu_test_vals[7] = {0, -0.004, -0.16, 0.7, 22, -INFINITY, INFINITY};
-    activation_function_test(leaky_relu, "LeakyReLU", input_vals, leaky_relu_test_vals, num_tests, output_file);
+    float leaky_relu_deriv_vals[7] = {NAN, 0.01, 0.01, 1, 1, 0.01, 1};
+    activation_function_test(leaky_relu, "LeakyReLU", input_vals, leaky_relu_test_vals, num_tests, output_file, FALSE);
+    activation_function_test(leaky_relu, "LeakyReLUDerivative", input_vals, leaky_relu_deriv_vals, num_tests, output_file, TRUE);
 
     float softplus_test_vals[7] = {0.69315, 0.51302, 0, 1.10319, 22, 0, INFINITY};
-    activation_function_test(softplus, "SoftPlus", input_vals, softplus_test_vals, num_tests, output_file);
+    float softplus_deriv_vals[7] = {0.5, 0.40131, 0, 0.66819, 1, 0, NAN};
+    activation_function_test(softplus, "SoftPlus", input_vals, softplus_test_vals, num_tests, output_file, FALSE);
+    activation_function_test(softplus, "SoftPlusDerivative", input_vals, softplus_deriv_vals, num_tests, output_file, TRUE);
 
     fclose(output_file);
 }
