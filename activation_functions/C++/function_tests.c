@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <math.h>
 
+#include "../../common_typedefs.h"
 #include "linear_functions.h"
 #include "nonlinear_functions.h"
 
@@ -12,12 +13,12 @@
 
 // Function for rounding to a certain number of decimal places
 float round_to_place(float val, float place) {
-    float multiple = powl(10, place);
+    float multiple = powf(10, place);
     return round(val * multiple) / multiple;
 }
 
 // Test function that conducts tests for a specific activation function 
-void activation_function_test(float (*activation_function) (float, int), const char* func_name, 
+void activation_function_test(one_arg_activation_function activation_function, const char* func_name, 
                               float inputs[], float correct_outputs[], int num_tests,
                               FILE* output_file, int deriv) {
 
@@ -36,7 +37,7 @@ void activation_function_test(float (*activation_function) (float, int), const c
         if (isnan(my_func_output)) assert(isnan(actual_func_output));
         else assert(my_func_output == actual_func_output);
 
-        fprintf(output_file, "\t\t- %s function with %f as argument evaluates to %f\n",
+        fprintf(output_file, "\t\t- %s function with %f as argument evaluates to %f\n\n",
                 func_name, inputs[i], actual_func_output);
     }
 }
