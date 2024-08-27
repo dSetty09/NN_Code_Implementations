@@ -4,18 +4,12 @@
 #include <assert.h>
 #include <math.h>
 
-#include "../../common_typedefs.h"
+#include "../../common_definitions.h"
 #include "linear_functions.h"
 #include "nonlinear_functions.h"
 
 #define TRUE 1
 #define FALSE 0
-
-// Function for rounding to a certain number of decimal places
-float round_to_place(float val, float place) {
-    float multiple = powf(10, place);
-    return round(val * multiple) / multiple;
-}
 
 // Test function that conducts tests for a specific activation function 
 void activation_function_test(one_arg_activation_function activation_function, const char* func_name, 

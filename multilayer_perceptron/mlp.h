@@ -8,81 +8,94 @@
 
 #include <stdlib.h>
 #include <time.h>
-#include "../common_typedefs.h"
+
+#include "../common_definitions.h"
 
 
 float generate_random_weight() {
     srand(time(NULL));
-    return rand() % 5;
+    return (rand()% 2 == 1) ? rand() % 5 : -(rand() % 5);
 }
 
-
-struct Neuron {
-    Neuron** prev_layer_connections;
+typedef struct NeuronNode {
+    struct NeuronNode* prev_layer;
     float* prev_layer_weights;
-    int num_prev_layer_connections;
+    int num_in_prev_layer;
 
     float bias;
     one_arg_activation_function activation_function;
 
-    Neuron** next_layer_connections;
-    int num_next_layer_connections;
+    struct NeuronNode* next_layer;
+    int num_in_next_layer;
 
     float output;
-};
+} Neuron;
 
-struct MultilayerPerceptron {
-    Neuron** first_layer;
+typedef struct MultilayerPerceptron {
+    Neuron* first_layer;
     int num_first_layer_neurons;
-};
+} MLP;
 
-float neuron_output(Neuron* neuron) {
-    float weighted_sum = neuron->bias;
+float weighted_sum(Neuron neuron, int deriv_output_index) {
+    if (deriv_output_index >= 0) return neuron.prev_layer_weights[deriv_output_index];
 
-    for (int i = 0; i < neuron->num_prev_layer_connections; ++i) {
-        weighted_sum += neuron->prev_layer_connections[i]->output * neuron->prev_layer_weights[i];
+    float result = neuron.bias;
+
+    for (int i = 0; i < neuron.num_in_prev_layer; ++i) {
+        result += neuron.prev_layer[i].output * neuron.prev_layer_weights[i];
     }
 
-    return neuron->activation_function(weighted_sum, 0); //  second argument, 0, implies not taking derivative
+    return result;
+}
+
+float neuron_output(Neuron neuron) {
+    return neuron.activation_function(weighted_sum(neuron, -1), 0); //  second argument, 0, implies not taking derivative
 } 
 
-MultilayerPerceptron* build_mlp(int num_layers, int* neurons_per_layer, 
-                                one_arg_activation_function* function_per_layer, 
-                                cost_function cost_func) {
+MLP* build_mlp(int num_layers, int neurons_per_layer[], 
+                                one_arg_activation_function function_per_layer[], 
+                                cost_function cost_func, float weight_vals[]) {
 
-    MultilayerPerceptron* new_mlp = (MultilayerPerceptron*) sizeof(MultilayerPerceptron);
-    Neuron** prev_layer = NULL;
-    Neuron** current_layer = new_mlp->first_layer;
+    MLP* new_mlp = (MLP*) malloc(sizeof(MLP));
+    Neuron* prev_layer = NULL;
+    Neuron* current_layer = new_mlp->first_layer;
+
+    int weights_added = 0;
 
     new_mlp->num_first_layer_neurons = neurons_per_layer[0];
 
-    for (int i = 0; i < num_layers; ++i) {
-        current_layer = (Neuron**) malloc(sizeof(Neuron*) * neurons_per_layer[i]);
+    for (int l = 0; l < num_layers; ++l) {
+        current_layer = (Neuron*) malloc(sizeof(Neuron) * neurons_per_layer[l]);
+        if (l == 0) new_mlp->first_layer = current_layer;
 
-        for (int j = 0; j < neurons_per_layer[i]; ++j) {
-            current_layer[j] = (Neuron*) malloc(sizeof(Neuron));
-
+        for (int i = 0; i < neurons_per_layer[l]; ++i) {
             if (!prev_layer) {
-                current_layer[j]->prev_layer_connections = NULL;
-                current_layer[j]->prev_layer_weights = NULL;
-                current_layer[j]->num_prev_layer_connections = 0;
+                current_layer[i].prev_layer = NULL;
+                current_layer[i].prev_layer_weights = NULL;
+                current_layer[i].num_in_prev_layer = 0;
             } else {
-                for (int k = 0; k < neurons_per_layer[i - 1]; ++k) {
-                    prev_layer[k]->next_layer_connections[j] = current_layer[j];
-                    
-                    current_layer[j]->prev_layer_connections[k] = prev_layer[k];
-                    current_layer[j]->prev_layer_weights[k] = generate_random_weight();
-                }
+                current_layer[i].prev_layer = prev_layer;
+                current_layer[i].prev_layer_weights = (float*) malloc(sizeof(float) * neurons_per_layer[l - 1]);
+                current_layer[i].num_in_prev_layer = neurons_per_layer[l - 1];
 
-                current_layer[j]->num_prev_layer_connections = neurons_per_layer[i - 1];
+                int neurons_in_last_layer = neurons_per_layer[l - 1];
+
+                for (int j = 0; j < neurons_in_last_layer; ++j) {
+                    if (weight_vals) current_layer[i].prev_layer_weights[j] = weight_vals[weights_added++];
+                    else current_layer[i].prev_layer_weights[j] = generate_random_weight();
+
+                    prev_layer[j].next_layer = current_layer;
+                    prev_layer[j].num_in_next_layer = neurons_per_layer[l];
+                }
             }
 
-            current_layer[j]->bias = 0;
-            current_layer[j]->activation_function = function_per_layer[i];
-            current_layer[j]->next_layer_connections = NULL;
-            current_layer[i]->num_next_layer_connections = 0;
+            current_layer[i].bias = 0;
+            current_layer[i].activation_function = function_per_layer[l];
 
-            current_layer[j]->output = 0; // neuron "switched off" when initialized
+            current_layer[i].next_layer = NULL;
+            current_layer[i].num_in_next_layer = 0;
+
+            current_layer[i].output = 0; // neuron "switched off" when initialized
         }
 
         prev_layer = current_layer;
@@ -91,34 +104,36 @@ MultilayerPerceptron* build_mlp(int num_layers, int* neurons_per_layer,
     return new_mlp;
 }
 
-float* compute_mlp_output(MultilayerPerceptron* mlp, int* inputs) {
+float* compute_mlp_output(MLP* mlp, float inputs[]) {
     int num_outputs = 0;
     float* outputs = NULL;
 
-    Neuron** curr_layer = mlp->first_layer;
+    Neuron* curr_layer = mlp->first_layer;
     int num_neurons_in_curr_layer = mlp->num_first_layer_neurons;
     int on_first_layer = 1;
 
     while (curr_layer != NULL) {
-        int num_neurons_in_next_layer = curr_layer[0]->num_next_layer_connections;
+        int num_neurons_in_next_layer = curr_layer[0].num_in_next_layer;
 
         for (int i = 0; i < num_neurons_in_curr_layer; ++i) {
             if (on_first_layer) {
-                curr_layer[i]->output = curr_layer[i]->activation_function(inputs[i], 0);
+                curr_layer[i].output = inputs[i];
             } else {
-                curr_layer[i]->output = neuron_output(curr_layer[i]);
+                curr_layer[i].output = neuron_output(curr_layer[i]);
             }
         }
 
         if (num_neurons_in_next_layer == 0) {
             num_outputs = num_neurons_in_curr_layer;
 
+            outputs = (float*) malloc(sizeof(float) * num_outputs);
+
             for (int i = 0; i < num_outputs; ++i) {
-                outputs[i] = curr_layer[i]->output;
+                outputs[i] = curr_layer[i].output;
             }
         }
 
-        curr_layer = curr_layer[0]->next_layer_connections;
+        curr_layer = curr_layer[0].next_layer;
         num_neurons_in_curr_layer = num_neurons_in_next_layer;
 
         on_first_layer = 0;
@@ -127,7 +142,7 @@ float* compute_mlp_output(MultilayerPerceptron* mlp, int* inputs) {
     return outputs;
 }
 
-void decommision_mlp(MultilayerPerceptron* mlp) {
+void decommision_mlp(MLP* mlp) {
 
 }
 
