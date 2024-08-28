@@ -12,6 +12,11 @@
 #include "../common_definitions.h"
 
 
+#define OUTPUT 0
+#define WEIGHT 1
+#define BIAS 2
+
+
 float generate_random_weight() {
     srand(time(NULL));
     return (rand()% 2 == 1) ? rand() % 5 : -(rand() % 5);
@@ -34,10 +39,18 @@ typedef struct NeuronNode {
 typedef struct MultilayerPerceptron {
     Neuron* first_layer;
     int num_first_layer_neurons;
+
+    Neuron* output_layer;
+    int num_output_layer_neurons;
+
+    float* outputs;
 } MLP;
 
-float weighted_sum(Neuron neuron, int deriv_output_index) {
-    if (deriv_output_index >= 0) return neuron.prev_layer_weights[deriv_output_index];
+float weighted_sum(Neuron neuron, int deriv_index, int deriving_variable) {
+    if (deriv_index >= 0) {
+        if (deriving_variable == OUTPUT) return neuron.prev_layer_weights[deriv_index];
+        if (deriving_variable == WEIGHT) return neuron.prev_layer[deriv_index].output;
+    }
 
     float result = neuron.bias;
 
@@ -45,16 +58,17 @@ float weighted_sum(Neuron neuron, int deriv_output_index) {
         result += neuron.prev_layer[i].output * neuron.prev_layer_weights[i];
     }
 
+    if (deriv_index >= 0) result -= neuron.bias;
+
     return result;
 }
 
-float neuron_output(Neuron neuron) {
-    return neuron.activation_function(weighted_sum(neuron, -1), 0); //  second argument, 0, implies not taking derivative
+float neuron_output(Neuron neuron, int deriv) {
+    return neuron.activation_function(weighted_sum(neuron, -1, 0), deriv);
 } 
 
 MLP* build_mlp(int num_layers, int neurons_per_layer[], 
-                                one_arg_activation_function function_per_layer[], 
-                                cost_function cost_func, float weight_vals[]) {
+                                one_arg_activation_function function_per_layer[],  float weight_vals[]) {
 
     MLP* new_mlp = (MLP*) malloc(sizeof(MLP));
     Neuron* prev_layer = NULL;
@@ -101,10 +115,14 @@ MLP* build_mlp(int num_layers, int neurons_per_layer[],
         prev_layer = current_layer;
     }
 
+    new_mlp->output_layer = current_layer;
+    new_mlp->num_output_layer_neurons = new_mlp->output_layer->prev_layer->num_in_next_layer;
+
     return new_mlp;
 }
 
-float* compute_mlp_output(MLP* mlp, float inputs[]) {
+/* Emulates forward-pass functionality of an MLP */
+void compute_mlp_output(MLP* mlp, float inputs[]) {
     int num_outputs = 0;
     float* outputs = NULL;
 
@@ -113,13 +131,13 @@ float* compute_mlp_output(MLP* mlp, float inputs[]) {
     int on_first_layer = 1;
 
     while (curr_layer != NULL) {
-        int num_neurons_in_next_layer = curr_layer[0].num_in_next_layer;
+        int num_neurons_in_next_layer = curr_layer->num_in_next_layer;
 
         for (int i = 0; i < num_neurons_in_curr_layer; ++i) {
             if (on_first_layer) {
                 curr_layer[i].output = inputs[i];
             } else {
-                curr_layer[i].output = neuron_output(curr_layer[i]);
+                curr_layer[i].output = neuron_output(curr_layer[i], 0);
             }
         }
 
@@ -133,13 +151,45 @@ float* compute_mlp_output(MLP* mlp, float inputs[]) {
             }
         }
 
-        curr_layer = curr_layer[0].next_layer;
+        curr_layer = curr_layer->next_layer;
         num_neurons_in_curr_layer = num_neurons_in_next_layer;
 
         on_first_layer = 0;
     }
     
-    return outputs;
+    mlp->outputs = outputs;
+}
+
+/* Emulates backward pass functionality of an MLP */
+void adjust_weights_and_biases(MLP* mlp, cost_function loss_function, float actual_outputs[]) {
+    float* last_layer_derivs = (float*) malloc(sizeof(float) * mlp->num_output_layer_neurons);
+    int num_in_last_layer = mlp->num_output_layer_neurons;
+    
+    for (int i = 0; i < mlp->num_output_layer_neurons; ++i) last_layer_derivs[i] = loss_function(mlp->outputs, actual_outputs, mlp->num_output_layer_neurons, i);
+
+    int num_in_curr_layer = mlp->output_layer->num_in_prev_layer;
+
+    for (Neuron* current_layer = mlp->output_layer->prev_layer; current_layer; current_layer = current_layer->prev_layer) {
+        float* cost_over_output_derivs = (float*) calloc(num_in_curr_layer, sizeof(float));
+
+        for (int i = 0; i < num_in_curr_layer; ++i) {
+            for (int j = 0; j < num_in_last_layer; ++j) {
+                float jth_output_to_wsum_deriv = current_layer[i].next_layer[j].activation_function(weighted_sum(current_layer->next_layer[j], -1, 0), 1);
+
+                float jth_wsum_to_weight_ij_deriv = weighted_sum(current_layer[i].next_layer[j], i, WEIGHT);
+                current_layer[i].next_layer[j].prev_layer_weights[i] += jth_wsum_to_weight_ij_deriv;
+
+                float jth_wsum_to_bias_deriv = weighted_sum(current_layer[i].next_layer[j], i, BIAS);
+                current_layer[i].next_layer[j].bias += jth_wsum_to_bias_deriv;
+
+                float jth_wsum_to_ith_output_deriv = weighted_sum(current_layer[i].next_layer[j], i, OUTPUT);
+                cost_over_output_derivs[i] += jth_wsum_to_ith_output_deriv * jth_output_to_wsum_deriv * last_layer_derivs[j];
+            }
+        }
+
+        free(last_layer_derivs);
+        last_layer_derivs = cost_over_output_derivs;
+    }
 }
 
 void decommision_mlp(MLP* mlp) {

@@ -1,36 +1,36 @@
 SingleOutputMLPOne Test:
 ------------------------------
-	- MLP Output 1: 0.000000
-	- Actual Output 1: 0.000000
+	- MLP Output 1: 0.532949
+	- Actual Output 1: 0.532950
 	- Output 1 is correct
 ------------------------------
 
 SingleOutputMLPTwo Test:
 ------------------------------
-	- MLP Output 1: 0.500000
-	- Actual Output 1: 0.500000
+	- MLP Output 1: 1.000000
+	- Actual Output 1: 1.000000
 	- Output 1 is correct
 ------------------------------
 
 MultipleOutputMLPOne Test:
 ------------------------------
-	- MLP Output 1: 0.000000
-	- Actual Output 1: 0.000000
+	- MLP Output 1: 0.490333
+	- Actual Output 1: 0.490330
 	- Output 1 is correct
 ------------------------------
-	- MLP Output 2: 1.000000
-	- Actual Output 2: 1.000000
+	- MLP Output 2: 0.561291
+	- Actual Output 2: 0.561290
 	- Output 2 is correct
 ------------------------------
 
 MultipleOutputMLPOne Test:
 ------------------------------
-	- MLP Output 1: 0.500000
-	- Actual Output 1: 0.500000
+	- MLP Output 1: 1.000000
+	- Actual Output 1: 1.000000
 	- Output 1 is correct
 ------------------------------
-	- MLP Output 2: 0.500000
-	- Actual Output 2: 0.500000
+	- MLP Output 2: 1.000000
+	- Actual Output 2: 1.000000
 	- Output 2 is correct
 ------------------------------
 

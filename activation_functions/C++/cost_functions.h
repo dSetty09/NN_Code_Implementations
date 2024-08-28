@@ -11,9 +11,9 @@
 #include <math.h>
 
 // Mean Squared Error Cost Function
-float mse(float yielded_vals[], float actual_vals[], int n, int deriv_var_index) {
-    if (deriv_var_index >= 0) 
-        return (2 * yielded_vals[deriv_var_index] - 2 * actual_vals[deriv_var_index]) / n;
+float mse(float yielded_vals[], float actual_vals[], int n, int deriving_output_index) {
+    if (deriving_output_index >= 0) 
+        return (2 * yielded_vals[deriving_output_index] - 2 * actual_vals[deriving_output_index]) / n;
 
     float summation = 0;
 
