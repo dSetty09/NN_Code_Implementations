@@ -1,36 +1,553 @@
-SingleOutputMLPOne Test:
+FEED FORWARD TESTS:
+
+SingleOutputMLPOne Feed Forward Test:
 ------------------------------
 	- MLP Output 1: 0.532949
-	- Actual Output 1: 0.532950
+	- Correct Output 1: 0.532950
 	- Output 1 is correct
 ------------------------------
 
-SingleOutputMLPTwo Test:
+SingleOutputMLPTwo Feed Forward Test:
 ------------------------------
 	- MLP Output 1: 1.000000
-	- Actual Output 1: 1.000000
+	- Correct Output 1: 1.000000
 	- Output 1 is correct
 ------------------------------
 
-MultipleOutputMLPOne Test:
+MultipleOutputMLPOne Feed Forward Test:
 ------------------------------
 	- MLP Output 1: 0.490333
-	- Actual Output 1: 0.490330
+	- Correct Output 1: 0.490330
 	- Output 1 is correct
 ------------------------------
 	- MLP Output 2: 0.561291
-	- Actual Output 2: 0.561290
+	- Correct Output 2: 0.561290
 	- Output 2 is correct
 ------------------------------
 
-MultipleOutputMLPOne Test:
+MultipleOutputMLPOne Feed Forward Test:
 ------------------------------
 	- MLP Output 1: 1.000000
-	- Actual Output 1: 1.000000
+	- Correct Output 1: 1.000000
 	- Output 1 is correct
 ------------------------------
 	- MLP Output 2: 1.000000
-	- Actual Output 2: 1.000000
+	- Correct Output 2: 1.000000
 	- Output 2 is correct
+------------------------------
+
+
+BACKWARD PROPAGATION TESTS:
+
+SingleOutputMLP Backpropagation Test:
+------------------------------
+- First Computed Output:
+	[0: 0.532949]
+- Ideal Output:
+	[0: 1.000000]
+- Error: 0.218136
+------------------------------
+- Iteration 1:
+	- Computed Outputs after Backpropagation:
+	[0: 0.545153]
+	- Previous Error: 0.218136
+	- New Error: 0.206886
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 2:
+	- Computed Outputs after Backpropagation:
+	[0: 0.558402]
+	- Previous Error: 0.206886
+	- New Error: 0.195009
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 3:
+	- Computed Outputs after Backpropagation:
+	[0: 0.578652]
+	- Previous Error: 0.195009
+	- New Error: 0.177534
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 4:
+	- Computed Outputs after Backpropagation:
+	[0: 0.609044]
+	- Previous Error: 0.177534
+	- New Error: 0.152847
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 5:
+	- Computed Outputs after Backpropagation:
+	[0: 0.650260]
+	- Previous Error: 0.152847
+	- New Error: 0.122318
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 6:
+	- Computed Outputs after Backpropagation:
+	[0: 0.699259]
+	- Previous Error: 0.122318
+	- New Error: 0.090445
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 7:
+	- Computed Outputs after Backpropagation:
+	[0: 0.749223]
+	- Previous Error: 0.090445
+	- New Error: 0.062889
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 8:
+	- Computed Outputs after Backpropagation:
+	[0: 0.793115]
+	- Previous Error: 0.062889
+	- New Error: 0.042801
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 9:
+	- Computed Outputs after Backpropagation:
+	[0: 0.827788]
+	- Previous Error: 0.042801
+	- New Error: 0.029657
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 10:
+	- Computed Outputs after Backpropagation:
+	[0: 0.853898]
+	- Previous Error: 0.029657
+	- New Error: 0.021346
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 11:
+	- Computed Outputs after Backpropagation:
+	[0: 0.873459]
+	- Previous Error: 0.021346
+	- New Error: 0.016013
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 12:
+	- Computed Outputs after Backpropagation:
+	[0: 0.888345]
+	- Previous Error: 0.016013
+	- New Error: 0.012467
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 13:
+	- Computed Outputs after Backpropagation:
+	[0: 0.899928]
+	- Previous Error: 0.012467
+	- New Error: 0.010014
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 14:
+	- Computed Outputs after Backpropagation:
+	[0: 0.909149]
+	- Previous Error: 0.010014
+	- New Error: 0.008254
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 15:
+	- Computed Outputs after Backpropagation:
+	[0: 0.916645]
+	- Previous Error: 0.008254
+	- New Error: 0.006948
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 16:
+	- Computed Outputs after Backpropagation:
+	[0: 0.922852]
+	- Previous Error: 0.006948
+	- New Error: 0.005952
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 17:
+	- Computed Outputs after Backpropagation:
+	[0: 0.928074]
+	- Previous Error: 0.005952
+	- New Error: 0.005173
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 18:
+	- Computed Outputs after Backpropagation:
+	[0: 0.932530]
+	- Previous Error: 0.005173
+	- New Error: 0.004552
+	- Error Reduced Successfully!
+------------------------------
+
+SingleOutputMLP Backpropagation Test:
+------------------------------
+- First Computed Output:
+	[0: 0.932530]
+- Ideal Output:
+	[0: 0.000000]
+- Error: 0.869612
+------------------------------
+- Iteration 1:
+	- Computed Outputs after Backpropagation:
+	[0: 0.859544]
+	- Previous Error: 0.869612
+	- New Error: 0.738816
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 2:
+	- Computed Outputs after Backpropagation:
+	[0: 0.714784]
+	- Previous Error: 0.738816
+	- New Error: 0.510916
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 3:
+	- Computed Outputs after Backpropagation:
+	[0: 0.578139]
+	- Previous Error: 0.510916
+	- New Error: 0.334245
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 4:
+	- Computed Outputs after Backpropagation:
+	[0: 0.518836]
+	- Previous Error: 0.334245
+	- New Error: 0.269191
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 5:
+	- Computed Outputs after Backpropagation:
+	[0: 0.494792]
+	- Previous Error: 0.269191
+	- New Error: 0.244819
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 6:
+	- Computed Outputs after Backpropagation:
+	[0: 0.485440]
+	- Previous Error: 0.244819
+	- New Error: 0.235652
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 7:
+	- Computed Outputs after Backpropagation:
+	[0: 0.482451]
+	- Previous Error: 0.235652
+	- New Error: 0.232759
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 8:
+	- Computed Outputs after Backpropagation:
+	[0: 0.480100]
+	- Previous Error: 0.232759
+	- New Error: 0.230496
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 9:
+	- Computed Outputs after Backpropagation:
+	[0: 0.471256]
+	- Previous Error: 0.230496
+	- New Error: 0.222082
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 10:
+	- Computed Outputs after Backpropagation:
+	[0: 0.443706]
+	- Previous Error: 0.222082
+	- New Error: 0.196875
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 11:
+	- Computed Outputs after Backpropagation:
+	[0: 0.377893]
+	- Previous Error: 0.196875
+	- New Error: 0.142803
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 12:
+	- Computed Outputs after Backpropagation:
+	[0: 0.267101]
+	- Previous Error: 0.142803
+	- New Error: 0.071343
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 13:
+	- Computed Outputs after Backpropagation:
+	[0: 0.168585]
+	- Previous Error: 0.071343
+	- New Error: 0.028421
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 14:
+	- Computed Outputs after Backpropagation:
+	[0: 0.118986]
+	- Previous Error: 0.028421
+	- New Error: 0.014158
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 15:
+	- Computed Outputs after Backpropagation:
+	[0: 0.093564]
+	- Previous Error: 0.014158
+	- New Error: 0.008754
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 16:
+	- Computed Outputs after Backpropagation:
+	[0: 0.078278]
+	- Previous Error: 0.008754
+	- New Error: 0.006128
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 17:
+	- Computed Outputs after Backpropagation:
+	[0: 0.068006]
+	- Previous Error: 0.006128
+	- New Error: 0.004625
+	- Error Reduced Successfully!
+------------------------------
+
+SingleOutputMLP Backpropagation Test:
+------------------------------
+- First Computed Output:
+	[0: 0.068006]
+- Ideal Output:
+	[0: 0.000000]
+- Error: 0.004625
+
+MultipleOutputMLP Backpropagation Test:
+------------------------------
+- First Computed Output:
+	[0: 0.490333]
+	[1: 0.561291]
+- Ideal Output:
+	[0: 1.000000]
+	[1: 0.000000]
+- Error: 0.287404
+------------------------------
+- Iteration 1:
+	- Computed Outputs after Backpropagation:
+	[0: 0.510192]
+	[1: 0.501379]
+	- Previous Error: 0.287404
+	- New Error: 0.245647
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 2:
+	- Computed Outputs after Backpropagation:
+	[0: 0.538022]
+	[1: 0.450321]
+	- Previous Error: 0.245647
+	- New Error: 0.208106
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 3:
+	- Computed Outputs after Backpropagation:
+	[0: 0.575728]
+	[1: 0.406415]
+	- Previous Error: 0.208106
+	- New Error: 0.172590
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 4:
+	- Computed Outputs after Backpropagation:
+	[0: 0.622523]
+	[1: 0.368095]
+	- Previous Error: 0.172590
+	- New Error: 0.138991
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 5:
+	- Computed Outputs after Backpropagation:
+	[0: 0.674452]
+	[1: 0.333816]
+	- Previous Error: 0.138991
+	- New Error: 0.108707
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 6:
+	- Computed Outputs after Backpropagation:
+	[0: 0.725572]
+	[1: 0.302239]
+	- Previous Error: 0.108707
+	- New Error: 0.083329
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 7:
+	- Computed Outputs after Backpropagation:
+	[0: 0.770834]
+	[1: 0.272642]
+	- Previous Error: 0.083329
+	- New Error: 0.063425
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 8:
+	- Computed Outputs after Backpropagation:
+	[0: 0.808036]
+	[1: 0.245066]
+	- Previous Error: 0.063425
+	- New Error: 0.048454
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 9:
+	- Computed Outputs after Backpropagation:
+	[0: 0.837409]
+	[1: 0.219954]
+	- Previous Error: 0.048454
+	- New Error: 0.037408
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 10:
+	- Computed Outputs after Backpropagation:
+	[0: 0.860264]
+	[1: 0.197680]
+	- Previous Error: 0.037408
+	- New Error: 0.029302
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 11:
+	- Computed Outputs after Backpropagation:
+	[0: 0.878063]
+	[1: 0.178334]
+	- Previous Error: 0.029302
+	- New Error: 0.023336
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 12:
+	- Computed Outputs after Backpropagation:
+	[0: 0.892053]
+	[1: 0.161744]
+	- Previous Error: 0.023336
+	- New Error: 0.018907
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 13:
+	- Computed Outputs after Backpropagation:
+	[0: 0.903198]
+	[1: 0.147598]
+	- Previous Error: 0.018907
+	- New Error: 0.015578
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 14:
+	- Computed Outputs after Backpropagation:
+	[0: 0.912207]
+	[1: 0.135538]
+	- Previous Error: 0.015578
+	- New Error: 0.013039
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 15:
+	- Computed Outputs after Backpropagation:
+	[0: 0.919598]
+	[1: 0.125222]
+	- Previous Error: 0.013039
+	- New Error: 0.011073
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 16:
+	- Computed Outputs after Backpropagation:
+	[0: 0.925749]
+	[1: 0.116353]
+	- Previous Error: 0.011073
+	- New Error: 0.009526
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 17:
+	- Computed Outputs after Backpropagation:
+	[0: 0.930934]
+	[1: 0.108678]
+	- Previous Error: 0.009526
+	- New Error: 0.008290
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 18:
+	- Computed Outputs after Backpropagation:
+	[0: 0.935358]
+	[1: 0.101991]
+	- Previous Error: 0.008290
+	- New Error: 0.007290
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 19:
+	- Computed Outputs after Backpropagation:
+	[0: 0.939173]
+	[1: 0.096127]
+	- Previous Error: 0.007290
+	- New Error: 0.006470
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 20:
+	- Computed Outputs after Backpropagation:
+	[0: 0.942496]
+	[1: 0.090950]
+	- Previous Error: 0.006470
+	- New Error: 0.005789
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 21:
+	- Computed Outputs after Backpropagation:
+	[0: 0.945415]
+	[1: 0.086351]
+	- Previous Error: 0.005789
+	- New Error: 0.005218
+	- Error Reduced Successfully!
+------------------------------
+------------------------------
+- Iteration 22:
+	- Computed Outputs after Backpropagation:
+	[0: 0.948000]
+	[1: 0.082240]
+	- Previous Error: 0.005218
+	- New Error: 0.004734
+	- Error Reduced Successfully!
 ------------------------------
 
