@@ -133,9 +133,9 @@ SigmoidDerivative Function Tests:
 		- SigmoidDerivative function with 22.000000 as argument evaluates to 0.000000
 
 	> Test 5:
-		- Mine: SigmoidDerivative(-inf) ==> nan
-		- Actual: SigmoidDerivative(-inf) ==> nan
-		- SigmoidDerivative function with -inf as argument evaluates to nan
+		- Mine: SigmoidDerivative(-inf) ==> 0.000000
+		- Actual: SigmoidDerivative(-inf) ==> 0.000000
+		- SigmoidDerivative function with -inf as argument evaluates to 0.000000
 
 	> Test 6:
 		- Mine: SigmoidDerivative(inf) ==> 0.000000
@@ -498,7 +498,7 @@ SoftPlusDerivative Function Tests:
 		- SoftPlusDerivative function with -inf as argument evaluates to 0.000000
 
 	> Test 6:
-		- Mine: SoftPlusDerivative(inf) ==> nan
-		- Actual: SoftPlusDerivative(inf) ==> nan
-		- SoftPlusDerivative function with inf as argument evaluates to nan
+		- Mine: SoftPlusDerivative(inf) ==> 1.000000
+		- Actual: SoftPlusDerivative(inf) ==> 1.000000
+		- SoftPlusDerivative function with inf as argument evaluates to 1.000000
 

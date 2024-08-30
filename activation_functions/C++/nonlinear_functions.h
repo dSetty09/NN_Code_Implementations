@@ -10,7 +10,11 @@
 // Sigmoid Activation Function
 // --> Used for models where have to predict probability as output
 float sigmoid(float x, int deriv) {
-    if (deriv) return expf(-x) / powf((1+expf(-x)), 2);
+    if (deriv) {
+        if (x <= -15) return 0;
+        return expf(-x) / powf((1+expf(-x)), 2);
+    }
+
     return 1 / (1 + expf(-x));
 }
 
@@ -71,6 +75,13 @@ float leaky_relu(float x, int deriv) {
 // SoftPlus Activation Function
 // --> Smoother approximation of ReLU
 float softplus(float x, int deriv) {
+    if (deriv) {
+        if (x >= 30) return 1;
+        return expf(x) / (1 + expf(x));
+    }
+
+    return log(1 + expf(x));
+
     return (deriv) ? expf(x) / (1 + expf(x)) : log(1 + expf(x));
 }
 
