@@ -17,4 +17,15 @@ float round_to_place(float val, float place) {
     return round(val * multiple) / multiple;
 }
 
+// Max function for ints only
+int float_arr_max(int nums[], int n) {
+    int ret = nums[0];
+
+    for (int i = 1; i < n; ++i) {
+        if (nums[i] > ret) ret = nums[i];
+    }
+
+    return ret;
+}
+
 #endif

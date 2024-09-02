@@ -17,18 +17,42 @@
 #define WEIGHT 1
 #define BIAS 2
 
-
+/** HELPERS **/
 float generate_random_weight() {
     srand(time(NULL));
     return (rand()% 2 == 1) ? rand() % 5 : -(rand() % 5);
 }
 
+char* itos(int n) {
+    int div = 10;
+    while (n / div != 0) div *= 10;
+    div /= 10;
+
+    char* ret = NULL;
+
+    for (int iters = 1; n != 0; ++iters) {
+        int quot = n / div;
+        char ci = quot + 48;
+
+        realloc((void*) ret, iters);
+        ret[iters - 1] = ci;
+
+        n %= div;
+        div /= 10;
+    }
+
+    return ret;
+}
+
+
+/** Main struct and function definitions **/
 typedef struct NeuronNode {
     struct NeuronNode* prev_layer;
     float* prev_layer_weights;
     int num_in_prev_layer;
 
     float bias;
+
     one_arg_activation_function activation_function;
 
     struct NeuronNode* next_layer;
@@ -72,8 +96,7 @@ float neuron_output(Neuron neuron, int deriv) {
     return neuron.activation_function(weighted_sum(neuron, -1, 0), deriv);
 } 
 
-MLP* build_mlp(int num_layers, int neurons_per_layer[], 
-                                one_arg_activation_function function_per_layer[],  float weight_vals[]) {
+MLP* build_mlp(int num_layers, int neurons_per_layer[], one_arg_activation_function function_per_layer[], float weight_vals[]) {
 
     MLP* new_mlp = (MLP*) malloc(sizeof(MLP));
     new_mlp->num_layers = num_layers;
@@ -172,10 +195,100 @@ void compute_mlp_output(MLP* mlp, float inputs[]) {
     mlp->outputs = outputs;
 }
 
+/* Function for visualizing an MLP */
+void print_mlp(MLP* mlp, FILE* output_file) {
+    int neuron_box_width = 32;
+    int neuron_box_content_width = 30;
+    int neuron_header_width = 9;
+    int neuron_pll_field_width = 26;
+    int neuron_pll_subfield_width = 30;
+    int neuron_bias_field_width = 21;
+    int neuron_activation_field_width = 23;
+    int neuron_output_field_width = 23;
+
+    int min_layer_length = 7;
+
+    int num_in_curr_layer = mlp->num_first_layer_neurons;
+
+    for (Neuron* curr_layer = mlp->first_layer; curr_layer; curr_layer = curr_layer->next_layer) {
+        int* num_conns_per_neuron = (int*) malloc(sizeof(int) * num_in_curr_layer);
+        for (int i = 0; i < num_in_curr_layer; ++i) num_conns_per_neuron[i] = curr_layer[i].num_in_prev_layer;
+        int length_of_this_layer = min_layer_length + float_arr_max(num_conns_per_neuron, num_in_curr_layer);
+
+        // Printing the top border for this layer
+        for (int c = 0; c < neuron_box_width * num_in_curr_layer; ++c) fprintf(output_file, "-");
+        fprintf(output_file, "\n|");
+
+        // Printing headers for each respective neuron in the layer
+        for (int i = 0; i < num_in_curr_layer; ++i) {
+            fprintf(output_file, "Neuron %d:", i);
+            for (int c = 0; c < neuron_box_content_width - neuron_header_width; ++c) fprintf(output_file, " ");
+            fprintf(output_file, "|");
+        }
+
+        fprintf(output_file, "\n|");
+
+        // Printing the previous layer field for each respective neuron
+        for (int i = 0; i < num_in_curr_layer; ++i) {
+            fprintf(output_file, "    -> Prev Layer Links: %d", curr_layer[i].num_in_prev_layer);
+            for (int c = 0; c < neuron_box_content_width - neuron_pll_field_width; ++c) fprintf(output_file, " ");
+            fprintf(output_file, "|");
+        }
+
+        // Printing each connection and their associated weight for each respective neuron
+        for (int l = length_of_this_layer - min_layer_length; l >= 0; --l) {
+            fprintf(output_file, "\n|");
+
+            for (int i = 0; i < num_in_curr_layer; ++i) {
+                int num_spaces = neuron_box_content_width;
+
+                int w_idx = abs(l - (length_of_this_layer - min_layer_length));
+                if (w_idx < curr_layer[i].num_in_prev_layer) {
+                    float rounded_weight = round_to_place(curr_layer[i].prev_layer_weights[w_idx], 3);
+                    fprintf(output_file, "        [%d: Weight = %f]", w_idx, rounded_weight);
+
+                    num_spaces -= neuron_pll_subfield_width;
+                }
+
+
+                for (int c = 0; c < num_spaces; ++c) fprintf(output_file, " ");
+                fprintf(output_file, "|");
+            }
+        }
+
+        fprintf(output_file, "\n|");
+
+        // Printing the bias field for each respective neuron
+        for (int i = 0; i < num_in_curr_layer; ++i) {
+            fprintf(output_file, "    -> Bias: %f", round_to_place(curr_layer[i].bias, 0));
+            for (int c = 0; c < neuron_box_content_width - neuron_bias_field_width; ++c) fprintf(output_file, " ");
+            fprintf(output_file, "|");
+        }
+
+        fprintf(output_file, "\n|");
+
+        // Printing the output field for each respective neuron
+        // TODO: (if have time) change this part so that adaptable to various output field widths
+        for (int i = 0; i < num_in_curr_layer; ++i) {
+            fprintf(output_file, "    -> Output: %f", round_to_place(curr_layer[i].output, 3));
+            for (int c = 0; c < neuron_box_content_width - neuron_output_field_width; ++c) fprintf(output_file, " ");
+            fprintf(output_file, "|");
+        }
+
+        fprintf(output_file, "\n");
+
+        // Printing the bottom border for this layer
+        for (int c = 0; c < neuron_box_width * num_in_curr_layer; ++c) fprintf(output_file, "-");
+        fprintf(output_file, "\n|");
+
+        fprintf(output_file, "\n\n\n");
+
+        num_in_curr_layer = curr_layer->num_in_next_layer;
+    }
+}
+
 /* Emulates backward pass functionality of an MLP */
 void adjust_weights_and_biases(MLP* mlp, cost_function loss_function, float actual_outputs[]) {
-    // TODO: modify function to adjust weights and biases according to average of all training examples
-
     float* stored_weights_adjustments = (float*) malloc(sizeof(float) * mlp->num_weights);
     int swa_i = 0;
 
@@ -196,7 +309,8 @@ void adjust_weights_and_biases(MLP* mlp, cost_function loss_function, float actu
             for (int j = 0; j < num_in_last_layer; ++j) {
                 float jth_output_to_wsum_deriv = current_layer[i].next_layer[j].activation_function(weighted_sum(current_layer[i].next_layer[j], -1, 0), 1);
                 float jth_wsum_to_ith_output_deriv = weighted_sum(current_layer[i].next_layer[j], i, OUTPUT);
-                cost_over_output_derivs[i] += jth_wsum_to_ith_output_deriv * jth_output_to_wsum_deriv * last_layer_derivs[j];
+                float cost_deriv_addend = jth_wsum_to_ith_output_deriv * jth_output_to_wsum_deriv * last_layer_derivs[j];
+                if (!isnan(cost_deriv_addend)) cost_over_output_derivs[i] += cost_deriv_addend;
             }
         }
 
@@ -205,10 +319,12 @@ void adjust_weights_and_biases(MLP* mlp, cost_function loss_function, float actu
                 float jth_output_to_wsum_deriv = current_layer[i].next_layer[j].activation_function(weighted_sum(current_layer[i].next_layer[j], -1, 0), 1);
 
                 float jth_wsum_to_weight_ij_deriv = weighted_sum(current_layer[i].next_layer[j], i, WEIGHT);
-                stored_weights_adjustments[swa_i++] = last_layer_derivs[j] * jth_output_to_wsum_deriv * jth_wsum_to_weight_ij_deriv;
+                float weight_deriv = last_layer_derivs[j] * jth_output_to_wsum_deriv * jth_wsum_to_weight_ij_deriv;
+                stored_weights_adjustments[swa_i++] = (isnan(weight_deriv)) ? 0 : weight_deriv; // weight derivative being equal to nan only occurs in case where 0 multiplied by infinity
 
                 float jth_wsum_to_bias_deriv = weighted_sum(current_layer[i].next_layer[j], i, BIAS);
-                stored_bias_adjustments[sba_i++] = last_layer_derivs[j] * jth_output_to_wsum_deriv * jth_wsum_to_bias_deriv;
+                float bias_deriv = last_layer_derivs[j] * jth_output_to_wsum_deriv * jth_wsum_to_bias_deriv;
+                stored_bias_adjustments[sba_i++] = (isnan(bias_deriv)) ? 0 : bias_deriv; // weight derivative being equal to nan only occurs in case where 0 multiplied by infinity
             }
         }
 
