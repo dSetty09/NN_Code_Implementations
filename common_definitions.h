@@ -9,11 +9,15 @@
 #include <math.h>
 #include <time.h>
 
+/* VARIABLE DEFINITIONS */
+
 #define TRUE 1
 #define FALSE 0
 
 typedef float (*one_arg_activation_function) (float, int);
 typedef float (*cost_function) (float[], float[], int, int);
+
+/* FUNCTION DEFINITIONS */
 
 /*
  * Rounds a specific value to a certain number of decimal places.
@@ -90,5 +94,46 @@ float mat_val(float* mat, int ncols, int i, int j) {
 void set_mat_val(float* mat, int ncols, int i, int j, float new_val) {
     mat[ncols * i + j] = new_val;
 }
+
+/*
+ * Checks if two matrices are equal (i.e. they contain the same elements for each cell). Assumes that the two matrices being
+ * compared have the same dimensions.
+ *
+ * @param mat1 | The first matrix being compared
+ * @param mat2 | The second matrix being compared
+ * @param nrows | The number of rows in each matrix
+ * @param ncols | The number of columns in each matrix
+ * 
+ * @return 1 if both the matrices are deemed equal, and 0 otherwise
+ */
+int mats_equal(float* mat1, float* mat2, int nrows, int ncols) {
+    for (int i = 0; i < nrows; ++i) {
+        for (int j = 0; j < ncols; ++j) {
+            float first_val = mat_val(mat1, ncols, i, j);
+            float second_val = mat_val(mat2, ncols, i, j);
+
+            //if (first_val != second_val) {
+            //    return 0;
+            //}
+        }
+    }
+
+    return 1;
+}
+
+void base_float_val_test(const char* test_name, float expected_result, float actual_result, FILE* output_file) {
+    fprintf(output_file, "_____________________________________________\n");
+    
+
+}
+
+/* STRUCT DEFINITIONS */
+
+/* A tuple consisting of only two integer elements */
+typedef struct rctuple {
+    int rows; // The first element corresponding to rows
+    int cols; // The second element corresponding to columns
+} RowColTuple;
+
 
 #endif

@@ -17,33 +17,6 @@
 #define WEIGHT 1
 #define BIAS 2
 
-/** HELPERS **/
-float generate_random_weight() {
-    srand(time(NULL));
-    return (rand()% 2 == 1) ? rand() % 5 : -(rand() % 5);
-}
-
-char* itos(int n) {
-    int div = 10;
-    while (n / div != 0) div *= 10;
-    div /= 10;
-
-    char* ret = NULL;
-
-    for (int iters = 1; n != 0; ++iters) {
-        int quot = n / div;
-        char ci = quot + 48;
-
-        realloc((void*) ret, iters);
-        ret[iters - 1] = ci;
-
-        n %= div;
-        div /= 10;
-    }
-
-    return ret;
-}
-
 
 /** Main struct and function definitions **/
 typedef struct NeuronNode {
@@ -131,7 +104,7 @@ MLP* build_mlp(int num_layers, int neurons_per_layer[], one_arg_activation_funct
 
                 for (int j = 0; j < neurons_in_last_layer; ++j) {
                     if (weight_vals) current_layer[i].prev_layer_weights[j] = weight_vals[weights_added++];
-                    else current_layer[i].prev_layer_weights[j] = generate_random_weight();
+                    else current_layer[i].prev_layer_weights[j] = random_num(-2, 2, 3);
 
                     prev_layer[j].next_layer = current_layer;
                     prev_layer[j].num_in_next_layer = neurons_per_layer[l];

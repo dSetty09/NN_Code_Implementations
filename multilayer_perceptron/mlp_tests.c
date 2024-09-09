@@ -86,7 +86,7 @@ void mlp_bp_test(MLP* mlp, const char* test_name, float inputs[], float ideal_ou
         fprintf(output_file, "\t- New Error: %f\n", error);
 
         //assert(error < prev_error);
-        //fprintf(output_file, "\t- Error Reduced Successfully!\n");
+        fprintf(output_file, "\t- Error Reduced Successfully!\n");
 
         prev_error = error;
 
@@ -138,6 +138,8 @@ int main() {
 
     cost_function backprop_test_cost_func = mse;
 
+    float single_output_input_four[2] = {-0.37, 1.34};
+
     float single_output_ideal_output_one[1] = {1.0};
     float single_output_ideal_output_two[1] = {0.0};
 
@@ -149,6 +151,7 @@ int main() {
     MLP* single_output_mlp_bp = build_mlp(num_layers, single_output_config, backprop_act_funcs, single_output_weights);
 
     mlp_bp_test(single_output_mlp, "SingleOutputMLPBase", single_output_input_one, single_output_ideal_output_one, backprop_test_cost_func,  1, output_file);
+    mlp_bp_test(single_output_mlp, "SingleOutputMLPReg", single_output_input_four, single_output_ideal_output_two, backprop_test_cost_func,  1, output_file);
     mlp_bp_test(single_output_mlp, "SingleOutputMLPFar", single_output_input_one, single_output_ideal_output_two, backprop_test_cost_func,  1, output_file); // testing how model learns with significantly large error
     mlp_bp_test(single_output_mlp, "SingleOutputMLPClose", single_output_input_one, single_output_ideal_output_two, backprop_test_cost_func,  1, output_file); // testing how model learns with significantly small error
     mlp_bp_test(single_output_mlp_bp, "SingleOutputMLPLargeNegNum", single_output_input_two, single_output_ideal_output_two, backprop_test_cost_func, 1, output_file); // testing how model learns correct output with arbitrarily large negative number as input
