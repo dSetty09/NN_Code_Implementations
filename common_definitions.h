@@ -5,7 +5,7 @@
 #ifndef COMMON_DEFINITIONS_H
 #define COMMON_DEFINITIONS_H
 
-#include <stdlib.h>
+#include <assert.h>
 #include <math.h>
 #include <time.h>
 
@@ -112,19 +112,38 @@ int mats_equal(float* mat1, float* mat2, int nrows, int ncols) {
             float first_val = mat_val(mat1, ncols, i, j);
             float second_val = mat_val(mat2, ncols, i, j);
 
-            //if (first_val != second_val) {
-            //    return 0;
-            //}
+            if (first_val != second_val) {
+                return 0;
+            }
         }
     }
 
     return 1;
 }
 
-void base_float_val_test(const char* test_name, float expected_result, float actual_result, FILE* output_file) {
-    fprintf(output_file, "_____________________________________________\n");
-    
+/* 
+ * Displays results of a certain test for a certain function in a readable format
+ *
+ * @param testing_function | Name of function being tested
+ * @param conducting_test | Name of test being conducted
+ * @param expected | The expected value of the test
+ * @param actual | The actual value of the test
+ * @param exp | The expression included in the assertion
+ * @param testing_value | A flag indicating whether we are testing a whole value or not. If not, we are testing array values.
+ * @param output_file | The file writing test results to
+ */
+void disp_test_results(const char* testing_function, const char* conducting_test, float expected, float actual, int exp, int testing_value, FILE* output_file) {
+    fprintf(output_file, "-----------------------------------------------------\n");
+    fprintf(output_file, "%s | %s\n", testing_function, conducting_test);
 
+    if (testing_value) {
+        fprintf(output_file, "Expected Result: %f\n", expected);
+        fprintf(output_file, "Actual Result: %f\n", actual);
+    }
+
+    assert(exp);
+    fprintf(output_file, "Test passed.\n");
+    fprintf(output_file, "-----------------------------------------------------\n");
 }
 
 /* STRUCT DEFINITIONS */

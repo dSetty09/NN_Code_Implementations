@@ -1,0 +1,270 @@
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 0x0 kern times 0x0 img
+Expected Result: 0.000000
+Actual Result: 0.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 0x0 kern times 1x1 img
+Expected Result: 0.000000
+Actual Result: 0.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 0x0 kern times 1xn img
+Expected Result: 0.000000
+Actual Result: 0.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 0x0 kern times nx1 img
+Expected Result: 0.000000
+Actual Result: 0.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 0x0 kern times oddxodd img
+Expected Result: 0.000000
+Actual Result: 0.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 0x0 kern times evenxeve  img
+Expected Result: 0.000000
+Actual Result: 0.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 0x0 kern times rxc (3x4) img
+Expected Result: 0.000000
+Actual Result: 0.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 0x0 kern times rxc (4x3) img
+Expected Result: 0.000000
+Actual Result: 0.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 1x1 kern times 1x1 img
+Expected Result: 3.000000
+Actual Result: 3.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 1x1 kern times 1xn img
+Expected Result: -2.000000
+Actual Result: -2.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 1x1 kern times nx1 img
+Expected Result: -2.000000
+Actual Result: -2.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 1x1 kern times oddxodd img
+Expected Result: -2.000000
+Actual Result: -2.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 1x1 kern times evenxeven img
+Expected Result: -2.000000
+Actual Result: -2.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 1x1 kern times rxc (3x4) img
+Expected Result: -2.000000
+Actual Result: -2.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 1x1 kern times rxc (4x3) img
+Expected Result: -2.000000
+Actual Result: -2.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 1xn kern times 1xn img
+Expected Result: 6.000000
+Actual Result: 6.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 1xn kern times oddxodd img
+Expected Result: 6.000000
+Actual Result: 6.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 1xn kern times evenxeven img
+Expected Result: 6.000000
+Actual Result: 6.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 1xn kern times rxc (3x4) img
+Expected Result: 6.000000
+Actual Result: 6.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | 1xn kern times rxc (4x3) img
+Expected Result: 6.000000
+Actual Result: 6.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | nx1 kern times nx1 img
+Expected Result: 6.000000
+Actual Result: 6.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | nx1 kern times oddxodd img
+Expected Result: 4.000000
+Actual Result: 4.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | nx1 kern times evenxeven img
+Expected Result: 4.000000
+Actual Result: 4.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | nx1 kern times rxc (3x4) img
+Expected Result: 4.000000
+Actual Result: 4.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | nx1 kern times rxc (4x3) img
+Expected Result: 5.000000
+Actual Result: 5.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | oddxodd kern times oddxodd img
+Expected Result: 36.000000
+Actual Result: 36.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | oddxodd kern times evenxeven img
+Expected Result: 36.000000
+Actual Result: 36.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | oddxodd kern times rxc (3x4) img
+Expected Result: 36.000000
+Actual Result: 36.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | oddxodd kern times rxc (4x3) img
+Expected Result: -13.000000
+Actual Result: -13.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | evenxeven kern times oddxodd img
+Expected Result: 14.000000
+Actual Result: 14.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | evenxeven kern times evenxeven img
+Expected Result: 14.000000
+Actual Result: 14.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | evenxeven kern times rxc (3x4) img
+Expected Result: 14.000000
+Actual Result: 14.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | evenxeven kern times rxc (4x3) img
+Expected Result: 5.000000
+Actual Result: 5.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | rxc (2x3) kern times oddxodd img
+Expected Result: 16.000000
+Actual Result: 16.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | rxc (2x3) kern times evenxeven img
+Expected Result: 16.000000
+Actual Result: 16.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | rxc (2x3) kern times rxc (3x4) img
+Expected Result: 16.000000
+Actual Result: 16.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | rxc (2x3) kern times rxc (4x3) img
+Expected Result: 3.000000
+Actual Result: 3.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | rxc (3x2) kern times oddxodd img
+Expected Result: 1.000000
+Actual Result: 1.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | rxc (3x2) kern times evenxeven img
+Expected Result: 1.000000
+Actual Result: 1.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | rxc (3x2) kern times rxc (3x4) img
+Expected Result: 1.000000
+Actual Result: 1.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SUP_PRODUCT_SUMMATION TEST | rxc (3x2) kern times rxc (4x3) img
+Expected Result: 4.000000
+Actual Result: 4.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+IMG_WITH_PADDING TESTS (2D) | NXN IMAGE NO PADDING
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+IMG_WITH_PADDING TESTS (2D) | RXC IMAGE NO PADDING
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+IMG_WITH_PADDING TESTS (2D) | NXN IMAGE SAME ROW COL PADDING
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+IMG_WITH_PADDING TESTS (2D) | RXC IMAGE SAME ROW COL PADDING
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+IMG_WITH_PADDING TESTS (2D) | NXN IMAGE ARBITRARY PADDING
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+IMG_WITH_PADDING TESTS (2D) | RXC IMAGE ARBITRARY PADDING
+Test passed.
+-----------------------------------------------------

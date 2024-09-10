@@ -3,70 +3,336 @@
 #include "convo_layer.h"
 
 int main() {
-    /* KERNEL OPS TESTS */
-    // float kern_mat[] = {-1, 0, 1, -1, 0, 1, -1, 0, 1};
+    FILE* output_file = fopen("convo_layer_tests.txt", "w");
+
+    /*** DEFINING IMAGE MATRICES OF VARYING DIMENSIONS FOR TESTS ***/
+    float img_zero_by_zero[] = {}; // A 0x0 matrix
+    float img_one_by_one[] = {3}; // A 1x1 matrix
+    float img_one_by_dimen[] = {-2, 1, -1, 2, 3}; // A 1xn or nx1 matrix, where n is dimension magnitude
+    float img_odd_by_odd[] = {-2, 1, -1, 2, 3, 0, -3, 1, 4, 3, 0, -4, 2, 1, -1, 3, 2, -1, 1, 0, 4, -4, 1, 2, 3}; // An oddxodd (5x5) matrix
+    float img_even_by_even[] = {-2, 1, -1, 2, 0, -3, 1, 4, 0, -4, 2, 1, 3, 2, -1, 1}; // An evenxeven (4x4) matrix
+    float img_r_by_c[] = {-2, 1, -1, 2, 0, -3, 1, 4, 0, -4, 2, 1}; // An rxc matrix, where r != c
+
     
+    /*** DEFINING KERNEL MATRICES OF VARYING DIMENSIONS FOR TESTS ***/
+    float kern_zero_by_zero[] = {}; // A 0x0 matrix
+    float kern_one_by_one[] = {1}; // A 1x1 matrix
+    float kern_one_by_dimen[] = {-2, 1, -1}; // A 1xn or nx1 matrix, where n is dimension magnitude
+    float kern_odd_by_odd[] = {-2, 1, -1, 0, -3, 1, 0, -4, 2}; // An oddxodd (3x3) matrix
+    float kern_even_by_even[] = {-2, 1, 0, -3}; // An evenxeven (2x2) matrix
+    float kern_r_by_c[] = {-2, 1, -1, 0, -3, 1}; // An rxc matrix, where r != c
 
-    // int kern_dimen = 3;
 
-    // Kernel kernel = {kern_mat, kern_dimen, sup_product_summation};
+    /*** SUP_PRODUCT_SUMMATION TESTS ***/
 
-    // float sup_mat1[] = {2, -2, 1, 0, -1, 0, 2, 1, 2};
+    float actual_result;
+    float expected_result;
 
-    // int sup_mat_nrows = 3;
-    // int sup_mat_ncols = 3;
 
-    // int sup_mat_centrow = 1;
-    // int sup_mat_centcol = 1;
+    /** 0x0 kernel tests **/
+    expected_result = 0;
 
-    // float convoresult2d = kernel.sup_prod_sum(kernel.matrix, sup_mat1, kern_dimen, sup_mat_ncols, sup_mat_centrow, sup_mat_centcol);
+    actual_result = sup_product_summation(kern_zero_by_zero, img_zero_by_zero, 0, 0, 0, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "0x0 kern times 0x0 img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
 
-    // printf("2D Kernel Convolution Expected Result:%f\n", -1.0);
-    // printf("2D Kernel Convolution Actual Result:%f\n", convoresult2d);
-    // assert(convoresult2d == -1);
-    // printf("2D Kernel Convolution Test Passed.\n\n");
+    actual_result = sup_product_summation(kern_zero_by_zero, img_one_by_one, 0, 0, 1, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "0x0 kern times 1x1 img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
 
-    /* 3D KERNEL OPS TESTS */
+    actual_result = sup_product_summation(kern_zero_by_zero, img_one_by_dimen, 0, 0, 5, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "0x0 kern times 1xn img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
 
-    // float sup_mat2[] = {3, -2, 5, 0, -7, 0, 8, 1, -3};
-    // float sup_mat3[] = {4, -1, 4, 0, -6, 0, 7, 0, -2};
+    actual_result = sup_product_summation(kern_zero_by_zero, img_one_by_dimen, 0, 0, 1, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "0x0 kern times nx1 img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
 
-    // Kernel kernels[] = {kernel, kernel, kernel};
-    // int num_channels = 3;
+    actual_result = sup_product_summation(kern_zero_by_zero, img_odd_by_odd, 0, 0, 5, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "0x0 kern times oddxodd img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
 
-    // Kernel3D kernel3d = {kernels, num_channels, sup_product_summation_3d};
+    actual_result = sup_product_summation(kern_zero_by_zero, img_even_by_even, 0, 0, 4, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "0x0 kern times evenxeve  img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
 
-    // float* sup_mat3d[] = {sup_mat1, sup_mat2, sup_mat3};
+    actual_result = sup_product_summation(kern_zero_by_zero, img_r_by_c, 0, 0, 4, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "0x0 kern times rxc (3x4) img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
 
-    // float convoresult3d = kernel3d.sup_prod_sum_3d(kernel3d.channel_kerns, sup_mat3d, sup_mat_ncols, sup_mat_centrow, sup_mat_centcol, num_channels);
+    actual_result = sup_product_summation(kern_zero_by_zero, img_r_by_c, 0, 0, 3, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "0x0 kern times rxc (4x3) img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
 
-    // printf("3D Kernel Convolution Expected Result:%f\n", -19.0);
-    // printf("3D Kernel Convolution Actual Result:%f\n", convoresult3d);
-    // assert(convoresult3d == -19);
-    // printf("3D Kernel Convolution Test Passed.\n");
 
-    /* CONVOLUTIONAL LAYER TESTS */
+    /** 1x1 kernel tests **/
 
-    float** img = (float**) malloc(sizeof(float));
-    float subimg[] = {-8, 5, 1, 7, 2, 0, 1, 3, 5, 6, 2, 2, 1, 5, 3, 0, 4, 3, 7, 2, 1, 1, -7, -6, 5};
-    *img = subimg;
+    expected_result = 3;
+    actual_result = sup_product_summation(kern_one_by_one, img_one_by_one, 1, 1, 1, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "1x1 kern times 1x1 img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
 
-    float kern_elems[] = {1, 1, 0, -1, 1, 1, 0, -1, 1, 1, 0, -1, 1, 1, 0, -1};
+    expected_result = -2;
+    actual_result = sup_product_summation(kern_one_by_one, img_one_by_dimen, 1, 1, 5, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "1x1 kern times 1xn img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
 
-    ConvoLayer convl; convl.build = convl_builder; convl.exec = convl_exec;
-    convl.build(&convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 4, 4, kern_elems);
+    expected_result = -2;
+    actual_result = sup_product_summation(kern_one_by_one, img_one_by_dimen, 1, 1, 1, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "1x1 kern times nx1 img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
 
-    // no padding, stride of 1
-    RowColTuple padding = {0, 0};
-    RowColTuple stride = {1, 1};
+    expected_result = -2;
+    actual_result = sup_product_summation(kern_one_by_one, img_odd_by_odd, 1, 1, 5, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "1x1 kern times oddxodd img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
 
-    float correct_result_img[] = {-18, 7, 0, -8};
+    expected_result = -2;
+    actual_result = sup_product_summation(kern_one_by_one, img_even_by_even, 1, 1, 4, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "1x1 kern times evenxeven img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
 
-    float** convl_result_imgs = convl.exec(convl.kernels, convl.kernels3d, convl.num_kernels, convl.num_channels, 4, 4, img, 5, 5, padding, stride);
-    float* convl_result_img = *convl_result_imgs;
+    expected_result = -2;
+    actual_result = sup_product_summation(kern_one_by_one, img_r_by_c, 1, 1, 4, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "1x1 kern times rxc (3x4) img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
 
-    assert(mats_equal(correct_result_img, convl_result_img, 2, 2));
-    printf("Convolution works properly on square image.\n");
+    expected_result = -2;
+    actual_result = sup_product_summation(kern_one_by_one, img_r_by_c, 1, 1, 3, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "1x1 kern times rxc (4x3) img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
 
-    free(img);
+
+    /** 1xn kernel tests **/
+
+    expected_result = 6;
+    actual_result = sup_product_summation(kern_one_by_dimen, img_one_by_dimen, 1, 3, 5, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "1xn kern times 1xn img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    expected_result = 6;
+    actual_result = sup_product_summation(kern_one_by_dimen, img_odd_by_odd, 1, 3, 5, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "1xn kern times oddxodd img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    expected_result = 6;
+    actual_result = sup_product_summation(kern_one_by_dimen, img_even_by_even, 1, 3, 4, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "1xn kern times evenxeven img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    expected_result = 6;
+    actual_result = sup_product_summation(kern_one_by_dimen, img_r_by_c, 1, 3, 4, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "1xn kern times rxc (3x4) img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    expected_result = 6;
+    actual_result = sup_product_summation(kern_one_by_dimen, img_r_by_c, 1, 3, 3, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "1xn kern times rxc (4x3) img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+
+    /** nx1 kernel tests **/
+
+    /* nx1 kern times nx1 img */
+    expected_result = 6;
+    actual_result = sup_product_summation(kern_one_by_dimen, img_one_by_dimen, 3, 1, 1, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "nx1 kern times nx1 img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    /* nx1 kern times oddxodd img */
+    expected_result = 4;
+    actual_result = sup_product_summation(kern_one_by_dimen, img_odd_by_odd, 3, 1, 5, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "nx1 kern times oddxodd img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    /* nx1 kern times evenxeven img */
+    expected_result = 4;
+    actual_result = sup_product_summation(kern_one_by_dimen, img_even_by_even, 3, 1, 4, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "nx1 kern times evenxeven img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    /* nx1 kern times rxc (3x4) img */
+    expected_result = 4;
+    actual_result = sup_product_summation(kern_one_by_dimen, img_r_by_c, 3, 1, 4, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "nx1 kern times rxc (3x4) img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    /* nx1 kern times rxc (4x3) img */
+    expected_result = 5;
+    actual_result = sup_product_summation(kern_one_by_dimen, img_r_by_c, 3, 1, 3, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "nx1 kern times rxc (4x3) img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+
+    /** oddxodd kernel tests **/
+
+    expected_result = 36;
+    actual_result = sup_product_summation(kern_odd_by_odd, img_odd_by_odd, 3, 3, 5, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "oddxodd kern times oddxodd img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    expected_result = 36;
+    actual_result = sup_product_summation(kern_odd_by_odd, img_even_by_even, 3, 3, 4, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "oddxodd kern times evenxeven img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    expected_result = 36;
+    actual_result = sup_product_summation(kern_odd_by_odd, img_r_by_c, 3, 3, 4, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "oddxodd kern times rxc (3x4) img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    expected_result = -13;
+    actual_result = sup_product_summation(kern_odd_by_odd, img_r_by_c, 3, 3, 3, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "oddxodd kern times rxc (4x3) img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+
+    /** evenxeven kernel tests **/
+
+    expected_result = 14;
+    actual_result = sup_product_summation(kern_even_by_even, img_odd_by_odd, 2, 2, 5, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "evenxeven kern times oddxodd img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    expected_result = 14;
+    actual_result = sup_product_summation(kern_even_by_even, img_even_by_even, 2, 2, 4, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "evenxeven kern times evenxeven img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    expected_result = 14;
+    actual_result = sup_product_summation(kern_even_by_even, img_r_by_c, 2, 2, 4, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "evenxeven kern times rxc (3x4) img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    expected_result = 5;
+    actual_result = sup_product_summation(kern_even_by_even, img_r_by_c, 2, 2, 3, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "evenxeven kern times rxc (4x3) img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    /** rxc (2x3) kernel tests **/
+
+    expected_result = 16;
+    actual_result = sup_product_summation(kern_r_by_c, img_odd_by_odd, 2, 3, 5, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "rxc (2x3) kern times oddxodd img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    expected_result = 16;
+    actual_result = sup_product_summation(kern_r_by_c, img_even_by_even, 2, 3, 4, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "rxc (2x3) kern times evenxeven img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    expected_result = 16;
+    actual_result = sup_product_summation(kern_r_by_c, img_r_by_c, 2, 3, 4, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "rxc (2x3) kern times rxc (3x4) img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    expected_result = 3;
+    actual_result = sup_product_summation(kern_r_by_c, img_r_by_c, 2, 3, 3, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "rxc (2x3) kern times rxc (4x3) img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    /** rxc (3x2) kernel tests **/
+
+    expected_result = 1;
+    actual_result = sup_product_summation(kern_r_by_c, img_odd_by_odd, 3, 2, 5, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "rxc (3x2) kern times oddxodd img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    expected_result = 1;
+    actual_result = sup_product_summation(kern_r_by_c, img_even_by_even, 3, 2, 4, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "rxc (3x2) kern times evenxeven img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    expected_result = 1;
+    actual_result = sup_product_summation(kern_r_by_c, img_r_by_c, 3, 2, 4, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "rxc (3x2) kern times rxc (3x4) img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+    expected_result = 4;
+    actual_result = sup_product_summation(kern_r_by_c, img_r_by_c, 3, 2, 3, 0, 0);
+    disp_test_results("SUP_PRODUCT_SUMMATION TEST", "rxc (3x2) kern times rxc (4x3) img", expected_result, actual_result,
+                      (expected_result == actual_result), 1, output_file);
+
+
+
+    /*** CONVOLUTION EXECUTION TESTS ***/
+
+    /** IMG_WITH_PADDING TESTS (2D) **/
+    float** img_2d = (float**) malloc(sizeof(float*));
+    RowColTuple padding;
+
+    /* NO PADDING */
+    padding.rows = 0;
+    padding.cols = 0;
+
+    *img_2d = img_even_by_even;
+    float expected_no_padding_nn[] = {-2, 1, -1, 2, 0, -3, 1, 4, 0, -4, 2, 1, 3, 2, -1, 1};
+    float* actual_no_padding_nn = *(img_with_padding(img_2d, 4, 4, 1, padding));
+    disp_test_results("IMG_WITH_PADDING TESTS (2D)", "NXN IMAGE NO PADDING", expected_result, actual_result, 
+                      (mats_equal(expected_no_padding_nn, actual_no_padding_nn, 4, 4)), 0, output_file);
+
+    *img_2d = img_r_by_c;
+    float expected_no_padding_rc[] = {-2, 1, -1, 2, 0, -3, 1, 4, 0, -4, 2, 1};
+    float* actual_no_padding_rc = *(img_with_padding(img_2d, 3, 4, 1, padding));
+    disp_test_results("IMG_WITH_PADDING TESTS (2D)", "RXC IMAGE NO PADDING", expected_result, actual_result, 
+                      (mats_equal(expected_no_padding_rc, actual_no_padding_rc, 3, 4)), 0, output_file);
+
+    /* SAME ROW AND COLUMN DIMENSION PADDING */
+    padding.rows = 1;
+    padding.cols = 1;
+
+    *img_2d = img_even_by_even;
+    float expected_samerc_padding_nn[] = {0, 0, 0, 0, 0, 0, 
+                                          0, -2, 1, -1, 2, 0,
+                                          0, 0, -3, 1, 4, 0, 
+                                          0, 0, -4, 2, 1, 0,
+                                          0, 3, 2, -1, 1, 0,
+                                          0, 0, 0, 0, 0, 0};
+    float* actual_samerc_padding_nn = *(img_with_padding(img_2d, 4, 4, 1, padding));
+    disp_test_results("IMG_WITH_PADDING TESTS (2D)", "NXN IMAGE SAME ROW COL PADDING", expected_result, actual_result, 
+                      (mats_equal(expected_samerc_padding_nn, actual_samerc_padding_nn, 6, 6)), 0, output_file);
+
+    *img_2d = img_r_by_c;
+    float expected_samerc_padding_rc[] = {0, 0, 0, 0, 0, 0,
+                                          0, -2, 1, -1, 2, 0,
+                                          0, 0, -3, 1, 4, 0,
+                                          0, 0, -4, 2, 1, 0,
+                                          0, 0, 0, 0, 0, 0};
+    float* actual_samerc_padding_rc = *(img_with_padding(img_2d, 3, 4, 1, padding));
+    disp_test_results("IMG_WITH_PADDING TESTS (2D)", "RXC IMAGE SAME ROW COL PADDING", expected_result, actual_result, 
+                      (mats_equal(expected_samerc_padding_rc, actual_samerc_padding_rc, 5, 6)), 0, output_file);
+
+    /* ARBITRARY ROW AND COLUMN DIMENSION PADDING */
+    padding.rows = 2;
+    padding.cols = 3;
+
+    *img_2d = img_even_by_even;
+    float expected_arbitrary_padding_nn[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                             0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                             0, 0, 0, -2, 1, -1, 2, 0, 0, 0,
+                                             0, 0, 0, 0, -3, 1, 4, 0, 0, 0,
+                                             0, 0, 0, 0, -4, 2, 1, 0, 0, 0,
+                                             0, 0, 0, 3, 2, -1, 1, 0, 0, 0,
+                                             0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                             0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    float* actual_arbitrary_padding_nn = *(img_with_padding(img_2d, 4, 4, 1, padding));
+    disp_test_results("IMG_WITH_PADDING TESTS (2D)", "NXN IMAGE ARBITRARY PADDING", expected_result, actual_result, 
+                      (mats_equal(expected_arbitrary_padding_nn, actual_arbitrary_padding_nn, 8, 10)), 0, output_file);
+
+    *img_2d = img_r_by_c;
+    float expected_arbitrary_padding_rc[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                             0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                             0, 0, 0, -2, 1, -1, 2, 0, 0, 0,
+                                             0, 0, 0, 0, -3, 1, 4, 0, 0, 0,
+                                             0, 0, 0, 0, -4, 2, 1, 0, 0, 0,
+                                             0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                             0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    float* actual_arbitrary_padding_rc = *(img_with_padding(img_2d, 3, 4, 1, padding));
+    disp_test_results("IMG_WITH_PADDING TESTS (2D)", "RXC IMAGE ARBITRARY PADDING", expected_result, actual_result, 
+                      (mats_equal(expected_arbitrary_padding_rc, actual_arbitrary_padding_rc, 7, 10)), 0, output_file);
+
+
+    /** CONVOLUTION TESTS **/
+
+    /**/
 }

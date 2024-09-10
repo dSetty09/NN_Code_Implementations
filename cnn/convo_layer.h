@@ -17,6 +17,8 @@ static const unsigned int PADDING = 1;
  * in the superimposed section of the image, that shares the same row and column index, with respect to the 
  * superimposed section, as the cell in the kernel matrix. Then, sums all the calculated products.
  * 
+ * -> NOTE: THIS FUNCTION'S BEHAVIOR IS UNDEFINED IF THE KERNEL IS LARGER THAN THE IMAGE IN ANY DIMENSION
+ * 
  * @param kernmat | The kernel matrix
  * @param kern_nrows | The number of rows in the kernel matrix
  * @param kern_ncols | The number of columns in the kernel matrix
@@ -221,8 +223,74 @@ void convl_builder(Kernel** kernels_ref, Kernel3D** kernels3d_ref, int* num_kern
 
 /* CONVOLUTION EXECUTION FUNCTIONS */
 
+/*
+ * Applies the row-wise padding and column-wise padding specified to the given image. Assumes zero padding is used.
+ *
+ * @param img | The image to which padding is being added
+ * @param img_nrows | The number of rows in the image being modified
+ * @param img_ncols | The number of columns in the image being modified
+ * @param num_channels | The number of channels in the input image
+ * @param padding | Contains the amount of padding applied row-wise and column-wise
+ * 
+ * @return The image with the specified padding applied
+ */
+float** img_with_padding(float** img, int img_nrows, int img_ncols, int num_channels, RowColTuple padding) {
+    float** pad_img = (float**) malloc(sizeof(float*) * (img_nrows + 2 * padding.rows));
+
+    for (int ch = 0; ch < num_channels; ++ch) {
+        float* pad_img_ch = (float*) malloc(sizeof(float) * (img_nrows + 2 * padding.rows));
+
+        for (int r = 0; r < img_nrows + 2 * padding.rows; ++r) {
+            for (int c = 0; c < img_ncols + 2 * padding.cols; ++c) {
+                if (r < padding.rows || r >= img_nrows + padding.rows) {
+                    set_mat_val(pad_img_ch, img_ncols + 2 * padding.cols, r, c, 0);
+                } else if (c < padding.cols || c >= img_ncols + padding.cols) {
+                    set_mat_val(pad_img_ch, img_ncols + 2 * padding.cols, r, c, 0);
+                } else {
+                    set_mat_val(pad_img_ch, img_ncols + 2 * padding.cols, r, c, mat_val(img[ch], img_ncols, r - padding.rows, c - padding.cols));
+                }
+            }
+        }
+
+        pad_img[ch] = pad_img_ch;
+    }
+
+    return pad_img;
+}
+
 int calc_output_dimen_size(int img_dimen_size, int kern_dimen_size, int padding_for_dimen, int stride_for_dimen) {
     return floorf(((img_dimen_size + 2 * padding_for_dimen - kern_dimen_size) / stride_for_dimen) + 1);
+}
+
+float* convolution(void* kernels_nd, int k, int kern_nrows, int kern_ncols, int num_channels,
+                   float** aug_img, int aug_img_ncols, int output_nrows, int output_ncols, RowColTuple stride) {
+
+    
+    Kernel* kernels = NULL;
+    Kernel3D* kernels_3d = NULL;
+
+    if (num_channels == 1) {
+        kernels = (Kernel*) kernels_nd;
+    } else {
+        kernels_3d = (Kernel3D*) kernels_nd;
+    }
+    
+    float* output_img = (float*) malloc(sizeof(float) * output_nrows * output_ncols);
+
+    for (int sup_r = 0, out_r = 0; out_r < output_nrows; sup_r += stride.rows, ++out_r) {
+        for (int sup_c = 0, out_c = 0; out_c < output_ncols; sup_c += stride.cols, ++out_c) {
+            if (kernels) {
+                set_mat_val(output_img, output_ncols, out_r, out_c, 
+                            kernels[k].sup_prod_sum(kernels[k].matrix, *aug_img, 
+                                                    kernels[k].nrows, kernels[k].ncols, aug_img_ncols, sup_r, sup_c));
+            } else {
+                set_mat_val(output_img, output_ncols, out_r, out_c, 
+                            kernels_3d[k].sup_prod_sum_3d(kernels_3d[k].channel_kerns, aug_img, aug_img_ncols, sup_r, sup_c, num_channels));
+            }
+        }
+    }
+
+    return output_img;
 }
 
 /*
@@ -246,25 +314,9 @@ int calc_output_dimen_size(int img_dimen_size, int kern_dimen_size, int padding_
 float** convl_exec(Kernel* kernels, Kernel3D* kernels3d, int num_kernels, int num_channels, int kern_nrows, int kern_ncols, 
                   float** img, int img_nrows, int img_ncols, RowColTuple padding, RowColTuple stride) {
 
-    float** aug_img = (float**) malloc(sizeof(float*) * (img_nrows + 2 * padding.rows));
-
-    for (int ch = 0; ch < num_channels; ++ch) {
-        float* aug_img_ch = (float*) malloc(sizeof(float) * (img_nrows + 2 * padding.rows));
-
-        for (int r = 0; r < img_nrows + 2 * padding.rows; ++r) {
-            for (int c = 0; c < img_ncols + 2 * padding.cols; ++c) {
-                if (r < padding.rows || r >= img_nrows + padding.rows) {
-                    set_mat_val(aug_img_ch, img_ncols + 2 * padding.cols, r, c, 0);
-                } else if (c < padding.rows || c >= img_ncols + padding.cols) {
-                    set_mat_val(aug_img_ch, img_ncols + 2 * padding.cols, r, c, 0);
-                } else {
-                    set_mat_val(aug_img_ch, img_ncols + 2 * padding.cols, r, c, mat_val(img[ch], img_ncols, r - padding.rows, c - padding.cols));
-                }
-            }
-        }
-
-        aug_img[ch] = aug_img_ch;
-    }
+    float** aug_img = img_with_padding(img, img_nrows, img_ncols, num_channels, padding);
+    int aug_img_nrows = img_nrows + 2 * padding.rows;
+    int aug_img_ncols = img_ncols + 2 * padding.cols;
 
     int output_nrows = calc_output_dimen_size(img_nrows, kern_nrows, padding.rows, stride.cols);
     int output_ncols = calc_output_dimen_size(img_ncols, kern_ncols, padding.cols, stride.cols);
@@ -272,6 +324,9 @@ float** convl_exec(Kernel* kernels, Kernel3D* kernels3d, int num_kernels, int nu
     float** output_imgs = (float**) malloc(sizeof(float*) * num_kernels);
 
     for (int k = 0; k < num_kernels; ++k) {
+        // if (kernels)
+        //  float* output_img = convolution(kernels, k, kern_nrows, kern_ncols, num_channels,
+        //                                  aug_img, aug_img_ncols, output_nrows, output_ncols, stride);
         float* output_img = (float*) malloc(sizeof(float) * output_nrows * output_ncols);
 
         for (int sup_r = 0, out_r = 0; sup_r + kern_nrows <= img_nrows; sup_r += stride.rows, ++out_r) {
