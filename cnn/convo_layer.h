@@ -10,6 +10,25 @@ static const unsigned int NO_PADDING = 0;
 static const unsigned int PADDING = 1;
 
 
+/** FOR MAX POOLING **/
+
+float max_pool(float* kern_mat, float* img, int kern_nrows, int kern_ncols, int img_ncols, int sup_start_row, int sup_start_col) {
+    float max = mat_val(img, img_ncols, sup_start_row, sup_start_col);
+
+    for (int kern_i = 0, sup_i = sup_start_row; kern_i < kern_nrows; ++kern_i, ++sup_i) {
+        for (int kern_j = 0, sup_j = sup_start_col; kern_j < kern_ncols; ++kern_j, ++sup_j) {
+            float curr_sup_val = mat_val(img, img_ncols, sup_start_row, sup_start_col);
+            
+            if (curr_sup_val > max) {
+                max = curr_sup_val;
+            }
+        }
+    }
+
+    return max;
+}
+
+
 /** KERNEL DEFINITIONS **/
 
 /*
@@ -34,8 +53,6 @@ float sup_product_summation(float* kern_mat, float* img, int kern_nrows, int ker
 
     for (int kern_i = 0, sup_i = sup_start_row; kern_i < kern_nrows; ++kern_i, ++sup_i) {
         for (int kern_j = 0, sup_j = sup_start_col; kern_j < kern_ncols; ++kern_j, ++sup_j) {
-            float ni = mat_val(kern_mat, kern_ncols, kern_i, kern_j);
-            float nj = mat_val(img, img_ncols, sup_i, sup_j);
             result += mat_val(kern_mat, kern_ncols, kern_i, kern_j) * mat_val(img, img_ncols, sup_i, sup_j);
         }
     }
@@ -118,6 +135,7 @@ void alloc_for_ref_kern_lists(Kernel** kernels_ref, Kernel3D** kernels3d_ref, in
 /*
  * Initializes the given kernel matrix with the specified kernel elements, if they are given. If the specified kernel elements aren't
  * given, then initializes the given kernel matrix with elements randomly generated between -2 and 2.
+ * -> NOTE: ASSUMES OPTIONAL KERN_ELEMS MATRIX HAS THE EXACT SAME DIMENSIONS AS THE KERNEL MATRIX BEING INITIALIZED
  * 
  * @param kmatrix | The matrix associated with the given kernel
  * @param kern_nrows | The number of rows for each kernel in the convolutional layer being initialized
@@ -179,6 +197,12 @@ void add_new_kernel_to_kern_lists(Kernel** kernels_ref, Kernel3D** kernels3d_ref
  * elements to be stored in each kernel's matrix, if there is only one channel, or matrices, if there is more than one channel, will be 
  * randomly generated between -2 and 2.
  * 
+ * IMPORTANT ASSUMPTIONS (BEHAVIOR OF CONVOLUTIONAL LAYER UNDEFINED IF THESE CONDITIONS ARE NOT MET):
+ * -> ASSUMES THERE IS AT LEAST ONE KERNEL
+ * -> ASSUMES NUMBER OF ROWS AND COLUMS FOR KERNELS ARE GREATER THAN ZERO
+ * -> ASSUMES NUMBER OF CHANNELS IS GREATER THAN ZERO
+ * 
+ * 
  * The fields to be initialized are:
  *  -> A list of kernels, which will contain a specified number of kernels – square matrices of specified row and column dimensions
  *      • If the specified number of channels is greater than one, then this field will be left NULL
@@ -189,16 +213,15 @@ void add_new_kernel_to_kern_lists(Kernel** kernels_ref, Kernel3D** kernels3d_ref
  *  -> An integer representing the number of kernels
  *  -> An integer representing the  number of channels
  * 
- * 
- * @param kernels_ref | A reference to the convolutional layer attribute that stores a list of kernels
- * @param kernels3d_ref | A reference to the convolutional layer attribute that stores a list of 3D kernels
- * @param num_kernels_ref | A reference to the convolutional layer attribute that stores an integer representing the number of kernels
- * @param num_channels_ref | A reference to the convolutional layer attribute that stores an integer representing the number of channels
- * @param num_kerns | The specified number of kernels to be included in the convolutional layer being initialized
- * @param num_channels | The specified number of channels to be included in the convolutional layer being initialized
- * @param kern_nrows | The number of rows for each kernel in the convolutional layer being initialized
- * @param kern_ncols | The number of columns for each kernel in the convolutional layer being initialized
- * @param kern_elems | The specified elements, if any, to be stored in each matrix in each kernel. If aren't any, this param equals NULL
+ * @param kernels_ref  A reference to the convolutional layer attribute that stores a list of kernels
+ * @param kernels3d_ref  A reference to the convolutional layer attribute that stores a list of 3D kernels
+ * @param num_kernels_ref  A reference to the convolutional layer attribute that stores an integer representing the number of kernels
+ * @param num_channels_ref  A reference to the convolutional layer attribute that stores an integer representing the number of channels
+ * @param num_kerns  The specified number of kernels to be included in the convolutional layer being initialized
+ * @param num_channels  The specified number of channels to be included in the convolutional layer being initialized
+ * @param kern_nrows The number of rows for each kernel in the convolutional layer being initialized
+ * @param kern_ncols The number of columns for each kernel in the convolutional layer being initialized
+ * @param kern_elems The specified elements, if any, to be stored in each matrix in each kernel. If aren't any, this param equals NULL
  */
 void convl_builder(Kernel** kernels_ref, Kernel3D** kernels3d_ref, int* num_kernels_ref, int* num_channels_ref, 
                    int num_kerns, int num_channels, int kern_nrows, int kern_ncols, float* kern_elems) {
@@ -258,10 +281,31 @@ float** img_with_padding(float** img, int img_nrows, int img_ncols, int num_chan
     return pad_img;
 }
 
+/*
+ * Calculates the size of a certain dimension of an output based on that size of same dimension for the image, the size of
+ * the same dimension for the kernel, the padding specified for that dimension, and the stride specified for that dimension.
+ * 
+ * IMPORTANT ASSUMPTIONS: 
+ * -> Assumes that the size of the kernel in any dimension is less than the size of the image in any dimension
+ * -> Assumes that stride is greater than zero
+ * 
+ * @param img_dimen_size | Size of dimension for given image
+ * @param kern_dimen_size | Size of dimension for given kernel
+ * @param padding_for_dimen | The specified padding for given dimension
+ * @param stride_for_dimen | The specified stride for given dimension
+ * 
+ * @return An integer specifying size of certain dimension for output image
+ */
 int calc_output_dimen_size(int img_dimen_size, int kern_dimen_size, int padding_for_dimen, int stride_for_dimen) {
     return floorf(((img_dimen_size + 2 * padding_for_dimen - kern_dimen_size) / stride_for_dimen) + 1);
 }
 
+/*
+ * Performs a convolution for the kth kernel in the list of kernels over a given image, which would be augmented with 
+ * any specified padding.
+ * 
+ * 
+ */
 float* convolution(void* kernels_nd, int k, int kern_nrows, int kern_ncols, int num_channels,
                    float** aug_img, int aug_img_ncols, int output_nrows, int output_ncols, RowColTuple stride) {
 
@@ -324,22 +368,13 @@ float** convl_exec(Kernel* kernels, Kernel3D* kernels3d, int num_kernels, int nu
     float** output_imgs = (float**) malloc(sizeof(float*) * num_kernels);
 
     for (int k = 0; k < num_kernels; ++k) {
-        // if (kernels)
-        //  float* output_img = convolution(kernels, k, kern_nrows, kern_ncols, num_channels,
-        //                                  aug_img, aug_img_ncols, output_nrows, output_ncols, stride);
-        float* output_img = (float*) malloc(sizeof(float) * output_nrows * output_ncols);
-
-        for (int sup_r = 0, out_r = 0; sup_r + kern_nrows <= img_nrows; sup_r += stride.rows, ++out_r) {
-            for (int sup_c = 0, out_c = 0; sup_c + kern_ncols <= img_ncols; sup_c += stride.cols, ++out_c) {
-                if (kernels) {
-                    set_mat_val(output_img, output_ncols, out_r, out_c, 
-                                kernels[k].sup_prod_sum(kernels[k].matrix, aug_img[0], 
-                                                        kernels[k].nrows, kernels[k].ncols, img_ncols, sup_r, sup_c));
-                } else {
-                    set_mat_val(output_img, output_ncols, out_r, out_c, 
-                                kernels3d[k].sup_prod_sum_3d(kernels3d[k].channel_kerns, aug_img, img_ncols, sup_r, sup_c, num_channels));
-                }
-            }
+        float* output_img = NULL;
+        if (kernels) {
+            output_img = convolution((void*) kernels, k, kern_nrows, kern_ncols, num_channels,
+                                     aug_img, aug_img_ncols, output_nrows, output_ncols, stride);
+        } else {
+            output_img = convolution((void*) kernels3d, k, kern_nrows, kern_ncols, num_channels,
+                                     aug_img, aug_img_ncols, output_nrows, output_ncols, stride);
         }
 
         output_imgs[k] = output_img;

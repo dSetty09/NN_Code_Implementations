@@ -254,6 +254,11 @@ int main() {
                       (expected_result == actual_result), 1, output_file);
 
 
+    /*** CONVOLUTIONAL LAYER BUILDER TESTS ***/
+
+    /**  **/
+
+
 
     /*** CONVOLUTION EXECUTION TESTS ***/
 
@@ -332,7 +337,133 @@ int main() {
                       (mats_equal(expected_arbitrary_padding_rc, actual_arbitrary_padding_rc, 7, 10)), 0, output_file);
 
 
+    /** CALC_OUTPUT_DIMEN_SIZE TESTS **/
+
+    /* KERNEL DIMEN SIZE AND IMG DIMEN SIZE ARE 1 */
+    expected_result = 1;
+    actual_result = calc_output_dimen_size(1, 1, 0, 1);
+    disp_test_results("CALC_OUTPUT_DIMEN_SIZE TESTS", "KERNEL DIMEN SIZE AND IMG DIMEN SIZE ARE 1", expected_result, actual_result,
+                       (expected_result == actual_result), 1, output_file);
+
+    /* KERNEL DIMEN SIZE AND IMG DIMEN SIZE ARE THE SAME */
+    expected_result = 1;
+    actual_result = calc_output_dimen_size(3, 3, 0, 1);
+    disp_test_results("CALC_OUTPUT_DIMEN_SIZE TESTS", "KERNEL DIMEN SIZE AND IMG DIMEN SIZE ARE 1", expected_result, actual_result,
+                       (expected_result == actual_result), 1, output_file);
+
+    /* KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (NO PADDING, STRIDE OF 1) */
+    expected_result = 5;
+    actual_result = calc_output_dimen_size(5, 1, 0, 1);
+    disp_test_results("CALC_OUTPUT_DIMEN_SIZE TESTS", 
+                      "KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (NO PADDING, STRIDE OF 1)", 
+                      expected_result, actual_result, (expected_result == actual_result), 1, output_file);
+
+    /* KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (NO PADDING, REASONABLE STRIDE GREATER THAN 1) */
+    expected_result = 3;
+    actual_result = calc_output_dimen_size(5, 1, 0, 2);
+    disp_test_results("CALC_OUTPUT_DIMEN_SIZE TESTS", 
+                      "KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (NO PADDING, REASONABLE STRIDE GREATER THAN 1)", 
+                      expected_result, actual_result, (expected_result == actual_result), 1, output_file);
+
+    /* KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (NO PADDING, TOO LARGE STRIDE) */
+    expected_result = 1;
+    actual_result = calc_output_dimen_size(5, 1, 0, 6);
+    disp_test_results("CALC_OUTPUT_DIMEN_SIZE TESTS", 
+                      "KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (NO PADDING, TOO LARGE STRIDE)", 
+                      expected_result, actual_result, (expected_result == actual_result), 1, output_file);
+
+    /* KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (PADDING, STRIDE OF 1) */
+    expected_result = 9;
+    actual_result = calc_output_dimen_size(5, 1, 2, 1);
+    disp_test_results("CALC_OUTPUT_DIMEN_SIZE TESTS", 
+                      "KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (PADDING, STRIDE OF 1)", 
+                      expected_result, actual_result, (expected_result == actual_result), 1, output_file);
+
+    /* KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (PADDING, REASONABLE STRIDE GREATER THAN 1) */
+    expected_result = 5;
+    actual_result = calc_output_dimen_size(5, 1, 2, 2);
+    disp_test_results("CALC_OUTPUT_DIMEN_SIZE TESTS", 
+                      "KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (PADDING, REASONABLE STRIDE GREATER THAN 1)", 
+                      expected_result, actual_result, (expected_result == actual_result), 1, output_file);
+
+    /* KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (PADDING, TOO LARGE STRIDE) */
+    expected_result = 1;
+    actual_result = calc_output_dimen_size(5, 1, 2, 15);
+    disp_test_results("CALC_OUTPUT_DIMEN_SIZE TESTS", 
+                      "KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (PADDING, TOO LARGE STRIDE)", 
+                      expected_result, actual_result, (expected_result == actual_result), 1, output_file);
+
+    /* KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (NO PADDING, STRIDE OF 1) */
+    expected_result = 4;
+    actual_result = calc_output_dimen_size(5, 2, 0, 1);
+    disp_test_results("CALC_OUTPUT_DIMEN_SIZE TESTS", 
+                      "KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (NO PADDING, STRIDE OF 1)", 
+                      expected_result, actual_result, (expected_result == actual_result), 1, output_file);
+
+    /* KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (NO PADDING, REASONABLE STRIDE GREATER THAN 1) */
+    expected_result = 2;
+    actual_result = calc_output_dimen_size(5, 2, 0, 2);
+    disp_test_results("CALC_OUTPUT_DIMEN_SIZE TESTS", 
+                      "KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (NO PADDING, REASONABLE STRIDE GREATER THAN 1)", 
+                      expected_result, actual_result, (expected_result == actual_result), 1, output_file);
+
+    /* KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (NO PADDING, TOO LARGE STRIDE) */
+    expected_result = 1;
+    actual_result = calc_output_dimen_size(5, 2, 0, 15);
+    disp_test_results("CALC_OUTPUT_DIMEN_SIZE TESTS", 
+                      "KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (NO PADDING, TOO LARGE STRIDE)", 
+                      expected_result, actual_result, (expected_result == actual_result), 1, output_file);
+
+    /* KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (PADDING, STRIDE OF 1) */
+    expected_result = 8;
+    actual_result = calc_output_dimen_size(5, 2, 2, 1);
+    disp_test_results("CALC_OUTPUT_DIMEN_SIZE TESTS", 
+                      "KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (PADDING, STRIDE OF 1)", 
+                      expected_result, actual_result, (expected_result == actual_result), 1, output_file);
+
+    /* KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (PADDING, REASONABLE STRIDE GREATER THAN 1) */
+    expected_result = 4;
+    actual_result = calc_output_dimen_size(5, 2, 2, 2);
+    disp_test_results("CALC_OUTPUT_DIMEN_SIZE TESTS", 
+                      "KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (PADDING, REASONABLE STRIDE GREATER THAN 1)", 
+                      expected_result, actual_result, (expected_result == actual_result), 1, output_file);
+
+    /* KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (PADDING, TOO LARGER STRIDE) */
+    expected_result = 1;
+    actual_result = calc_output_dimen_size(5, 2, 2, 15);
+    disp_test_results("CALC_OUTPUT_DIMEN_SIZE TESTS", 
+                      "KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (PADDING, TOO LARGER STRIDE)", 
+                      expected_result, actual_result, (expected_result == actual_result), 1, output_file);
+
+
     /** CONVOLUTION TESTS **/
 
-    /**/
+    float** img = (float**) malloc(sizeof(float*));
+
+    /* USING ODD BY ODD KERNEL */
+    *img = img_even_by_even;
+
+    ConvoLayer convl; convl.build = convl_builder; convl.exec = convl_exec;
+    convl.build(&convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 3, 3, kern_odd_by_odd);
+    
+    float expected_output_obo[] = {36, -10, 0, 4};
+    RowColTuple stride = {1, 1};
+    float* actual_output_obo = convolution((void*) convl.kernels, 0, 3, 3, 1, img, 4, 2, 2, stride);
+    disp_test_results("CONVOLUTION TESTS", 
+                      "USING ODD BY ODD KERNEL", 
+                      expected_result, actual_result, 
+                      (mats_equal(expected_output_obo, actual_output_obo, 2, 2)), 0, output_file);
+
+    /* USING EVEN BY EVEN KERNEL */
+    *img = img_even_by_even;
+
+    ConvoLayer convla; convla.build = convl_builder; convla.exec = convl_exec;
+    convla.build(&convla.kernels, &convla.kernels3d, &convla.num_kernels, &convla.num_channels, 1, 1, 2, 2, kern_even_by_even);
+    
+    float expected_output_ebe[] = {14, -6, -8, 9, 1, -1, -10, 13, -6};
+    float* actual_output_ebe = convolution((void*) convla.kernels, 0, 2, 2, 1, img, 4, 3, 3, stride);
+    disp_test_results("CONVOLUTION TESTS", 
+                      "USING EVEN BY EVEN KERNEL", 
+                      expected_result, actual_result, 
+                      (mats_equal(expected_output_ebe, actual_output_ebe, 3, 3)), 0, output_file);
 }

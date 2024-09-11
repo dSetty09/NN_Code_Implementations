@@ -268,3 +268,95 @@ Test passed.
 IMG_WITH_PADDING TESTS (2D) | RXC IMAGE ARBITRARY PADDING
 Test passed.
 -----------------------------------------------------
+-----------------------------------------------------
+CALC_OUTPUT_DIMEN_SIZE TESTS | KERNEL DIMEN SIZE AND IMG DIMEN SIZE ARE 1
+Expected Result: 1.000000
+Actual Result: 1.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CALC_OUTPUT_DIMEN_SIZE TESTS | KERNEL DIMEN SIZE AND IMG DIMEN SIZE ARE 1
+Expected Result: 1.000000
+Actual Result: 1.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CALC_OUTPUT_DIMEN_SIZE TESTS | KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (NO PADDING, STRIDE OF 1)
+Expected Result: 5.000000
+Actual Result: 5.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CALC_OUTPUT_DIMEN_SIZE TESTS | KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (NO PADDING, REASONABLE STRIDE GREATER THAN 1)
+Expected Result: 3.000000
+Actual Result: 3.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CALC_OUTPUT_DIMEN_SIZE TESTS | KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (NO PADDING, TOO LARGE STRIDE)
+Expected Result: 1.000000
+Actual Result: 1.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CALC_OUTPUT_DIMEN_SIZE TESTS | KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (PADDING, STRIDE OF 1)
+Expected Result: 9.000000
+Actual Result: 9.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CALC_OUTPUT_DIMEN_SIZE TESTS | KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (PADDING, REASONABLE STRIDE GREATER THAN 1)
+Expected Result: 5.000000
+Actual Result: 5.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CALC_OUTPUT_DIMEN_SIZE TESTS | KERNEL DIMEN SIZE IS 1 WHILE IMG DIMEN SIZE IS GREATER THAN 1 (PADDING, TOO LARGE STRIDE)
+Expected Result: 1.000000
+Actual Result: 1.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CALC_OUTPUT_DIMEN_SIZE TESTS | KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (NO PADDING, STRIDE OF 1)
+Expected Result: 4.000000
+Actual Result: 4.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CALC_OUTPUT_DIMEN_SIZE TESTS | KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (NO PADDING, REASONABLE STRIDE GREATER THAN 1)
+Expected Result: 2.000000
+Actual Result: 2.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CALC_OUTPUT_DIMEN_SIZE TESTS | KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (NO PADDING, TOO LARGE STRIDE)
+Expected Result: 1.000000
+Actual Result: 1.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CALC_OUTPUT_DIMEN_SIZE TESTS | KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (PADDING, STRIDE OF 1)
+Expected Result: 8.000000
+Actual Result: 8.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CALC_OUTPUT_DIMEN_SIZE TESTS | KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (PADDING, REASONABLE STRIDE GREATER THAN 1)
+Expected Result: 4.000000
+Actual Result: 4.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CALC_OUTPUT_DIMEN_SIZE TESTS | KERNEL DIMEN SIZE IS GREATER THAN 1 WHILE DIMEN SIZE IS GREATER THAN 1 (PADDING, TOO LARGER STRIDE)
+Expected Result: 1.000000
+Actual Result: 1.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CONVOLUTION TESTS | USING ODD BY ODD KERNEL
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CONVOLUTION TESTS | USING EVEN BY EVEN KERNEL
+Test passed.
+-----------------------------------------------------
