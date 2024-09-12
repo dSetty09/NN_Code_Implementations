@@ -353,10 +353,30 @@ Actual Result: 1.000000
 Test passed.
 -----------------------------------------------------
 -----------------------------------------------------
-CONVOLUTION TESTS | USING ODD BY ODD KERNEL
+CONVOLUTION TESTS | USING ODD BY ODD KERNEL ON EVEN BY EVEN IMAGE
 Test passed.
 -----------------------------------------------------
 -----------------------------------------------------
-CONVOLUTION TESTS | USING EVEN BY EVEN KERNEL
+CONVOLUTION TESTS | USING EVEN BY EVEN KERNEL ON EVEN BY EVEN IMAGE
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CONVOLUTION TESTS | USING EVEN BY ODD KERNEL ON EVEN BY EVEN IMAGE
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CONVOLUTION TESTS | USING ODD BY EVEN KERNEL ON EVEN BY EVEN IMAGE
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CONVOLUTION TESTS | NO PADDING AND STRIDE 1
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CONVOLUTION TESTS | NO PADDING AND REASONABLE ROW STRIDE AND UNREASONABLE COLUMN STRIDE
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CONVOLUTION TESTS | ARBITRARY PADDING AND ARBITRARY STRIDES
 Test passed.
 -----------------------------------------------------

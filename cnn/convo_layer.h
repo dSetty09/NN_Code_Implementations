@@ -362,7 +362,7 @@ float** convl_exec(Kernel* kernels, Kernel3D* kernels3d, int num_kernels, int nu
     int aug_img_nrows = img_nrows + 2 * padding.rows;
     int aug_img_ncols = img_ncols + 2 * padding.cols;
 
-    int output_nrows = calc_output_dimen_size(img_nrows, kern_nrows, padding.rows, stride.cols);
+    int output_nrows = calc_output_dimen_size(img_nrows, kern_nrows, padding.rows, stride.rows);
     int output_ncols = calc_output_dimen_size(img_ncols, kern_ncols, padding.cols, stride.cols);
 
     float** output_imgs = (float**) malloc(sizeof(float*) * num_kernels);
