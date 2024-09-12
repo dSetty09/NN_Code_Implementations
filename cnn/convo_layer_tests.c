@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
-#include "convo_layer.h"
+#include "layer.h"
 
 int main() {
     FILE* output_file = fopen("convo_layer_tests.txt", "w");
@@ -12,6 +12,20 @@ int main() {
     float img_odd_by_odd[] = {-2, 1, -1, 2, 3, 0, -3, 1, 4, 3, 0, -4, 2, 1, -1, 3, 2, -1, 1, 0, 4, -4, 1, 2, 3}; // An oddxodd (5x5) matrix
     float img_even_by_even[] = {-2, 1, -1, 2, 0, -3, 1, 4, 0, -4, 2, 1, 3, 2, -1, 1}; // An evenxeven (4x4) matrix
     float img_r_by_c[] = {-2, 1, -1, 2, 0, -3, 1, 4, 0, -4, 2, 1}; // An rxc matrix, where r != c
+
+    /*
+    0 0  0  0 0 0
+    0 0  0  0 0 0
+    0 -2 1 -1 2 0
+    0 0 -3  1 4 0
+    0 0 -4  2 1 0
+    0 0  0  0 0 0
+    0 0  0  0 0 0
+
+    -2  1
+    0  -3
+
+    */
 
     
     /*** DEFINING KERNEL MATRICES OF VARYING DIMENSIONS FOR TESTS ***/
@@ -443,42 +457,42 @@ int main() {
     /* USING ODD BY ODD KERNEL ON EVEN BY EVEN IMAGE */
     *img = img_even_by_even;
 
-    ConvoLayer convl; convl.build = convl_builder; convl.exec = convl_exec;
-    convl.build(&convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 3, 3, kern_odd_by_odd);
+    Layer convl; convl.build = builder; convl.exec = exec;
+    convl.build(CONVOLUTIONAL, &convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 3, 3, kern_odd_by_odd);
     
     float expected_output_obo[] = {36, -10, 0, 4};
     RowColTuple stride = {1, 1};
-    float* actual_output_obo = convolution((void*) convl.kernels, 0, 3, 3, 1, img, 4, 2, 2, stride);
+    float* actual_output_obo = operate_over_img((void*) convl.kernels, 0, 3, 3, 1, img, 4, 2, 2, stride);
     disp_test_results("CONVOLUTION TESTS", 
                       "USING ODD BY ODD KERNEL ON EVEN BY EVEN IMAGE", 
                       expected_result, actual_result, 
                       (mats_equal(expected_output_obo, actual_output_obo, 2, 2)), 0, output_file);
 
     /* USING EVEN BY EVEN KERNEL ON EVEN BY EVEN IMAGE */
-    convl.build(&convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 2, 2, kern_even_by_even);
+    convl.build(CONVOLUTIONAL, &convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 2, 2, kern_even_by_even);
     
     float expected_output_ebe[] = {14, -6, -8, 9, 1, -1, -10, 13, -6};
-    float* actual_output_ebe = convolution((void*) convl.kernels, 0, 2, 2, 1, img, 4, 3, 3, stride);
+    float* actual_output_ebe = operate_over_img((void*) convl.kernels, 0, 2, 2, 1, img, 4, 3, 3, stride);
     disp_test_results("CONVOLUTION TESTS", 
                       "USING EVEN BY EVEN KERNEL ON EVEN BY EVEN IMAGE", 
                       expected_result, actual_result, 
                       (mats_equal(expected_output_ebe, actual_output_ebe, 3, 3)), 0, output_file);
 
     /* USING EVEN BY ODD KERNEL ON EVEN BY EVEN IMAGE */
-    convl.build(&convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 2, 3, kern_r_by_c);
+    convl.build(CONVOLUTIONAL, &convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 2, 3, kern_r_by_c);
     
     float expected_output_ebo[] = {16, -4, 10, -2, -13, 13};
-    float* actual_output_ebo = convolution((void*) convl.kernels, 0, 2, 3, 1, img, 4, 3, 2, stride);
+    float* actual_output_ebo = operate_over_img((void*) convl.kernels, 0, 2, 3, 1, img, 4, 3, 2, stride);
     disp_test_results("CONVOLUTION TESTS", 
                       "USING EVEN BY ODD KERNEL ON EVEN BY EVEN IMAGE", 
                       expected_result, actual_result, 
                       (mats_equal(expected_output_ebo, actual_output_ebo, 3, 2)), 0, output_file);
 
     /* USING ODD BY EVEN KERNEL ON EVEN BY EVEN IMAGE */
-    convl.build(&convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 3, 2, kern_r_by_c);
+    convl.build(CONVOLUTIONAL, &convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 3, 2, kern_r_by_c);
     
     float expected_output_obe[] = {1, 14, -2, -10, 4, 4};
-    float* actual_output_obe = convolution((void*) convl.kernels, 0, 3, 2, 1, img, 4, 2, 3, stride);
+    float* actual_output_obe = operate_over_img((void*) convl.kernels, 0, 3, 2, 1, img, 4, 2, 3, stride);
     disp_test_results("CONVOLUTION TESTS", 
                       "USING ODD BY EVEN KERNEL ON EVEN BY EVEN IMAGE", 
                       expected_result, actual_result, 
@@ -486,10 +500,10 @@ int main() {
 
     /* NO PADDING AND STRIDE 1 */
     *img = img_r_by_c;
-    convl.build(&convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 2, 3, kern_r_by_c);
+    convl.build(CONVOLUTIONAL, &convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 2, 3, kern_r_by_c);
 
     float expected_output_nps1[] = {16, -4, 10, -2};
-    float* actual_output_nps1 = convolution((void*) convl.kernels, 0, 2, 3, 1, img, 4, 2, 2, stride);
+    float* actual_output_nps1 = operate_over_img((void*) convl.kernels, 0, 2, 3, 1, img, 4, 2, 2, stride);
     disp_test_results("CONVOLUTION TESTS", 
                       "NO PADDING AND STRIDE 1", 
                       expected_result, actual_result, 
@@ -500,14 +514,14 @@ int main() {
     stride.cols = 2;
 
     float expected_output_nprcsurs[] = {3, -3};
-    float* actual_output_nprcsurs = convolution((void*) convl.kernels, 0, 2, 3, 1, img, 3, 2, 1, stride);
+    float* actual_output_nprcsurs = operate_over_img((void*) convl.kernels, 0, 2, 3, 1, img, 3, 2, 1, stride);
     disp_test_results("CONVOLUTION TESTS", 
                       "NO PADDING AND REASONABLE ROW STRIDE AND UNREASONABLE COLUMN STRIDE", 
                       expected_result, actual_result, 
                       (mats_equal(expected_output_nprcsurs, actual_output_nprcsurs, 2, 1)), 0, output_file);
 
     /* ARBITRARY PADDING AND ARBITRARY STRIDES */
-    convl.build(&convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 2, 2, kern_even_by_even);
+    convl.build(CONVOLUTIONAL, &convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 2, 2, kern_even_by_even);
 
     padding.rows = 2;
     padding.cols = 1;
@@ -516,7 +530,7 @@ int main() {
     stride.cols = 3;
 
     float expected_output_apas[] = {0, 0, -2, -8, 0, -3};
-    float* actual_output_apas = *(convl_exec(convl.kernels, convl.kernels3d, convl.num_kernels, convl.num_channels, 2, 2, img, 3, 4, 
+    float* actual_output_apas = *(exec(convl.kernels, convl.kernels3d, convl.num_kernels, convl.num_channels, 2, 2, img, 3, 4, 
                                              padding, stride));
 
     disp_test_results("CONVOLUTION TESTS", 
