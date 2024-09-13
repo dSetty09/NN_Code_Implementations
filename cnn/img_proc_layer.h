@@ -394,7 +394,7 @@ float** exec(Kernel* kernels, Kernel3D* kernels3d, int num_kernels, int num_chan
     return output_imgs;
 }
 
-typedef struct layer {
+typedef struct img_proc_layer {
     Kernel* kernels;
     Kernel3D* kernels3d;
 
@@ -403,6 +403,6 @@ typedef struct layer {
 
     void (*build) (char, Kernel**, Kernel3D**, int*, int*, int, int, int, int, float*);
     float** (*exec) (Kernel*, Kernel3D*, int, int, int, int, float**, int, int, RowColTuple, RowColTuple);
-} Layer;
+} ImgProcLayer;
 
 #endif

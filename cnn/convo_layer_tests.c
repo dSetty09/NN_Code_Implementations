@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
-#include "layer.h"
+#include "img_proc_layer.h"
 
 int main() {
     FILE* output_file = fopen("convo_layer_tests.txt", "w");
@@ -471,7 +471,7 @@ int main() {
     /* USING ODD BY ODD KERNEL ON EVEN BY EVEN IMAGE */
     *img = img_even_by_even;
 
-    Layer convl; convl.build = builder; convl.exec = exec;
+    ImgProcLayer convl; convl.build = builder; convl.exec = exec;
     convl.build(CONVOLUTIONAL, &convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 3, 3, kern_odd_by_odd);
     
     float expected_output_obo[] = {36, -10, 0, 4};
