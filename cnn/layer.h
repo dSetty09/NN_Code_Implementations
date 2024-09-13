@@ -14,6 +14,25 @@ static const unsigned int PADDING = 1;
 static const unsigned char CONVOLUTIONAL = 'c';
 static const unsigned char MAX_POOLING = 'm';
 
+static const unsigned int NOT_ALR_CREATED = 0;
+static const unsigned int ALR_CREATED = 1;
+
+/** HELPER DEFINITIONS **/
+
+/*
+ * Frees the memory resources of the given image.
+ *
+ * @param img | The image whose memory resources are being freed
+ * @param num_channels | The number of channels in the image
+ */
+void free_img_rsrcs(float** img, int num_channels) {
+    for (int ch = 0; ch < num_channels; ++ch) {
+        free(img[ch]);
+    }
+
+    free(img);
+}
+
 
 /** KERNEL DEFINITIONS **/
 
@@ -210,6 +229,18 @@ void builder(char layer_type, Kernel** kernels_ref, Kernel3D** kernels3d_ref, in
     }
 }
 
+/*
+ * Frees the memory in the referenced kernels list, if it has been allocated, or the referenced 3D kernels list, if that has been
+ * allocated.
+ * 
+ * @param kernels_ref | A reference to the list of kernels stored in the layer structure
+ * @param kernels3d_ref | A referene to the4 list of 3D kernels stored in the layer structure
+ */
+void destroyer(Kernel** kernels_ref, Kernel3D** kernels3d_ref) {
+    if (*kernels_ref) free(*kernels_ref);
+    if (*kernels3d_ref) free(*kernels3d_ref);
+}
+
 /* EXECUTION FUNCTIONS */
 
 /*
@@ -224,13 +255,16 @@ void builder(char layer_type, Kernel** kernels_ref, Kernel3D** kernels3d_ref, in
  * @return The image with the specified padding applied
  */
 float** img_with_padding(float** img, int img_nrows, int img_ncols, int num_channels, RowColTuple padding) {
-    float** pad_img = (float**) malloc(sizeof(float*) * (img_nrows + 2 * padding.rows));
+    float** pad_img = (float**) malloc(sizeof(float*) * num_channels);
+
+    int pad_img_nrows = img_nrows + (2 * padding.rows);
+    int pad_img_ncols = img_ncols + (2* padding.cols);
 
     for (int ch = 0; ch < num_channels; ++ch) {
-        float* pad_img_ch = (float*) malloc(sizeof(float) * (img_nrows + 2 * padding.rows));
+        float* pad_img_ch = (float*) malloc(sizeof(float) * pad_img_nrows * pad_img_ncols);
 
-        for (int r = 0; r < img_nrows + 2 * padding.rows; ++r) {
-            for (int c = 0; c < img_ncols + 2 * padding.cols; ++c) {
+        for (int r = 0; r < pad_img_nrows; ++r) {
+            for (int c = 0; c < pad_img_ncols; ++c) {
                 if (r < padding.rows || r >= img_nrows + padding.rows) {
                     set_mat_val(pad_img_ch, img_ncols + 2 * padding.cols, r, c, 0);
                 } else if (c < padding.cols || c >= img_ncols + padding.cols) {
@@ -286,7 +320,6 @@ int calc_output_dimen_size(int img_dimen_size, int kern_dimen_size, int padding_
 float* operate_over_img(void* kernels_nd, int k, int kern_nrows, int kern_ncols, int num_channels,
                         float** aug_img, int aug_img_ncols, int output_nrows, int output_ncols, RowColTuple stride) {
 
-    
     Kernel* kernels = NULL;
     Kernel3D* kernels_3d = NULL;
 
@@ -302,8 +335,7 @@ float* operate_over_img(void* kernels_nd, int k, int kern_nrows, int kern_ncols,
         for (int sup_c = 0, out_c = 0; out_c < output_ncols; sup_c += stride.cols, ++out_c) {
             if (kernels) {
                 set_mat_val(output_img, output_ncols, out_r, out_c, 
-                            kernels[k].sup_operation(kernels[k].matrix, *aug_img, 
-                                                    kernels[k].nrows, kernels[k].ncols, aug_img_ncols, sup_r, sup_c));
+                            kernels[k].sup_operation(kernels[k].matrix, *aug_img, kernels[k].nrows, kernels[k].ncols, aug_img_ncols, sup_r, sup_c));
             } else {
                 set_mat_val(output_img, output_ncols, out_r, out_c, 
                             kernels_3d[k].sup_operations_sum(kernels_3d[k].channel_kerns, aug_img, aug_img_ncols, sup_r, sup_c, num_channels));
@@ -356,6 +388,8 @@ float** exec(Kernel* kernels, Kernel3D* kernels3d, int num_kernels, int num_chan
 
         output_imgs[k] = output_img;
     }
+
+    free_img_rsrcs(aug_img, num_channels);
 
     return output_imgs;
 }

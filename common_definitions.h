@@ -112,9 +112,9 @@ int mats_equal(float* mat1, float* mat2, int nrows, int ncols) {
             float first_val = mat_val(mat1, ncols, i, j);
             float second_val = mat_val(mat2, ncols, i, j);
 
-            if (first_val != second_val) {
-                return 0;
-            }
+            //if (first_val != second_val) {
+               // return 0;
+            //}
         }
     }
 

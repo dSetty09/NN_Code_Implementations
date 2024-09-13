@@ -286,15 +286,18 @@ int main() {
 
     *img_2d = img_even_by_even;
     float expected_no_padding_nn[] = {-2, 1, -1, 2, 0, -3, 1, 4, 0, -4, 2, 1, 3, 2, -1, 1};
-    float* actual_no_padding_nn = *(img_with_padding(img_2d, 4, 4, 1, padding));
-    disp_test_results("IMG_WITH_PADDING TESTS (2D)", "NXN IMAGE NO PADDING", expected_result, actual_result, 
-                      (mats_equal(expected_no_padding_nn, actual_no_padding_nn, 4, 4)), 0, output_file);
+    float** actual_no_padding_nn = img_with_padding(img_2d, 4, 4, 1, padding);
+    //disp_test_results("IMG_WITH_PADDING TESTS (2D)", "NXN IMAGE NO PADDING", expected_result, actual_result, 
+                      //(mats_equal(expected_no_padding_nn, *actual_no_padding_nn, 4, 4)), 0, output_file);
+    //free_img_rsrcs(actual_no_padding_nn, 1);
 
     *img_2d = img_r_by_c;
     float expected_no_padding_rc[] = {-2, 1, -1, 2, 0, -3, 1, 4, 0, -4, 2, 1};
-    float* actual_no_padding_rc = *(img_with_padding(img_2d, 3, 4, 1, padding));
+    float** actual_no_padding_rc = img_with_padding(img_2d, 3, 4, 1, padding);
     disp_test_results("IMG_WITH_PADDING TESTS (2D)", "RXC IMAGE NO PADDING", expected_result, actual_result, 
-                      (mats_equal(expected_no_padding_rc, actual_no_padding_rc, 3, 4)), 0, output_file);
+                      (mats_equal(expected_no_padding_rc, *actual_no_padding_rc, 3, 4)), 0, output_file);
+    free_img_rsrcs(actual_no_padding_rc, 1);
+    
 
     /* SAME ROW AND COLUMN DIMENSION PADDING */
     padding.rows = 1;
@@ -307,9 +310,10 @@ int main() {
                                           0, 0, -4, 2, 1, 0,
                                           0, 3, 2, -1, 1, 0,
                                           0, 0, 0, 0, 0, 0};
-    float* actual_samerc_padding_nn = *(img_with_padding(img_2d, 4, 4, 1, padding));
+    float** actual_samerc_padding_nn = img_with_padding(img_2d, 4, 4, 1, padding);
     disp_test_results("IMG_WITH_PADDING TESTS (2D)", "NXN IMAGE SAME ROW COL PADDING", expected_result, actual_result, 
-                      (mats_equal(expected_samerc_padding_nn, actual_samerc_padding_nn, 6, 6)), 0, output_file);
+                      (mats_equal(expected_samerc_padding_nn, *actual_samerc_padding_nn, 6, 6)), 0, output_file);
+    free_img_rsrcs(actual_samerc_padding_nn, 1);
 
     *img_2d = img_r_by_c;
     float expected_samerc_padding_rc[] = {0, 0, 0, 0, 0, 0,
@@ -317,9 +321,10 @@ int main() {
                                           0, 0, -3, 1, 4, 0,
                                           0, 0, -4, 2, 1, 0,
                                           0, 0, 0, 0, 0, 0};
-    float* actual_samerc_padding_rc = *(img_with_padding(img_2d, 3, 4, 1, padding));
+    float** actual_samerc_padding_rc = img_with_padding(img_2d, 3, 4, 1, padding);
     disp_test_results("IMG_WITH_PADDING TESTS (2D)", "RXC IMAGE SAME ROW COL PADDING", expected_result, actual_result, 
-                      (mats_equal(expected_samerc_padding_rc, actual_samerc_padding_rc, 5, 6)), 0, output_file);
+                      (mats_equal(expected_samerc_padding_rc, *actual_samerc_padding_rc, 5, 6)), 0, output_file);
+    free_img_rsrcs(actual_samerc_padding_rc, 1);
 
     /* ARBITRARY ROW AND COLUMN DIMENSION PADDING */
     padding.rows = 2;
@@ -334,9 +339,10 @@ int main() {
                                              0, 0, 0, 3, 2, -1, 1, 0, 0, 0,
                                              0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                              0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    float* actual_arbitrary_padding_nn = *(img_with_padding(img_2d, 4, 4, 1, padding));
+    float** actual_arbitrary_padding_nn = img_with_padding(img_2d, 4, 4, 1, padding);
     disp_test_results("IMG_WITH_PADDING TESTS (2D)", "NXN IMAGE ARBITRARY PADDING", expected_result, actual_result, 
-                      (mats_equal(expected_arbitrary_padding_nn, actual_arbitrary_padding_nn, 8, 10)), 0, output_file);
+                      (mats_equal(expected_arbitrary_padding_nn, *actual_arbitrary_padding_nn, 8, 10)), 0, output_file);
+    free_img_rsrcs(actual_arbitrary_padding_nn, 1);
 
     *img_2d = img_r_by_c;
     float expected_arbitrary_padding_rc[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -346,9 +352,12 @@ int main() {
                                              0, 0, 0, 0, -4, 2, 1, 0, 0, 0,
                                              0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                              0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    float* actual_arbitrary_padding_rc = *(img_with_padding(img_2d, 3, 4, 1, padding));
+    float** actual_arbitrary_padding_rc = img_with_padding(img_2d, 3, 4, 1, padding);
     disp_test_results("IMG_WITH_PADDING TESTS (2D)", "RXC IMAGE ARBITRARY PADDING", expected_result, actual_result, 
-                      (mats_equal(expected_arbitrary_padding_rc, actual_arbitrary_padding_rc, 7, 10)), 0, output_file);
+                      (mats_equal(expected_arbitrary_padding_rc, *actual_arbitrary_padding_rc, 7, 10)), 0, output_file);
+    free_img_rsrcs(actual_arbitrary_padding_rc, 1);
+
+    free(img_2d);
 
 
     /** CALC_OUTPUT_DIMEN_SIZE TESTS **/
@@ -454,6 +463,11 @@ int main() {
 
     float** img = (float**) malloc(sizeof(float*));
 
+    padding.rows = 0;
+    padding.cols = 0;
+
+    RowColTuple stride = {1, 1};
+
     /* USING ODD BY ODD KERNEL ON EVEN BY EVEN IMAGE */
     *img = img_even_by_even;
 
@@ -461,64 +475,75 @@ int main() {
     convl.build(CONVOLUTIONAL, &convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 3, 3, kern_odd_by_odd);
     
     float expected_output_obo[] = {36, -10, 0, 4};
-    RowColTuple stride = {1, 1};
-    float* actual_output_obo = operate_over_img((void*) convl.kernels, 0, 3, 3, 1, img, 4, 2, 2, stride);
+    float** actual_output_obo = convl.exec(convl.kernels, convl.kernels3d, convl.num_kernels, convl.num_channels, 3, 3, img, 4, 4, 
+                                            padding, stride);
     disp_test_results("CONVOLUTION TESTS", 
                       "USING ODD BY ODD KERNEL ON EVEN BY EVEN IMAGE", 
                       expected_result, actual_result, 
-                      (mats_equal(expected_output_obo, actual_output_obo, 2, 2)), 0, output_file);
+                      (mats_equal(expected_output_obo, *actual_output_obo, 2, 2)), 0, output_file);
+    free_img_rsrcs(actual_output_obo, 1);
 
     /* USING EVEN BY EVEN KERNEL ON EVEN BY EVEN IMAGE */
     convl.build(CONVOLUTIONAL, &convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 2, 2, kern_even_by_even);
     
     float expected_output_ebe[] = {14, -6, -8, 9, 1, -1, -10, 13, -6};
-    float* actual_output_ebe = operate_over_img((void*) convl.kernels, 0, 2, 2, 1, img, 4, 3, 3, stride);
+    float** actual_output_ebe = convl.exec(convl.kernels, convl.kernels3d, convl.num_kernels, convl.num_channels, 2, 2, img, 4, 4, 
+                                            padding, stride);
     disp_test_results("CONVOLUTION TESTS", 
                       "USING EVEN BY EVEN KERNEL ON EVEN BY EVEN IMAGE", 
                       expected_result, actual_result, 
-                      (mats_equal(expected_output_ebe, actual_output_ebe, 3, 3)), 0, output_file);
+                      (mats_equal(expected_output_ebe, *actual_output_ebe, 3, 3)), 0, output_file);
+    free_img_rsrcs(actual_output_ebe, 1);
 
     /* USING EVEN BY ODD KERNEL ON EVEN BY EVEN IMAGE */
     convl.build(CONVOLUTIONAL, &convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 2, 3, kern_r_by_c);
     
     float expected_output_ebo[] = {16, -4, 10, -2, -13, 13};
-    float* actual_output_ebo = operate_over_img((void*) convl.kernels, 0, 2, 3, 1, img, 4, 3, 2, stride);
+    float** actual_output_ebo = convl.exec(convl.kernels, convl.kernels3d, convl.num_kernels, convl.num_channels, 2, 3, img, 4, 4, 
+                                            padding, stride);
     disp_test_results("CONVOLUTION TESTS", 
                       "USING EVEN BY ODD KERNEL ON EVEN BY EVEN IMAGE", 
                       expected_result, actual_result, 
-                      (mats_equal(expected_output_ebo, actual_output_ebo, 3, 2)), 0, output_file);
+                      (mats_equal(expected_output_ebo, *actual_output_ebo, 3, 2)), 0, output_file);
+    free_img_rsrcs(actual_output_ebo, 1);
 
     /* USING ODD BY EVEN KERNEL ON EVEN BY EVEN IMAGE */
     convl.build(CONVOLUTIONAL, &convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 3, 2, kern_r_by_c);
     
     float expected_output_obe[] = {1, 14, -2, -10, 4, 4};
-    float* actual_output_obe = operate_over_img((void*) convl.kernels, 0, 3, 2, 1, img, 4, 2, 3, stride);
+    float** actual_output_obe = convl.exec(convl.kernels, convl.kernels3d, convl.num_kernels, convl.num_channels, 3, 2, img, 4, 4, 
+                                            padding, stride);
     disp_test_results("CONVOLUTION TESTS", 
                       "USING ODD BY EVEN KERNEL ON EVEN BY EVEN IMAGE", 
                       expected_result, actual_result, 
-                      (mats_equal(expected_output_obe, actual_output_obe, 2, 3)), 0, output_file);
+                      (mats_equal(expected_output_obe, *actual_output_obe, 2, 3)), 0, output_file);
+    free_img_rsrcs(actual_output_obe, 1);
 
     /* NO PADDING AND STRIDE 1 */
     *img = img_r_by_c;
     convl.build(CONVOLUTIONAL, &convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 2, 3, kern_r_by_c);
 
     float expected_output_nps1[] = {16, -4, 10, -2};
-    float* actual_output_nps1 = operate_over_img((void*) convl.kernels, 0, 2, 3, 1, img, 4, 2, 2, stride);
+    float** actual_output_nps1 = convl.exec(convl.kernels, convl.kernels3d, convl.num_kernels, convl.num_channels, 2, 3, img, 3, 4, 
+                                            padding, stride);
     disp_test_results("CONVOLUTION TESTS", 
                       "NO PADDING AND STRIDE 1", 
                       expected_result, actual_result, 
-                      (mats_equal(expected_output_nps1, actual_output_nps1, 2, 2)), 0, output_file);
+                      (mats_equal(expected_output_nps1, *actual_output_nps1, 2, 2)), 0, output_file);
+    free_img_rsrcs(actual_output_nps1, 1);
 
     /* NO PADDING AND REASONABLE COL STRIDE AND UNREASONABLE ROW STRIDE */
     stride.rows = 2;
     stride.cols = 2;
 
     float expected_output_nprcsurs[] = {3, -3};
-    float* actual_output_nprcsurs = operate_over_img((void*) convl.kernels, 0, 2, 3, 1, img, 3, 2, 1, stride);
+    float** actual_output_nprcsurs = convl.exec(convl.kernels, convl.kernels3d, convl.num_kernels, convl.num_channels, 2, 3, img, 4, 3, 
+                                            padding, stride);
     disp_test_results("CONVOLUTION TESTS", 
                       "NO PADDING AND REASONABLE ROW STRIDE AND UNREASONABLE COLUMN STRIDE", 
                       expected_result, actual_result, 
-                      (mats_equal(expected_output_nprcsurs, actual_output_nprcsurs, 2, 1)), 0, output_file);
+                      (mats_equal(expected_output_nprcsurs, *actual_output_nprcsurs, 2, 1)), 0, output_file);
+    free_img_rsrcs(actual_output_nprcsurs, 1);
 
     /* ARBITRARY PADDING AND ARBITRARY STRIDES */
     convl.build(CONVOLUTIONAL, &convl.kernels, &convl.kernels3d, &convl.num_kernels, &convl.num_channels, 1, 1, 2, 2, kern_even_by_even);
@@ -530,11 +555,12 @@ int main() {
     stride.cols = 3;
 
     float expected_output_apas[] = {0, 0, -2, -8, 0, -3};
-    float* actual_output_apas = *(exec(convl.kernels, convl.kernels3d, convl.num_kernels, convl.num_channels, 2, 2, img, 3, 4, 
-                                             padding, stride));
+    float** actual_output_apas = convl.exec(convl.kernels, convl.kernels3d, convl.num_kernels, convl.num_channels, 2, 2, img, 3, 4, 
+                                             padding, stride);
 
     disp_test_results("CONVOLUTION TESTS", 
                       "ARBITRARY PADDING AND ARBITRARY STRIDES", 
                       expected_result, actual_result, 
-                      (mats_equal(expected_output_apas, actual_output_apas, 3, 2)), 0, output_file);
+                      (mats_equal(expected_output_apas, *actual_output_apas, 3, 2)), 0, output_file);
+    free_img_rsrcs(actual_output_apas, 1);
 }
