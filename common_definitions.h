@@ -14,6 +14,10 @@
 #define TRUE 1
 #define FALSE 0
 
+static const unsigned char OUTPUT = 'O';
+static const unsigned char WEIGHT = 'W';
+static const unsigned char BIAS = 'B';
+
 typedef float (*one_arg_activation_function) (float, int);
 typedef float (*cost_function) (float[], float[], int, int);
 

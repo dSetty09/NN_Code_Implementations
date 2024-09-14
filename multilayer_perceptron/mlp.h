@@ -13,11 +13,6 @@
 #include "../common_definitions.h"
 
 
-#define OUTPUT 0
-#define WEIGHT 1
-#define BIAS 2
-
-
 /** Main struct and function definitions **/
 typedef struct NeuronNode {
     struct NeuronNode* prev_layer;
