@@ -13,10 +13,11 @@
  * @param img_ncols | The number of columns in the given image
  * @param sup_start_row | The starting row index for the superimposed part of the image
  * @param sup_start_col | The starting column index for the superimposed part of the image
+ * @param kern_bias | The bias of the kernel matrix (this is not used)
  * 
  * @return The maximum value across all values in each cell of the part of the image superimposed by the kernel
  */
-float sup_max(float* kern_mat, float* img, int kern_nrows, int kern_ncols, int img_ncols, int sup_start_row, int sup_start_col) {
+float sup_max(float* kern_mat, float* img, int kern_nrows, int kern_ncols, int img_ncols, int sup_start_row, int sup_start_col, float kern_bias) {
     float max = mat_val(img, img_ncols, sup_start_row, sup_start_col);
 
     for (int kern_i = 0, sup_i = sup_start_row; kern_i < kern_nrows; ++kern_i, ++sup_i) {

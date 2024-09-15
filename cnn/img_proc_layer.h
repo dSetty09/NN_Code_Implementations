@@ -43,9 +43,10 @@ void free_img_rsrcs(float** img, int num_channels) {
  */
 typedef struct kernel_node {
     float* matrix; // The kernel matrix
+    float bias; // The bias for this kernel
     int nrows; // The number of rows in this kernel
     int ncols; // Then umber of columns in this kernel
-    float (*sup_operation) (float*, float*, int, int, int, int, int); // The superimposed operation function for this Kernel
+    float (*sup_operation) (float*, float*, int, int, int, int, int, float); // The superimposed operation function for this Kernel
 } Kernel;
 
 
@@ -68,7 +69,7 @@ float sup_operations_sum(Kernel* channel_kerns, float** img3d, int img3d_ncols, 
 
     for (int ch = 0; ch < nchannels; ++ch) {
         result += channel_kerns[ch].sup_operation(channel_kerns[ch].matrix, img3d[ch], channel_kerns[ch].nrows, channel_kerns[ch].ncols, 
-                                                 img3d_ncols, sup_start_row, sup_start_col);
+                                                 img3d_ncols, sup_start_row, sup_start_col, channel_kerns[ch].bias);
     }
 
     return result;
@@ -134,16 +135,18 @@ void init_kern_mat(float* kmatrix, int kern_nrows, int kern_ncols, float* kern_e
 /*
  * Initializes the kernel associated with a specific channel to adopt the elements of a given matrix with given dimensions.
  *
+ * @param layer_type | The type of layer, either a convolutional layer or max pooling layer, this kernel is operating under
  * @param channel_kernels | A list of kernels, each associated with a specific channel
  * @param kmatrix | The matrix containing the elements the initializing kernel will adopt
  * @param kern_nrows | The number of rows for the kernel being initialized
  * @param kern_ncols | The number of columns for the kernel being initialized
- * @param layer_type | The type of layer, either a convolutional layer or max pooling layer, this kernel is operating under
+ * @param bias | The specified bias for this kernel
  */
-void init_channel_kernel(Kernel* channel_kernels, int channel, float* kmatrix, int kern_nrows, int kern_ncols, char layer_type) {
+void init_channel_kernel(char layer_type, Kernel* channel_kernels, int channel, float* kmatrix, int kern_nrows, int kern_ncols, float bias) {
     channel_kernels[channel].matrix = kmatrix;
     channel_kernels[channel].nrows = kern_nrows;
     channel_kernels[channel].ncols = kern_ncols;
+    channel_kernels[channel].bias = bias;
 
     if (layer_type == CONVOLUTIONAL) {
         channel_kernels[channel].sup_operation = sup_product_summation;
@@ -165,7 +168,8 @@ void init_channel_kernel(Kernel* channel_kernels, int channel, float* kmatrix, i
  */
 void add_new_kernel_to_kern_lists(Kernel** kernels_ref, Kernel3D** kernels3d_ref, int k, Kernel* channel_kernels, int num_channels) {
     if (num_channels == 1) {
-        (*kernels_ref)[k] = channel_kernels[0];
+        (*kernels_ref)[k] = *channel_kernels;
+        free(channel_kernels);
     } else {
         (*kernels3d_ref)[k].channel_kerns = channel_kernels;
         (*kernels3d_ref)[k].num_channels = num_channels;
@@ -208,10 +212,11 @@ void add_new_kernel_to_kern_lists(Kernel** kernels_ref, Kernel3D** kernels3d_ref
  * @param num_channels | The specified number of channels to be included in the convolutional layer being initialized
  * @param kern_nrows | The number of rows for each kernel in the convolutional layer being initialized
  * @param kern_ncols | The number of columns for each kernel in the convolutional layer being initialized
+ * @param bias_for_all | The specified bias for all kernels in this layer
  * @param kern_elems | The specified elements, if any, to be stored in each matrix in each kernel. If aren't any, this param equals NULL
  */
 void builder(char layer_type, Kernel** kernels_ref, Kernel3D** kernels3d_ref, int* num_kernels_ref, int* num_channels_ref, 
-                   int num_kerns, int num_channels, int kern_nrows, int kern_ncols, float* kern_elems) {
+                   int num_kerns, int num_channels, int kern_nrows, int kern_ncols, float bias_for_all, float* kern_elems) {
 
     *num_kernels_ref = num_kerns;
     *num_channels_ref = num_channels;
@@ -224,7 +229,7 @@ void builder(char layer_type, Kernel** kernels_ref, Kernel3D** kernels3d_ref, in
         for (int ch = 0; ch < num_channels; ++ch) {
             float* kmatrix = (float*) malloc(sizeof(float) * kern_nrows * kern_ncols);
             init_kern_mat(kmatrix, kern_nrows, kern_ncols, kern_elems);
-            init_channel_kernel(channel_kernels, ch, kmatrix, kern_nrows, kern_ncols, layer_type);
+            init_channel_kernel(layer_type, channel_kernels, ch, kmatrix, kern_nrows, kern_ncols, bias_for_all);
         }
 
         add_new_kernel_to_kern_lists(kernels_ref, kernels3d_ref, k, channel_kernels, num_channels);
@@ -237,10 +242,20 @@ void builder(char layer_type, Kernel** kernels_ref, Kernel3D** kernels3d_ref, in
  * 
  * @param kernels_ref | A reference to the list of kernels stored in the layer structure
  * @param kernels3d_ref | A referene to the4 list of 3D kernels stored in the layer structure
+ * @param num_kernels | The number of kernels in either of the kernel lists
  */
-void destroyer(Kernel** kernels_ref, Kernel3D** kernels3d_ref) {
-    if (*kernels_ref) free(*kernels_ref);
-    if (*kernels3d_ref) free(*kernels3d_ref);
+void destroyer(Kernel** kernels_ref, Kernel3D** kernels3d_ref, int num_kernels) {
+    if (*kernels_ref) {
+        free(*kernels_ref);
+    }
+
+    if (*kernels3d_ref) {
+        for (int k = 0; k < num_kernels; ++k) {
+            free((*kernels3d_ref)[k].channel_kerns);
+        }
+
+        free(*kernels3d_ref);
+    }
 }
 
 /* EXECUTION FUNCTIONS */
@@ -337,7 +352,7 @@ float* operate_over_img(void* kernels_nd, int k, int kern_nrows, int kern_ncols,
         for (int sup_c = 0, out_c = 0; out_c < output_ncols; sup_c += stride.cols, ++out_c) {
             if (kernels) {
                 set_mat_val(output_img, output_ncols, out_r, out_c, 
-                            kernels[k].sup_operation(kernels[k].matrix, *aug_img, kernels[k].nrows, kernels[k].ncols, aug_img_ncols, sup_r, sup_c));
+                            kernels[k].sup_operation(kernels[k].matrix, *aug_img, kernels[k].nrows, kernels[k].ncols, aug_img_ncols, sup_r, sup_c, kernels[k].bias));
             } else {
                 set_mat_val(output_img, output_ncols, out_r, out_c, 
                             kernels_3d[k].sup_operations_sum(kernels_3d[k].channel_kerns, aug_img, aug_img_ncols, sup_r, sup_c, num_channels));
@@ -403,8 +418,9 @@ typedef struct img_proc_layer {
     int num_kernels;
     int num_channels;
 
-    void (*build) (char, Kernel**, Kernel3D**, int*, int*, int, int, int, int, float*);
+    void (*build) (char, Kernel**, Kernel3D**, int*, int*, int, int, int, int, float, float*);
     float** (*exec) (Kernel*, Kernel3D*, int, int, int, int, float**, int, int, RowColTuple, RowColTuple);
+    void (*destroy) (Kernel**, Kernel3D**, int);
 } ImgProcLayer;
 
 #endif

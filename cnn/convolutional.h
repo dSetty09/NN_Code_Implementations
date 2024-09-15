@@ -17,10 +17,11 @@
  * @param img_ncols | The number of columns in the image the kernel is passing over
  * @param sup_start_row | The starting row index of the section of the image superimposed by the kernel matrix
  * @param sup_start_col | The starting column index of the section of the image superimposed by the kernel matrix
+ * @param kern_bias | The given bias of the kernel matrix
  * 
  * @return The summation of each product of each respective cell between the kernel matrix and superimposed section of the image.
  */
-float sup_product_summation(float* kern_mat, float* img, int kern_nrows, int kern_ncols, int img_ncols, int sup_start_row, int sup_start_col) {
+float sup_product_summation(float* kern_mat, float* img, int kern_nrows, int kern_ncols, int img_ncols, int sup_start_row, int sup_start_col, float kern_bias) {
     float result = 0;
 
     for (int kern_i = 0, sup_i = sup_start_row; kern_i < kern_nrows; ++kern_i, ++sup_i) {
@@ -28,6 +29,8 @@ float sup_product_summation(float* kern_mat, float* img, int kern_nrows, int ker
             result += mat_val(kern_mat, kern_ncols, kern_i, kern_j) * mat_val(img, img_ncols, sup_i, sup_j);
         }
     }
+
+    result += kern_bias;
 
     return result;
 }
