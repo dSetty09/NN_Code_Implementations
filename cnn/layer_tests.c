@@ -3,7 +3,7 @@
 #include "img_proc_layer.h"
 
 int main() {
-    FILE* output_file = fopen("convo_layer_tests.txt", "w");
+    FILE* output_file = fopen("layer_tests.txt", "w");
 
     /*** DEFINING IMAGE MATRICES OF VARYING DIMENSIONS FOR TESTS ***/
     float img_zero_by_zero[] = {}; // A 0x0 matrix
