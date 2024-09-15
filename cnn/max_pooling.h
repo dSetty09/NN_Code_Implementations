@@ -22,7 +22,7 @@ float sup_max(float* kern_mat, float* img, int kern_nrows, int kern_ncols, int i
 
     for (int kern_i = 0, sup_i = sup_start_row; kern_i < kern_nrows; ++kern_i, ++sup_i) {
         for (int kern_j = 0, sup_j = sup_start_col; kern_j < kern_ncols; ++kern_j, ++sup_j) {
-            float curr_sup_val = mat_val(img, img_ncols, sup_start_row, sup_start_col);
+            float curr_sup_val = mat_val(img, img_ncols, sup_i, sup_j);
             
             if (curr_sup_val > max) {
                 max = curr_sup_val;

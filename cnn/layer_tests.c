@@ -676,6 +676,69 @@ int main() {
 
     convl.destroy(&convl.kernels, &convl.kernels3d, convl.num_kernels);
 
+
+    /** MAX POOLING TESTS **/
+    ImgProcLayer maxlayer; maxlayer.build = builder; maxlayer.exec = exec; maxlayer.destroy = destroyer;
+    maxlayer.build(MAX_POOLING, &maxlayer.kernels, &maxlayer.kernels3d, &maxlayer.num_kernels,
+                   &maxlayer.num_channels, 1, 1, 2, 2, 0, NULL);
+
+    /* EXACT MAX POOLING */
+    *img = img_even_by_even;
+
+    padding.rows = 0;
+    padding.cols = 0;
+
+    stride.rows = 2;
+    stride.cols = 2;
+
+    float expected_emp[] = {1, 4, 3, 2};
+    expected_rvf->vect = expected_emp;
+    expected_rvf->num_rows = 2;
+    expected_rvf->num_cols = 2;
+
+    float** actual_emp = maxlayer.exec(maxlayer.kernels, maxlayer.kernels3d, maxlayer.num_kernels,
+                                       maxlayer.num_channels, 2, 2, img, 4, 4, padding, stride);
+    actual_rvf->vect = *actual_emp;
+    actual_rvf->num_rows = 2;
+    actual_rvf->num_cols = 2;
+
+    disp_test_results("MAX POOLING TESTS", "EXACT MAX POOLING", (void*) expected_rvf, (void*) actual_rvf, 
+                      0, output_file);
+    free_img_rsrcs(actual_emp, 1);
+
+    maxlayer.destroy(&maxlayer.kernels, &maxlayer.kernels3d, maxlayer.num_kernels);
+
+    /* NONEXACT MAX POOLING */
+    *img = img_r_by_c;
+
+    padding.rows = 1;
+    padding.cols = 1;
+
+    stride.rows = 2;
+    stride.cols = 4;
+
+    maxlayer.build(MAX_POOLING, &maxlayer.kernels, &maxlayer.kernels3d, &maxlayer.num_kernels,
+                   &maxlayer.num_channels, 1, 1, 2, 3, 0, NULL);
+
+    float expected_nmp[] = {1, 0};
+    expected_rvf->vect = expected_nmp;
+    expected_rvf->num_rows = 2;
+    expected_rvf->num_cols = 1;
+
+    float** actual_nmp = maxlayer.exec(maxlayer.kernels, maxlayer.kernels3d, maxlayer.num_kernels,
+                                       maxlayer.num_channels, 2, 3, img, 3, 4, padding, stride);
+    actual_rvf->vect = *actual_nmp;
+    actual_rvf->num_rows = 2;
+    actual_rvf->num_cols = 1;
+
+    disp_test_results("MAX POOLING TESTS", "NONEXACT MAX POOLING", (void*) expected_rvf, (void*) actual_rvf, 
+                      0, output_file);
+    free_img_rsrcs(actual_nmp, 1);
+
+    maxlayer.destroy(&maxlayer.kernels, &maxlayer.kernels3d, maxlayer.num_kernels);
+
+
+    /** FREE ALL RESOURCES USED FOR TESTING **/
     free(expected_rvf);
     free(actual_rvf);
 
