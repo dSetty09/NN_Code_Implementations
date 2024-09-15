@@ -150,19 +150,19 @@ int mats_equal(float* mat1, float* mat2, int nrows, int ncols) {
  * 
  * @param feature_map_set | 
  */
-float* flatten_feature_map_set(void* feature_map_set, int num_rows, int num_cols, int num_channels) {
+float* flatten_img(void* img, int num_rows, int num_cols, int num_channels) {
     if (num_channels == 1) {
-        return (float*) feature_map_set;
+        return (float*) img;
     }
 
     float* flattened_set = (float*) malloc(sizeof(float) * num_channels * num_rows * num_cols);
-    int entries_per_feature_map = num_rows * num_cols;
+    int entries_per_img_channel = num_rows * num_cols;
 
     for (int ch = 0; ch < num_channels; ++ch) {
         for (int r = 0; r < num_rows; ++r) {
             for (int c = 0; c < num_cols; ++c) {
-                flattened_set[entries_per_feature_map * ch + num_cols * r + c] = 
-                    mat_val(((float**) feature_map_set)[ch], num_cols, r, c);
+                flattened_set[entries_per_img_channel * ch + num_cols * r + c] = 
+                    mat_val(((float**) img)[ch], num_cols, r, c);
             }
         }
     }

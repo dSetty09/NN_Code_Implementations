@@ -365,7 +365,7 @@ float* operate_over_img(void* kernels_nd, int k, int kern_nrows, int kern_ncols,
 
 /*
  * For each kernel, executes their superimposed operation while they are being processed or traversed across the image and
- * stores each of the output images resulting from each kernel's operation.
+ * stores each of the output image channels resulting from each kernel's operation.
  * 
  * @param kernels | A list of kernels
  * @param kernels3d | A list of 3D kernels
@@ -379,7 +379,7 @@ float* operate_over_img(void* kernels_nd, int k, int kern_nrows, int kern_ncols,
  * @param padding | A specifier indicating whether there should or should not be any padding
  * @param stride | The amount by which the kernel will slide over the image during each convolution iteration
  * 
- * @return A tensor of output images resulting from their respective kernels' convolution operations, each being represented as a matrix
+ * @return A tensor of output image channels resulting from their respective kernels' convolution operations, each represented as a matrix
  */
 float** exec(Kernel* kernels, Kernel3D* kernels3d, int num_kernels, int num_channels, int kern_nrows, int kern_ncols, 
                   float** img, int img_nrows, int img_ncols, RowColTuple padding, RowColTuple stride) {
@@ -391,24 +391,24 @@ float** exec(Kernel* kernels, Kernel3D* kernels3d, int num_kernels, int num_chan
     int output_nrows = calc_output_dimen_size(img_nrows, kern_nrows, padding.rows, stride.rows);
     int output_ncols = calc_output_dimen_size(img_ncols, kern_ncols, padding.cols, stride.cols);
 
-    float** output_imgs = (float**) malloc(sizeof(float*) * num_kernels);
+    float** output_img = (float**) malloc(sizeof(float*) * num_kernels);
 
     for (int k = 0; k < num_kernels; ++k) {
-        float* output_img = NULL;
+        float* output_img_channel = NULL;
         if (kernels) {
-            output_img = operate_over_img((void*) kernels, k, kern_nrows, kern_ncols, num_channels,
+            output_img_channel = operate_over_img((void*) kernels, k, kern_nrows, kern_ncols, num_channels,
                                            aug_img, aug_img_ncols, output_nrows, output_ncols, stride);
         } else {
-            output_img = operate_over_img((void*) kernels3d, k, kern_nrows, kern_ncols, num_channels,
+            output_img_channel = operate_over_img((void*) kernels3d, k, kern_nrows, kern_ncols, num_channels,
                                            aug_img, aug_img_ncols, output_nrows, output_ncols, stride);
         }
 
-        output_imgs[k] = output_img;
+        output_img[k] = output_img_channel;
     }
 
     free_img_rsrcs(aug_img, num_channels);
 
-    return output_imgs;
+    return output_img;
 }
 
 typedef struct img_proc_layer {
