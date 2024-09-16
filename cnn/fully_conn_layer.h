@@ -4,8 +4,8 @@
 #define FULLY_CONN_LAYER_H
 
 #include <stdlib.h>
+
 #include "../common_definitions.h"
-#include "../activation_functions/C++/nonlinear_functions.h"
 
 
 /** NEURON DEFINITIONS **/
@@ -29,18 +29,6 @@ float weighted_sum(float* input_vect, float* assoc_weights, float bias, int num_
     return result;
 }
 
-/*
- * Calculates the output to be produced by passing a given weighted sum as an argument to an activation function
- *
- * @param weighted_sum | The weighted sum to be processed by an activation function
- * @param activation_func | The activation function processing a given weighted sum
- * 
- * @return The output produced from passing a given weighted sum as an argument to an activation
- */
-float output(float weighted_sum, one_arg_activation_function activation_func) {
-    return activation_func(weighted_sum, 0);
-}
-
 /* A single neuron in a fully connected layer */
 typedef struct neuron {
     float* input_vect; // The vector of inputs (i.e. feature vector taken as input from fully connected layer)
@@ -49,10 +37,7 @@ typedef struct neuron {
 
     int num_inputs; // The number of inputs being processed and, by extension, the number of associated weights
 
-    one_arg_activation_function activation_func; // The activation function for this neuron
-
     float (*weighted_sum) (float*, float*, float, int); // The function for calculating the weighted sum
-    float (*output) (float, one_arg_activation_function); // The function for calculating the neuron's output
 } Neuron;
 
 
@@ -74,33 +59,44 @@ typedef struct neuron {
  * @param num_neurons_ref | A reference to the number of neurons attribute of the layer being initialized
  * @param activ_func_ref | A reference to the activation function attribute of the layer being initialized
  * @param feature_vect_input | The feature vector produced by the layer just before the layer being initialized
- * @param optional_weights | A vector of weights assigned to each connection each neuron has with each input
+ * @param optional_weights | A vector of sets of weights assigned to each neuron
  * @param num_neurons | The number of neurons in the layer being initialized
  * @param num_inputs | The number of inputs in the feature vector for this layer
  * @param activation_func | The activation function to be associated with this layer
  */
-void builder(Neuron** neurons_ref, int* num_neurons_ref, float* feature_vect_input, float* optional_weights, 
-             int num_neurons, int num_inputs, one_arg_activation_function activation_func) {
+void fcl_builder(Neuron** neurons_ref, int* num_neurons_ref, float* feature_vect_input, float** optional_weights, 
+             int num_neurons, int num_inputs) {
+
+    (*neurons_ref) = (Neuron*) malloc(sizeof(Neuron) * num_neurons);
 
     for (int i = 0; i < num_neurons; ++i) {
         (*neurons_ref)[i].input_vect = feature_vect_input;
+        (*neurons_ref)[i].assoc_weights = (float*) malloc(sizeof(float) * num_inputs);
 
-        if (optional_weights) {
-            (*neurons_ref)[i].assoc_weights = optional_weights;
-        } else {
-            for (int j = 0; j < num_inputs; ++j) {
-                (*neurons_ref)[i].assoc_weights[j] = random_num(-2, 2, 3);
-            }
+        for (int j = 0; j < num_inputs; ++j) {
+            (*neurons_ref)[i].assoc_weights[j] = (optional_weights) ? optional_weights[i][j] : random_num(-2, 2, 3);
         }
 
         (*neurons_ref)[i].bias = 1;
         (*neurons_ref)[i].num_inputs = num_inputs;
-        (*neurons_ref)[i].activation_func = activation_func;
         (*neurons_ref)[i].weighted_sum = weighted_sum;
-        (*neurons_ref)[i].output = output;
     }
 
     *num_neurons_ref = num_neurons;
+}
+
+/*
+ * Frees the memory required to represent a given list of neurons.
+ *
+ * @param neurons | The list of neurons whose memory is being freed
+ * @param num_neurons | The number of neurons in the aforementioned list of neurons
+ */
+void fcl_destroyer(Neuron* neurons, int num_neurons) {
+    for (int n = 0; n < num_neurons; ++n) {
+        free(neurons[n].assoc_weights);
+    }
+
+    free(neurons);
 }
 
 /*
@@ -112,12 +108,12 @@ void builder(Neuron** neurons_ref, int* num_neurons_ref, float* feature_vect_inp
  * 
  * @return A vector storing the outputs produced by each neuron
  */
-float* exec(float* feature_vect, Neuron* neurons, int num_neurons) {
+float* fcl_exec(float* feature_vect, Neuron* neurons, int num_neurons) {
     float* output_vect = (float*) malloc(sizeof(float) * num_neurons);
 
     for (int i = 0; i < num_neurons; ++i) {
-        output_vect[i] = neurons[i].output(neurons[i].weighted_sum(neurons[i].input_vect, neurons[i].assoc_weights, 
-                                neurons[i].bias, neurons[i].num_inputs), 0);
+        output_vect[i] = neurons[i].weighted_sum(neurons[i].input_vect, neurons[i].assoc_weights, 
+                                neurons[i].bias, neurons[i].num_inputs);
     }
 
     return output_vect;
@@ -132,10 +128,9 @@ typedef struct fully_connected_layer {
     Neuron* neurons; // The list of neurons in this layer
     int num_neurons; // The number of neurons in this layer
 
-    void (*build) (float**, Neuron**, int*, one_arg_activation_function*, float*, float*, int, int, 
-                   one_arg_activation_function); // The builder function for this layer
-
-    float* (*exec) (float*, Neuron*, int); // The execution function for this layer
+    void (*build) (Neuron**, int*, float*, float**, int, int); // Builder
+    float* (*exec) (float*, Neuron*, int); // Executor
+    void (*destroy) (Neuron*, int); // Destroyer
 } FullConnLayer;
 
 #endif

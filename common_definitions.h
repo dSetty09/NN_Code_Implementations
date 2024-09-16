@@ -190,7 +190,7 @@ float min_vect_elem(void* vect, int num_rows, int num_cols, int num_layers) {
         vect2d = (float*) vect;
     }
 
-    float min = (vect3d) ? mat_val(vect3d[0], num_rows, 0, 0) : mat_val(vect2d, num_rows, 0, 0);
+    float min = (vect3d) ? mat_val(vect3d[0], num_rows, 0, 0) : mat_val(vect2d, num_cols, 0, 0);
 
     if (vect2d) {
         for (int r = 0; r < num_rows; ++r) {

@@ -1,6 +1,6 @@
 function_tests.dSYM/
 mlp_tests.dSYM
 comm_defs_tests.dSYM/
-convo_layer_tests.dSYM/
+fully_conn_layer_tests.dSYM/
 layer_tests.dSYM/
 .vscode/
