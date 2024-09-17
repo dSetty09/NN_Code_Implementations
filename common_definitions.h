@@ -8,6 +8,8 @@
 #include <assert.h>
 #include <math.h>
 #include <time.h>
+#include <float.h>
+#include <limits.h>
 
 /* VARIABLE DEFINITIONS */
 
@@ -17,6 +19,19 @@
 static const unsigned char OUTPUT = 'O';
 static const unsigned char WEIGHT = 'W';
 static const unsigned char BIAS = 'B';
+
+static const int NO_DERIV = -1;
+
+static const float NEAR_ZERO = 1E-15;
+
+static const float NN_LOG_MIN_INPUT = 0;
+static const float NN_LOG_MAX_INPUT = FLT_MAX;
+static const float NN_LOG_MAX_OUTPUT = 88.722839;
+
+static const float NN_SQUARE_MAX_INPUT = 18446742974197923840.000000;
+static const float NN_SQUARE_MIN_INPUT = -18446742974197923840.000000;
+static const float NN_SQUARE_MAX_DERIV_INPUT = 170141173319264429905852091742258462720.000000;
+static const float NN_SQUARE_MIN_DERIV_INPUT = -170141173319264429905852091742258462720.000000;
 
 typedef float (*one_arg_activation_function) (float, int);
 typedef float (*cost_function) (float[], float[], int, int);
@@ -52,6 +67,32 @@ typedef struct rvf {
 float round_to_place(float val, float place) {
     float multiple = powf(10, place);
     return round(val * multiple) / multiple;
+}
+
+float bp_safe_exp(float x, int deriv) {
+    if (x <= FLT_MAX_10_EXP && x >= FLT_MIN_10_EXP) return (deriv) ? exp(x) + NEAR_ZERO : exp(x) + NEAR_ZERO;
+
+    if (x < FLT_MIN_10_EXP) return NEAR_ZERO;
+
+    return (deriv) ? FLT_MAX : FLT_MAX;
+}
+
+float bp_safe_log(float x, int deriv) {
+    if (x <= NN_LOG_MAX_INPUT && x >= NN_LOG_MIN_INPUT) return (deriv) ? (1 / x + NEAR_ZERO) : log(x + NEAR_ZERO);
+
+    if (x < NN_LOG_MIN_INPUT) return NAN;
+
+    return (deriv) ? NEAR_ZERO : NN_LOG_MAX_OUTPUT;
+}
+
+float bp_safe_square(float x, int deriv) {
+    if (x <= NN_SQUARE_MAX_INPUT && x >= NN_SQUARE_MIN_INPUT) return (deriv) ? (2 * x) : pow(x, 2);
+
+    if (x < NN_SQUARE_MIN_INPUT && deriv) return (x < NN_SQUARE_MIN_DERIV_INPUT) ? (2 * NN_SQUARE_MIN_DERIV_INPUT) : (2 * x);
+
+    if (deriv) return (x > NN_SQUARE_MAX_DERIV_INPUT) ? (2 * NN_SQUARE_MAX_DERIV_INPUT) : (2 * x);
+
+    return FLT_MAX;
 }
 
 /*
@@ -131,8 +172,8 @@ void set_mat_val(float* mat, int ncols, int i, int j, float new_val) {
 int mats_equal(float* mat1, float* mat2, int nrows, int ncols) {
     for (int i = 0; i < nrows; ++i) {
         for (int j = 0; j < ncols; ++j) {
-            float first_val = mat_val(mat1, ncols, i, j);
-            float second_val = mat_val(mat2, ncols, i, j);
+            float first_val = round_to_place(mat_val(mat1, ncols, i, j), 5);
+            float second_val = round_to_place(mat_val(mat2, ncols, i, j), 5);
 
             if (first_val != second_val) {
                 return 0;
