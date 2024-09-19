@@ -5,9 +5,23 @@
 #ifndef LINEAR_FUNCTIONS_HPP
 #define LINEAR_FUNCTIONS_HPP
 
+#include "../../common_definitions.h"
+
 // Linear Activation Function
 float linear(float x, int deriv) {
-    return (deriv) ? 1 : x;
+    if (deriv) {
+        return 1;
+    }
+
+    if (x > FLT_MAX) {
+        return FLT_MAX;
+    }
+
+    if (x < -FLT_MAX) {
+        return -FLT_MAX;
+    }
+
+    return x;
 }
 
 #endif

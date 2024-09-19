@@ -25,14 +25,14 @@ Linear Function Tests:
 		- Linear function with 22.000000 as argument evaluates to 22.000000
 
 	> Test 5:
-		- Mine: Linear(-inf) ==> -inf
-		- Actual: Linear(-inf) ==> -inf
-		- Linear function with -inf as argument evaluates to -inf
+		- Mine: Linear(-inf) ==> -340282346638528859811704183484516925440.000000
+		- Actual: Linear(-inf) ==> -340282346638528859811704183484516925440.000000
+		- Linear function with -inf as argument evaluates to -340282346638528859811704183484516925440.000000
 
 	> Test 6:
-		- Mine: Linear(inf) ==> inf
-		- Actual: Linear(inf) ==> inf
-		- Linear function with inf as argument evaluates to inf
+		- Mine: Linear(inf) ==> 340282346638528859811704183484516925440.000000
+		- Actual: Linear(inf) ==> 340282346638528859811704183484516925440.000000
+		- Linear function with inf as argument evaluates to 340282346638528859811704183484516925440.000000
 
 LinearDerivative Function Tests:
 	> Test 0:
@@ -77,7 +77,7 @@ Sigmoid Function Tests:
 		- Sigmoid function with 0.000000 as argument evaluates to 0.500000
 
 	> Test 1:
-		- Mine: Sigmoid(-0.400000) ==> 0.401310
+		- Mine: Sigmoid(-0.400000) ==> 0.401312
 		- Actual: Sigmoid(-0.400000) ==> 0.401310
 		- Sigmoid function with -0.400000 as argument evaluates to 0.401310
 
@@ -87,7 +87,7 @@ Sigmoid Function Tests:
 		- Sigmoid function with -16.000000 as argument evaluates to 0.000000
 
 	> Test 3:
-		- Mine: Sigmoid(0.700000) ==> 0.668190
+		- Mine: Sigmoid(0.700000) ==> 0.668188
 		- Actual: Sigmoid(0.700000) ==> 0.668190
 		- Sigmoid function with 0.700000 as argument evaluates to 0.668190
 
@@ -113,7 +113,7 @@ SigmoidDerivative Function Tests:
 		- SigmoidDerivative function with 0.000000 as argument evaluates to 0.250000
 
 	> Test 1:
-		- Mine: SigmoidDerivative(-0.400000) ==> 0.240260
+		- Mine: SigmoidDerivative(-0.400000) ==> 0.240261
 		- Actual: SigmoidDerivative(-0.400000) ==> 0.240260
 		- SigmoidDerivative function with -0.400000 as argument evaluates to 0.240260
 
@@ -123,7 +123,7 @@ SigmoidDerivative Function Tests:
 		- SigmoidDerivative function with -16.000000 as argument evaluates to 0.000000
 
 	> Test 3:
-		- Mine: SigmoidDerivative(0.700000) ==> 0.221710
+		- Mine: SigmoidDerivative(0.700000) ==> 0.221713
 		- Actual: SigmoidDerivative(0.700000) ==> 0.221710
 		- SigmoidDerivative function with 0.700000 as argument evaluates to 0.221710
 
@@ -149,7 +149,7 @@ Tanh Function Tests:
 		- Tanh function with 0.000000 as argument evaluates to 0.000000
 
 	> Test 1:
-		- Mine: Tanh(-0.400000) ==> -0.379950
+		- Mine: Tanh(-0.400000) ==> -0.379949
 		- Actual: Tanh(-0.400000) ==> -0.379950
 		- Tanh function with -0.400000 as argument evaluates to -0.379950
 
@@ -159,7 +159,7 @@ Tanh Function Tests:
 		- Tanh function with -16.000000 as argument evaluates to -1.000000
 
 	> Test 3:
-		- Mine: Tanh(0.700000) ==> 0.604370
+		- Mine: Tanh(0.700000) ==> 0.604368
 		- Actual: Tanh(0.700000) ==> 0.604370
 		- Tanh function with 0.700000 as argument evaluates to 0.604370
 
@@ -185,7 +185,7 @@ TanhDerivative Function Tests:
 		- TanhDerivative function with 0.000000 as argument evaluates to 1.000000
 
 	> Test 1:
-		- Mine: TanhDerivative(-0.400000) ==> 0.855640
+		- Mine: TanhDerivative(-0.400000) ==> 0.855639
 		- Actual: TanhDerivative(-0.400000) ==> 0.855640
 		- TanhDerivative function with -0.400000 as argument evaluates to 0.855640
 
@@ -252,9 +252,9 @@ Step Function Tests:
 
 StepDerivative Function Tests:
 	> Test 0:
-		- Mine: StepDerivative(0.000000) ==> nan
-		- Actual: StepDerivative(0.000000) ==> nan
-		- StepDerivative function with 0.000000 as argument evaluates to nan
+		- Mine: StepDerivative(0.000000) ==> 0.000000
+		- Actual: StepDerivative(0.000000) ==> 0.000000
+		- StepDerivative function with 0.000000 as argument evaluates to 0.000000
 
 	> Test 1:
 		- Mine: StepDerivative(-0.400000) ==> 0.000000
@@ -318,15 +318,15 @@ ReLU Function Tests:
 		- ReLU function with -inf as argument evaluates to 0.000000
 
 	> Test 6:
-		- Mine: ReLU(inf) ==> inf
-		- Actual: ReLU(inf) ==> inf
-		- ReLU function with inf as argument evaluates to inf
+		- Mine: ReLU(inf) ==> 340282346638528859811704183484516925440.000000
+		- Actual: ReLU(inf) ==> 340282346638528859811704183484516925440.000000
+		- ReLU function with inf as argument evaluates to 340282346638528859811704183484516925440.000000
 
 ReLUDerivative Function Tests:
 	> Test 0:
-		- Mine: ReLUDerivative(0.000000) ==> nan
-		- Actual: ReLUDerivative(0.000000) ==> nan
-		- ReLUDerivative function with 0.000000 as argument evaluates to nan
+		- Mine: ReLUDerivative(0.000000) ==> 0.000000
+		- Actual: ReLUDerivative(0.000000) ==> 0.000000
+		- ReLUDerivative function with 0.000000 as argument evaluates to 0.000000
 
 	> Test 1:
 		- Mine: ReLUDerivative(-0.400000) ==> 0.000000
@@ -385,20 +385,20 @@ LeakyReLU Function Tests:
 		- LeakyReLU function with 22.000000 as argument evaluates to 22.000000
 
 	> Test 5:
-		- Mine: LeakyReLU(-inf) ==> -inf
-		- Actual: LeakyReLU(-inf) ==> -inf
-		- LeakyReLU function with -inf as argument evaluates to -inf
+		- Mine: LeakyReLU(-inf) ==> -3402823593150348620939981984515489792.000000
+		- Actual: LeakyReLU(-inf) ==> -3402823593150348620939981984515489792.000000
+		- LeakyReLU function with -inf as argument evaluates to -3402823593150348620939981984515489792.000000
 
 	> Test 6:
-		- Mine: LeakyReLU(inf) ==> inf
-		- Actual: LeakyReLU(inf) ==> inf
-		- LeakyReLU function with inf as argument evaluates to inf
+		- Mine: LeakyReLU(inf) ==> 340282346638528859811704183484516925440.000000
+		- Actual: LeakyReLU(inf) ==> 340282346638528859811704183484516925440.000000
+		- LeakyReLU function with inf as argument evaluates to 340282346638528859811704183484516925440.000000
 
 LeakyReLUDerivative Function Tests:
 	> Test 0:
-		- Mine: LeakyReLUDerivative(0.000000) ==> nan
-		- Actual: LeakyReLUDerivative(0.000000) ==> nan
-		- LeakyReLUDerivative function with 0.000000 as argument evaluates to nan
+		- Mine: LeakyReLUDerivative(0.000000) ==> 0.010000
+		- Actual: LeakyReLUDerivative(0.000000) ==> 0.010000
+		- LeakyReLUDerivative function with 0.000000 as argument evaluates to 0.010000
 
 	> Test 1:
 		- Mine: LeakyReLUDerivative(-0.400000) ==> 0.010000
@@ -432,12 +432,12 @@ LeakyReLUDerivative Function Tests:
 
 SoftPlus Function Tests:
 	> Test 0:
-		- Mine: SoftPlus(0.000000) ==> 0.693150
+		- Mine: SoftPlus(0.000000) ==> 0.693147
 		- Actual: SoftPlus(0.000000) ==> 0.693150
 		- SoftPlus function with 0.000000 as argument evaluates to 0.693150
 
 	> Test 1:
-		- Mine: SoftPlus(-0.400000) ==> 0.513020
+		- Mine: SoftPlus(-0.400000) ==> 0.513015
 		- Actual: SoftPlus(-0.400000) ==> 0.513020
 		- SoftPlus function with -0.400000 as argument evaluates to 0.513020
 
@@ -447,7 +447,7 @@ SoftPlus Function Tests:
 		- SoftPlus function with -16.000000 as argument evaluates to 0.000000
 
 	> Test 3:
-		- Mine: SoftPlus(0.700000) ==> 1.103190
+		- Mine: SoftPlus(0.700000) ==> 1.103186
 		- Actual: SoftPlus(0.700000) ==> 1.103190
 		- SoftPlus function with 0.700000 as argument evaluates to 1.103190
 
@@ -462,9 +462,9 @@ SoftPlus Function Tests:
 		- SoftPlus function with -inf as argument evaluates to 0.000000
 
 	> Test 6:
-		- Mine: SoftPlus(inf) ==> inf
-		- Actual: SoftPlus(inf) ==> inf
-		- SoftPlus function with inf as argument evaluates to inf
+		- Mine: SoftPlus(inf) ==> 340282346638528859811704183484516925440.000000
+		- Actual: SoftPlus(inf) ==> 340282346638528859811704183484516925440.000000
+		- SoftPlus function with inf as argument evaluates to 340282346638528859811704183484516925440.000000
 
 SoftPlusDerivative Function Tests:
 	> Test 0:
@@ -473,7 +473,7 @@ SoftPlusDerivative Function Tests:
 		- SoftPlusDerivative function with 0.000000 as argument evaluates to 0.500000
 
 	> Test 1:
-		- Mine: SoftPlusDerivative(-0.400000) ==> 0.401310
+		- Mine: SoftPlusDerivative(-0.400000) ==> 0.401312
 		- Actual: SoftPlusDerivative(-0.400000) ==> 0.401310
 		- SoftPlusDerivative function with -0.400000 as argument evaluates to 0.401310
 
@@ -483,7 +483,7 @@ SoftPlusDerivative Function Tests:
 		- SoftPlusDerivative function with -16.000000 as argument evaluates to 0.000000
 
 	> Test 3:
-		- Mine: SoftPlusDerivative(0.700000) ==> 0.668190
+		- Mine: SoftPlusDerivative(0.700000) ==> 0.668188
 		- Actual: SoftPlusDerivative(0.700000) ==> 0.668190
 		- SoftPlusDerivative function with 0.700000 as argument evaluates to 0.668190
 
@@ -502,3 +502,17 @@ SoftPlusDerivative Function Tests:
 		- Actual: SoftPlusDerivative(inf) ==> 1.000000
 		- SoftPlusDerivative function with inf as argument evaluates to 1.000000
 
+-----------------------------------------------------
+SOFTMAX TEST | FUNCTION OUTPUT
+Expected = [0.981571, 0.000000, 0.000121, 0.000329, 0.017978]
+
+Actual = [0.981572, 0.000000, 0.000121, 0.000329, 0.017978]
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+SOFTMAX TEST | FUNCTION DERIVATIVE
+Expected = [ 0.018089,  0.017655,  0.000121,  -0.000002,  -0.017647]
+
+Actual = [ 0.018089,  0.017655,  0.000121,  -0.000002,  -0.017647]
+Test passed.
+-----------------------------------------------------

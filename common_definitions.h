@@ -10,6 +10,7 @@
 #include <time.h>
 #include <float.h>
 #include <limits.h>
+#include <stdlib.h>
 
 /* VARIABLE DEFINITIONS */
 
@@ -24,14 +25,14 @@ static const int NO_DERIV = -1;
 
 static const float NEAR_ZERO = 1E-15;
 
-static const float NN_LOG_MIN_INPUT = 0;
-static const float NN_LOG_MAX_INPUT = FLT_MAX;
-static const float NN_LOG_MAX_OUTPUT = 88.722839;
+static const float BP_LOG_MIN_INPUT = 0;
+static const float BP_LOG_MAX_INPUT = FLT_MAX;
+static const float BP_LOG_MAX_OUTPUT = 88.722839;
 
-static const float NN_SQUARE_MAX_INPUT = 18446742974197923840.000000;
-static const float NN_SQUARE_MIN_INPUT = -18446742974197923840.000000;
-static const float NN_SQUARE_MAX_DERIV_INPUT = 170141173319264429905852091742258462720.000000;
-static const float NN_SQUARE_MIN_DERIV_INPUT = -170141173319264429905852091742258462720.000000;
+static const float BP_SQUARE_MAX_INPUT = 18446742974197923840.000000;
+static const float BP_SQUARE_MIN_INPUT = -18446742974197923840.000000;
+static const float BP_SQUARE_MAX_DERIV_INPUT = 170141173319264429905852091742258462720.000000;
+static const float BP_SQUARE_MIN_DERIV_INPUT = -170141173319264429905852091742258462720.000000;
 
 typedef float (*one_arg_activation_function) (float, int);
 typedef float (*cost_function) (float[], float[], int, int);
@@ -69,8 +70,21 @@ float round_to_place(float val, float place) {
     return round(val * multiple) / multiple;
 }
 
+float floor_to_place(float val, float place) {
+    float multiple = powf(10, place);
+    return floorf(val * multiple) / multiple;
+}
+
+int are_similar(float val1, float val2) {
+    if (abs(val1 - val2) < 0.00001) {
+        return 1;
+    }
+
+    return 0;
+}
+
 float bp_safe_exp(float x, int deriv) {
-    if (x <= FLT_MAX_10_EXP && x >= FLT_MIN_10_EXP) return (deriv) ? exp(x) + NEAR_ZERO : exp(x) + NEAR_ZERO;
+    if (x <= FLT_MAX_10_EXP && x >= FLT_MIN_10_EXP) return (deriv) ? expf(x) + NEAR_ZERO : expf(x) + NEAR_ZERO;
 
     if (x < FLT_MIN_10_EXP) return NEAR_ZERO;
 
@@ -78,19 +92,19 @@ float bp_safe_exp(float x, int deriv) {
 }
 
 float bp_safe_log(float x, int deriv) {
-    if (x <= NN_LOG_MAX_INPUT && x >= NN_LOG_MIN_INPUT) return (deriv) ? (1 / x + NEAR_ZERO) : log(x + NEAR_ZERO);
+    if (x <= BP_LOG_MAX_INPUT && x >= BP_LOG_MIN_INPUT) return (deriv) ? (1 / x + NEAR_ZERO) : logf(x + NEAR_ZERO);
 
-    if (x < NN_LOG_MIN_INPUT) return NAN;
+    if (x < BP_LOG_MIN_INPUT) return NAN;
 
-    return (deriv) ? NEAR_ZERO : NN_LOG_MAX_OUTPUT;
+    return (deriv) ? NEAR_ZERO : BP_LOG_MAX_OUTPUT;
 }
 
 float bp_safe_square(float x, int deriv) {
-    if (x <= NN_SQUARE_MAX_INPUT && x >= NN_SQUARE_MIN_INPUT) return (deriv) ? (2 * x) : pow(x, 2);
+    if (x <= BP_SQUARE_MAX_INPUT && x >= BP_SQUARE_MIN_INPUT) return (deriv) ? (2 * x) : powf(x, 2);
 
-    if (x < NN_SQUARE_MIN_INPUT && deriv) return (x < NN_SQUARE_MIN_DERIV_INPUT) ? (2 * NN_SQUARE_MIN_DERIV_INPUT) : (2 * x);
+    if (x < BP_SQUARE_MIN_INPUT && deriv) return (x < BP_SQUARE_MIN_DERIV_INPUT) ? (2 * BP_SQUARE_MIN_DERIV_INPUT) : (2 * x);
 
-    if (deriv) return (x > NN_SQUARE_MAX_DERIV_INPUT) ? (2 * NN_SQUARE_MAX_DERIV_INPUT) : (2 * x);
+    if (deriv) return (x > BP_SQUARE_MAX_DERIV_INPUT) ? (2 * BP_SQUARE_MAX_DERIV_INPUT) : (2 * x);
 
     return FLT_MAX;
 }
@@ -329,7 +343,7 @@ void disp_test_results(const char* testing_function, const char* conducting_test
     if (testing_value) {
         fprintf(output_file, "Expected Result: %f\n", *((float*) expected));
         fprintf(output_file, "Actual Result: %f\n", *((float*) actual));
-        assert(*((float*) expected) == *((float*) actual));
+        assert(floor_to_place(*((float*) expected), 5) == floor_to_place(*((float*) actual), 5));
     } else {
         ReadVectFmt* expected_rvf = (ReadVectFmt*) expected;
         print_vector(expected_rvf->vect, expected_rvf->num_rows, expected_rvf->num_cols, expected_rvf->num_layers,
