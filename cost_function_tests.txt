@@ -1,0 +1,30 @@
+-----------------------------------------------------
+CROSS ENTROPY LOSS TESTS | STANDARD DISTRIBUTIONS
+Expected Result: 2.755956
+Actual Result: 2.755956
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CROSS ENTROPY LOSS TESTS | DISTRIBUTION WHERE ONE YIELDED HAS PROBABILITY 0
+Expected Result: 2.518526
+Actual Result: 2.518525
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CROSS ENTROPY LOSS TESTS | DISTRIBUTION WHERE CLASSIFIES COMPLETELY WRONG
+Expected Result: 28.667185
+Actual Result: 28.667183
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CROSS ENTROPY LOSS TESTS | DERIVIATIVE WITH RESPECT TO 0 AT INDEX WITH LARGE TRUE VALUE
+Expected Result: -829999946924032.000000
+Actual Result: -829999946924032.000000
+Test passed.
+-----------------------------------------------------
+-----------------------------------------------------
+CROSS ENTROPY LOSS TESTS | DERIVATIVE WITH RESPECT TO 0 AT INDEX WTIH SMALL TRUE VALUE
+Expected Result: -10.000000
+Actual Result: -10.000000
+Test passed.
+-----------------------------------------------------
