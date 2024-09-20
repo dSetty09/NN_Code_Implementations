@@ -69,15 +69,15 @@ int main() {
 
     float* expected = img_1d;
     exp_rvf->vect = (void*) expected;
-    exp_rvf->num_x = 6;
-    exp_rvf->num_y = 1;
-    exp_rvf->num_z = 1;
+    exp_rvf->num_cols = 6;
+    exp_rvf->num_rows = 1;
+    exp_rvf->num_layers = 1;
 
     float* actual = flatten_feature_map_set((void*) img_1d, nrows, ncols, nchannels);
     act_rvf->vect = (void*) actual;
-    act_rvf->num_x = 6;
-    act_rvf->num_y = 1;
-    act_rvf->num_z = 1;
+    act_rvf->num_cols = 6;
+    act_rvf->num_rows = 1;
+    act_rvf->num_layers = 1;
 
     disp_test_results("FLATTEN FEATURE MAP SET TESTS", "ALREADY FLAT (NONZERO NUMBER OF COLUMNS)", exp_rvf, act_rvf, FALSE, output_file); 
 
