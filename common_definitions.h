@@ -83,6 +83,18 @@ int are_similar(float val1, float val2) {
     return 0;
 }
 
+float arr_max(int* arr, int num) {
+    float max = arr[0];
+
+    for (int i = 0; i < num; ++i) {
+        if (arr[i] > max) {
+            max = arr[i];
+        }
+    }
+
+    return max;
+}
+
 float bp_safe_exp(float x, int deriv) {
     if (x <= FLT_MAX_10_EXP && x >= FLT_MIN_10_EXP) return (deriv) ? expf(x) + NEAR_ZERO : expf(x) + NEAR_ZERO;
 

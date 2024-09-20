@@ -2,5 +2,6 @@ function_tests.dSYM/
 mlp_tests.dSYM
 comm_defs_tests.dSYM/
 fully_conn_layer_tests.dSYM/
+cost_function_tests.dSYM/
 layer_tests.dSYM/
 .vscode/

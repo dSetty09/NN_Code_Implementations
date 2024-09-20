@@ -33,9 +33,12 @@ float weighted_sum(float* input_vect, float* assoc_weights, float bias, int num_
 typedef struct neuron {
     float* input_vect; // The vector of inputs (i.e. feature vector taken as input from fully connected layer)
     float* assoc_weights; // The weights to be multiplied, respectively, with each input in the input vector
+    int num_inputs; // The number of inputs being processed and, by extension, the number of associated weights
+
     float bias; // The bias for this neuron
 
-    int num_inputs; // The number of inputs being processed and, by extension, the number of associated weights
+    float* act_cost_derivs; // Cost function derivatives each with respect to a specific activation from an activation or softmax function
+    float deriv_cost_to_wsum; // The derivative of this neuron's output with respect to a cost function
 
     float (*weighted_sum) (float*, float*, float, int); // The function for calculating the weighted sum
 } Neuron;
