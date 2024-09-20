@@ -96,11 +96,11 @@ int main() {
 
     MLP* multiple_output_mlp = build_mlp(num_layers, multiple_output_config, multiple_output_function_config, multiple_output_weights);
 
-    mlp_ff_test(single_output_mlp, "SingleOutputMLPOne", single_output_input_one, single_output_key_one, 1, output_file);
-    mlp_ff_test(single_output_mlp, "SingleOutputMLPTwo", single_output_input_two, single_output_key_two, 1, output_file);
+    mlp_ff_test(single_output_mlp, "SingleOutputMLPDecimals", single_output_input_one, single_output_key_one, 1, output_file);
+    mlp_ff_test(single_output_mlp, "SingleOutputMLPInfinity", single_output_input_two, single_output_key_two, 1, output_file);
 
-    mlp_ff_test(multiple_output_mlp, "MultipleOutputMLPOne", multiple_output_input_one, multiple_output_key_one, 2, output_file);
-    mlp_ff_test(multiple_output_mlp, "MultipleOutputMLPOne", multiple_output_input_two, multiple_output_key_two, 2, output_file);
+    mlp_ff_test(multiple_output_mlp, "MultipleOutputMLPDecimals", multiple_output_input_one, multiple_output_key_one, 2, output_file);
+    mlp_ff_test(multiple_output_mlp, "MultipleOutputMLPInfinity", multiple_output_input_two, multiple_output_key_two, 2, output_file);
 
     /* Backward pass tests */
     fprintf(output_file, "\nBACKWARD PROPAGATION TESTS:\n\n");
@@ -109,9 +109,16 @@ int main() {
     float single_output_ideal_output_one[1] = {1.0};
     float single_output_ideal_output_two[1] = {0.0};
     float multiple_output_ideal_outputs[2] = {1.0, 0.0};
-    mlp_bp_test(single_output_mlp, "SingleOutputMLP", single_output_input_one, single_output_ideal_output_one, backprop_test_cost_func,  1, output_file);
-    mlp_bp_test(single_output_mlp, "SingleOutputMLP", single_output_input_one, single_output_ideal_output_two, backprop_test_cost_func,  1, output_file); // testing how model learns with decently large error
-    mlp_bp_test(single_output_mlp, "SingleOutputMLP", single_output_input_one, single_output_ideal_output_two, backprop_test_cost_func,  1, output_file); // testing how model learns with very small error
-    mlp_bp_test(multiple_output_mlp, "MultipleOutputMLP", multiple_output_input_one, multiple_output_ideal_outputs, backprop_test_cost_func, 2, output_file);
+
+    mlp_bp_test(single_output_mlp, "SingleOutputMLPSimpleBackprop", single_output_input_one, single_output_ideal_output_one, backprop_test_cost_func,  1, output_file);
+
+    // Testing how model learns with decently large error
+    mlp_bp_test(single_output_mlp, "SingleOutputMLPLargeErrorBackprop", single_output_input_one, single_output_ideal_output_two, backprop_test_cost_func,  1, output_file);
+
+    // Testing how model learns with very small error
+    mlp_bp_test(single_output_mlp, "SingleOutputMLPSmallErrorBackprop", single_output_input_one, single_output_ideal_output_two, backprop_test_cost_func,  1, output_file);
+
+    // Testing how multiple output learns weights to yield a set of outputs where one neuron is fully activated while the other is not activated at all
+    mlp_bp_test(multiple_output_mlp, "MultipleOutputMLPBackpropToYieldSpecificClassification", multiple_output_input_one, multiple_output_ideal_outputs, backprop_test_cost_func, 2, output_file); // te
     fclose(output_file);
 }
