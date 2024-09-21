@@ -76,7 +76,7 @@ float floor_to_place(float val, float place) {
 }
 
 int are_similar(float val1, float val2) {
-    if (abs(val1 - val2) < 0.00001) {
+    if (fabsf(val1 - val2) < 0.00001) {
         return 1;
     }
 
