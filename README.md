@@ -8,16 +8,6 @@
         - If it is not, you can change your current working directory by entering the following command:
             > cd "~/*path/to/local/copy*/NN_Code_Implementations"
 
-## Commands to Navigate to Directories where Each Test File is Located 
-- Directory where cross entropy cost function tests are located: "**NN_Code_Implementations**"
-    > If you have followed the third aforementioned assumption, there is no command needed to change the current working directory to the aforementioned directory
-
-- Directory where activation function tests are located: "**NN_Code_Implementations/activation_functions**"
-    > cd activation_functions
-
-- Directory where MLP tests are located: "**multilayer_perceptrons**"
-    > "NN_Code_Implementations/
-
 ## How to Compile and Run Tests for Cross Entropy Cost Function
 
 1. Type the following command to compile the associated testing file.
@@ -53,10 +43,10 @@
 2. Type the following command to compile the associated testing file.
     > gcc mlp_tests.c -o mlp_tests
 
-2. Type the following command to execute the tests for the implemented MLP
+3. Type the following command to execute the tests for the implemented MLP
     > ./mlp_tests
 
-3. To view the results of the test in the terminal, type the following command
+4. To view the results of the test in the terminal, type the following command
     > less mlp_tests.txt
 
 
@@ -65,10 +55,13 @@
 1. Change your current working directory to the "cnn" directory
     > cd cnn
 
-2. Type the following command to execute the tests for the implemented CNN layers
+2. Type the following command to compile the associated testing file.
+    > gcc layer_tests.c -o layer_tests
+
+3. Type the following command to execute the tests for the implemented CNN layers
     > ./layer_tests
 
-3. To view the results of the test in the terminal, type the following command
+4. To view the results of the test in the terminal, type the following command
     > less layer_tests.txt
 
 
@@ -76,6 +69,9 @@
 
 1. Change your current working directory to the "fully_connected" directory
     > cd fully_connected
+
+2. Type the following command to compile the associated testing file.
+    > gcc fully_conn_layer_tests.c -o fully_conn_layer_tests
 
 2. Type the following command to execute the tests for the implemented fully-connected layer
     > ./full_conn_layer_tests

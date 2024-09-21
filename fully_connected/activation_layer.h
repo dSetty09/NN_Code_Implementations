@@ -4,7 +4,7 @@
  ***/
 
 #include "../common_definitions.h"
-#include "../activation_functions/C++/nonlinear_functions.h"
+#include "../activation_functions/nonlinear_functions.h"
 
 #ifndef ACTIVATION_LAYER_H
 #define ACTIVATION_LAYER_H
