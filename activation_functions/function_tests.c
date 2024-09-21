@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <math.h>
 
-#include "../../common_definitions.h"
+#include "../common_definitions.h"
 #include "linear_functions.h"
 #include "nonlinear_functions.h"
 
@@ -38,6 +38,13 @@ void activation_function_test(one_arg_activation_function activation_function, c
 
 
 int main() {
+    /* 
+     * NOTE: in the cases where 0 should be returned as a derivative, I altered the test cases to 
+     * test if the functions return a number near zero, such as 1E-15. I made this decision to prevent
+     * the case where the derivative of the cost with respect to the activation of a neuron is calculated 
+     * to be 0, preventing the weights of the connections of a neuron from being updated during one epoch.
+     */
+
     FILE* output_file = fopen("function_tests.txt", "w");
 
     float input_vals[7] = {0, -0.4, -16, 0.7, 22, -INFINITY, INFINITY};

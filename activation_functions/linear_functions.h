@@ -5,7 +5,7 @@
 #ifndef LINEAR_FUNCTIONS_HPP
 #define LINEAR_FUNCTIONS_HPP
 
-#include "../../common_definitions.h"
+#include "../common_definitions.h"
 
 // Linear Activation Function
 float linear(float x, int deriv) {

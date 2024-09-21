@@ -6,7 +6,7 @@
 #define NONLINEAR_FUNCTIONS_H
 
 #include <math.h>
-#include "../../common_definitions.h"
+#include "../common_definitions.h"
 
 // Sigmoid Activation Function
 // --> Used for models where have to predict probability as output
