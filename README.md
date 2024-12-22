@@ -129,4 +129,4 @@ sudo apt install cmake
 ---
 
 **For Windows**
-1. **Use Binary Distribution from [CMake's Website](https://cmake.org/download/)
+1. **Use Binary Distribution from [CMake's Website](https://cmake.org/download/)**
