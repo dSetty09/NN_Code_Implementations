@@ -36,10 +36,8 @@ static const float MIN_FLT_EXP = -15.942385;
 static const float MIN_FLT_LOG_ARG = 1e-45;
 static const float MAX_FLT_LOG_ARG = 3e38;
 
-static const float BP_SQUARE_MAX_INPUT = 18446742974197923840.000000;
-static const float BP_SQUARE_MIN_INPUT = -18446742974197923840.000000;
-static const float BP_SQUARE_MAX_DERIV_INPUT = 170141173319264429905852091742258462720.000000;
-static const float BP_SQUARE_MIN_DERIV_INPUT = -170141173319264429905852091742258462720.000000;
+static const float MIN_FLT_SQR_ARG = -18446743523953729536.000000;
+static const float MAX_FLT_SQR_ARG = 18446743523953729536.000000;
 
 /* TYPE DEFINITIONS */
 typedef float (*simple_act_func) (float, int);
@@ -111,22 +109,20 @@ float flt_safe_exp(float x);
  * float arithmetic operations. 
  * 
  * @param x | The x value
- * @param deriv | Flag indicating whether taking derivative or not
  * 
- * @return log(x) s.t. divide by zero exception is avoided.
+ * @return log(x) such that the value outputted is safe for float arithmetic operations.
  */
 float flt_safe_log(float x);
 
 /*
- * Similar to above function, except that it ensures that square operation is "safe" for neural network
- * propagation.
+ * Similar to above function, except that it ensures that square operation is "safe" for 
+ * float arithmetic operations.
  * 
  * @param x | The x value
- * @param deriv | Flag indicating whether taking derivative or not
  * 
- * @return square(x) s.t. divide by zero exception is avoided.
+ * @return square(x) such that the value outputted is safe for float arithmetic operations.
  */
-float bp_safe_square(float x, int deriv);
+float flt_safe_square(float x);
 
 /*
  * Generates a random number between a minimum and maximum value, inclusive. 

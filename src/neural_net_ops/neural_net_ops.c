@@ -37,14 +37,10 @@ float flt_safe_log(float x) {
     return logf(x);
 }
 
-float bp_safe_square(float x, int deriv) {
-    if (x <= BP_SQUARE_MAX_INPUT && x >= BP_SQUARE_MIN_INPUT) return (deriv) ? (2 * x) : powf(x, 2);
-
-    if (x < BP_SQUARE_MIN_INPUT && deriv) return (x < BP_SQUARE_MIN_DERIV_INPUT) ? (2 * BP_SQUARE_MIN_DERIV_INPUT) : (2 * x);
-
-    if (deriv) return (x > BP_SQUARE_MAX_DERIV_INPUT) ? (2 * BP_SQUARE_MAX_DERIV_INPUT) : (2 * x);
-
-    return FLT_MAX;
+float flt_safe_square(float x) {
+    if (x < MIN_FLT_SQR_ARG) return powf(MIN_FLT_SQR_ARG, 2);
+    if (x > MAX_FLT_SQR_ARG) return powf(MAX_FLT_SQR_ARG, 2);
+    return powf(x, 2);
 }
 
 float random_num(float min, float max, float precision) {

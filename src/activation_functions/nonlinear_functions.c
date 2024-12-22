@@ -11,7 +11,7 @@ float sigmoid(float x, int deriv) {
             return NEAR_ZERO;
         }
 
-        float sig_denom_squared = bp_safe_square(sig_denom, 0);
+        float sig_denom_squared = flt_safe_square(sig_denom);
 
         result = e_neg_x / sig_denom_squared;
         return result + NEAR_ZERO;
@@ -28,8 +28,8 @@ float hyperbolic_tangent(float x, int deriv) {
     float e_pos_x = flt_safe_exp(x);
 
     if (deriv) {
-        float sum_squared = bp_safe_square(e_pos_x + e_neg_x, 0);
-        float diff_squared = bp_safe_square(e_pos_x - e_neg_x, 0);
+        float sum_squared = flt_safe_square(e_pos_x + e_neg_x);
+        float diff_squared = flt_safe_square(e_pos_x - e_neg_x);
 
         result = (sum_squared - diff_squared) / sum_squared;
         return result + NEAR_ZERO;

@@ -16,6 +16,12 @@ TEST(FloatSafeTests, Log) {
     ASSERT_FLOAT_EQ(88.596848, flt_safe_log(INFINITY));
 }
 
+TEST(FloatSafeTests, Square) {
+    ASSERT_FLOAT_EQ(FLT_MAX, flt_safe_square(-INFINITY));
+    ASSERT_FLOAT_EQ(18044.279297, flt_safe_square(134.329)); 
+    ASSERT_FLOAT_EQ(FLT_MAX, flt_safe_square(INFINITY));
+}
+
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
