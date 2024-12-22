@@ -4,10 +4,9 @@
 
 #include <vector>
 
+#include "../include/neural_net_ops/neural_net_ops.h"
 #include "../include/activation_functions/linear_functions.h"
 #include "../include/activation_functions/nonlinear_functions.h"
-
-typedef float (*simple_act_func) (float, int);
 
 class SimpleActFuncTest : public testing::Test {
 protected:

@@ -30,6 +30,8 @@ static const int NO_DERIV = -1;
 
 static const float NEAR_ZERO = 1E-15;
 
+static const float MAX_FLT_EXP = 88.722839;
+
 static const float BP_LOG_MIN_INPUT = 0;
 static const float BP_LOG_MAX_INPUT = FLT_MAX;
 static const float BP_LOG_MAX_OUTPUT = 88.722839;
@@ -39,7 +41,8 @@ static const float BP_SQUARE_MIN_INPUT = -18446742974197923840.000000;
 static const float BP_SQUARE_MAX_DERIV_INPUT = 170141173319264429905852091742258462720.000000;
 static const float BP_SQUARE_MIN_DERIV_INPUT = -170141173319264429905852091742258462720.000000;
 
-
+/* TYPE DEFINITIONS */
+typedef float (*simple_act_func) (float, int);
 
 /* STRUCT DEFINITIONS */
 
@@ -103,7 +106,7 @@ float arr_max(float* arr, int num);
  * 
  * @return e^x s.t. divide by zero exception is avoided. 
  */
-float bp_safe_exp(float x, int deriv);
+float bp_safe_exp(float x);
 
 /*
  * Similar to above function, except that it ensures that log operation is "safe" for neural network
