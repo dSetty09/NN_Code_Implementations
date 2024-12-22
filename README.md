@@ -1,80 +1,108 @@
-# Running Tests in Command Line
+# Vedya Labs Neural Network Implementation Project
 
-### Instruction Assumptions: 
- - Each set of instructions assume you have done the following:
-    1. You have forked this repository and saved your local copy of it to a certain location on your computer.
-    2. You are running the code through a shell program, or a terminal
-    3. Your current working directory of your terminal session is "NN_Code_Implementations"
-        - If it is not, you can change your current working directory by entering the following command:
-            > cd "~/*path/to/local/copy*/NN_Code_Implementations"
+## Installing Google Test if Needed
+**For macOS**  
+1. **Using [Homebrew](https://brew.sh/)**:
 
-## How to Compile and Run Tests for Cross Entropy Cost Function
+```bash
+brew install googletest
+```
+After installation, Homebrew provides the `gtest` library in its default paths like `/usr/local/opt/googletest`.
+ 
+2. **Manual Installation** :
 
-1. Type the following command to compile the associated testing file.
-    > gcc cost_function_tests.c -o cost_function_tests
-
-2. Type the following command to execute the tests for the implemented cost function.
-    > ./cost_function_tests
-
-2. To view the results of the test in the terminal, type the following command
-    > less cost_function_tests.txt
-
-
-## How to Run Tests for Activation Functions
-
-1. Change your current working directory to the "activation_functions" directory
-    > cd activation_functions
-
-2. Type the following command to compile the associated testing file.
-    > gcc function_tests.c -o function_tests
-
-3. Type the following command to execute the tests for the implemented activation functions
-    > ./function_tests
-
-4. To view the results of the test in the terminal, type the following command
-    > less function_tests.txt
+```bash
+git clone https://github.com/google/googletest.git
+cd googletest
+cmake -S . -B build
+cmake --build build
+sudo cmake --install build
+```
 
 
-## How to Run Tests for MLP 
+---
 
-1. Change your current working directory to the "multilayer_perceptron" directory
-    > cd multilayer_perceptron
+**For Linux**  
+1. **Using Package Manager**  (Ubuntu/Debian):
 
-2. Type the following command to compile the associated testing file.
-    > gcc mlp_tests.c -o mlp_tests
+```bash
+sudo apt update
+sudo apt install libgtest-dev
+```
+After installation, compile the source code (as `libgtest-dev` installs the source):
 
-3. Type the following command to execute the tests for the implemented MLP
-    > ./mlp_tests
+```bash
+cd /usr/src/gtest
+sudo cmake .
+sudo make
+sudo cp *.a /usr/lib
+```
+ 
+2. **Manual Installation** :
 
-4. To view the results of the test in the terminal, type the following command
-    > less mlp_tests.txt
-
-
-## How to Run Forward Pass Tests for All types of CNN Layers except the Fully-Connected Layer
-
-1. Change your current working directory to the "cnn" directory
-    > cd cnn
-
-2. Type the following command to compile the associated testing file.
-    > gcc layer_tests.c -o layer_tests
-
-3. Type the following command to execute the tests for the implemented CNN layers
-    > ./layer_tests
-
-4. To view the results of the test in the terminal, type the following command
-    > less layer_tests.txt
+```bash
+git clone https://github.com/google/googletest.git
+cd googletest
+cmake -S . -B build
+cmake --build build
+sudo cmake --install build
+```
 
 
-## How to Run Forward Pass Tests for Fully-Connected Layer
+---
 
-1. Change your current working directory to the "fully_connected" directory
-    > cd fully_connected
+**For Windows**  
+1. **Using vcpkg** : 
+  - Install [vcpkg](https://github.com/microsoft/vcpkg)  if not already installed.
+ 
+  - Install `gtest` using vcpkg:
 
-2. Type the following command to compile the associated testing file.
-    > gcc fully_conn_layer_tests.c -o fully_conn_layer_tests
+```bash
+vcpkg install gtest
+```
+ 
+2. **Manual Installation** : 
+  - Clone the repository:
 
-2. Type the following command to execute the tests for the implemented fully-connected layer
-    > ./full_conn_layer_tests
+```bash
+git clone https://github.com/google/googletest.git
+cd googletest
+```
+ 
+  - Use CMake to generate project files and build:
 
-3. To view the results of the test in the terminal, type the following command
-    > less full_conn_layer_tests.txt
+```bash
+cmake -S . -B build
+cmake --build build
+```
+
+  - Add the compiled library paths to your project or system path as needed.
+
+
+---
+
+**Verifying Installation** After installing `gtest`, you can verify it by compiling and running a simple test program.**Example Test Program:** 
+
+```cpp
+#include <gtest/gtest.h>
+
+TEST(SampleTest, AssertionTrue) {
+    ASSERT_TRUE(true);
+}
+
+int main(int argc, char **argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```
+
+Compile with:
+
+
+```bash
+g++ -std=c++17 -o test_sample test_sample.cpp -lgtest -lgtest_main -pthread
+./test_sample
+```
+
+If the test runs successfully, your installation is complete!
+
