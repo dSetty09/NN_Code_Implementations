@@ -1,11 +1,4 @@
-/* Notes:
- * --> Functions assume primitive integer data type passed as argument
- */
-
-#ifndef LINEAR_FUNCTIONS_HPP
-#define LINEAR_FUNCTIONS_HPP
-
-#include "../common_definitions.h"
+#include "../../include/activation_functions/linear_functions.h"
 
 // Linear Activation Function
 float linear(float x, int deriv) {
@@ -23,5 +16,3 @@ float linear(float x, int deriv) {
 
     return x;
 }
-
-#endif

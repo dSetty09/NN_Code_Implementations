@@ -1,15 +1,7 @@
-/* Notes:
- * --> Functions assume primitive integer data type passed as argument
- * --> Contains implementations of Mean Squared Error and its derivative
- * --> Future updates:
- *          > Will contain implementation of Cross Entropy Loss and its derivative
- */
-
 #ifndef COST_FUNCTIONS_H
 #define COST_FUNCTIONS_H
 
-#include <math.h>
-#include "common_definitions.h"
+#include "../../include/neural_net_ops/neural_net_ops.h"
 
 /*
  * Calculates the mean squared error between a set of values yielded from a neural network versus 

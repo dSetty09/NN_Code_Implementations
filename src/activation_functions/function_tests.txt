@@ -4,8 +4,8 @@
 #include <assert.h>
 #include <math.h>
 
-#include "../common_definitions.h"
-#include "linear_functions.h"
+#include "../neural_net_ops/neural_net_ops.h"
+#include "linear_functions.h" 
 #include "nonlinear_functions.h"
 
 #define TRUE 1
