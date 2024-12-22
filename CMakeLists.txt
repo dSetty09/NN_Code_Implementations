@@ -33,16 +33,3 @@ foreach(TEST_FILE ${TEST_FILES})
     # Set executables to be within the build directory
     set_target_properties(${TEST_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 endforeach()
-
-# add_executable(test_act_funcs 
-#     tests/test_act_funcs.cpp 
-#     src/activation_functions/linear_functions.c 
-#     src/activation_functions/nonlinear_functions.c
-#     src/neural_net_ops/neural_net_ops.c
-# )
-
-# # link google test and pthread libraries
-# target_link_libraries(test_act_funcs PRIVATE gtest gtest_main pthread) 
-
-# # set executables to be sent to binary directory
-# set_target_properties(PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
