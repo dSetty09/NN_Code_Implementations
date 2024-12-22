@@ -11,7 +11,7 @@
 class SimpleActFuncTest : public testing::Test {
 protected:
     void SetUp() override {
-       inputs = {0, -0.4, -16, 0.7, 22, -FLT_MAX, FLT_MAX}; 
+       inputs = {0, -0.4, -16, 0.7, 22, -INFINITY, INFINITY}; 
 
        linear_outputs = {0, -0.4, -16, 0.7, 22, -FLT_MAX, FLT_MAX};
        sigmoid_outputs = {0.5, 0.40131, 0, 0.66819, 1, 0, 1};
