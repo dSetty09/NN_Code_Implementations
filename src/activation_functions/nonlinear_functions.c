@@ -3,8 +3,8 @@
 float sigmoid(float x, int deriv) {
     float result;
 
-    float e_neg_x = bp_safe_exp(-x);
-    float sig_denom = 1 + bp_safe_exp(-x);
+    float e_neg_x = flt_safe_exp(-x);
+    float sig_denom = 1 + flt_safe_exp(-x);
 
     if (deriv) {
         if (x < -35) {
@@ -24,8 +24,8 @@ float sigmoid(float x, int deriv) {
 float hyperbolic_tangent(float x, int deriv) {
     float result;
 
-    float e_neg_x = bp_safe_exp(-x);
-    float e_pos_x = bp_safe_exp(x);
+    float e_neg_x = flt_safe_exp(-x);
+    float e_pos_x = flt_safe_exp(x);
 
     if (deriv) {
         float sum_squared = bp_safe_square(e_pos_x + e_neg_x, 0);
@@ -99,7 +99,7 @@ float softplus(float x, int deriv) {
 
     float result;
 
-    float e_pos_x = bp_safe_exp(x);
+    float e_pos_x = flt_safe_exp(x);
     float log_expr = 1 + e_pos_x;
 
     if (deriv) {
@@ -107,29 +107,29 @@ float softplus(float x, int deriv) {
         return result + NEAR_ZERO;
     }
 
-    result = bp_safe_log(1 + bp_safe_exp(x), 0);
+    result = flt_safe_log(1 + flt_safe_exp(x));
     return result;
 }
 
 float softmax(float* z, int i, unsigned int n, int deriv_i) {
     float sum_nat_exps = 0;
 
-    for (int j = 0; j < n; ++j) sum_nat_exps += bp_safe_exp(z[j]);
+    for (int j = 0; j < n; ++j) sum_nat_exps += flt_safe_exp(z[j]);
 
     if (deriv_i >= 0) {
         if (i == deriv_i) {
             float sum_nat_exps_before = 0;
-            for (int k = 0; k < i; ++k) sum_nat_exps_before += bp_safe_exp(z[k]);
+            for (int k = 0; k < i; ++k) sum_nat_exps_before += flt_safe_exp(z[k]);
 
             float sum_nat_exps_after = 0;
-            for (int l = i + 1; l < n; ++l) sum_nat_exps_after += bp_safe_exp(z[l]);
+            for (int l = i + 1; l < n; ++l) sum_nat_exps_after += flt_safe_exp(z[l]);
 
-            return (bp_safe_exp(z[i]) * (sum_nat_exps_before + sum_nat_exps_after)) / (sum_nat_exps * sum_nat_exps);
+            return (flt_safe_exp(z[i]) * (sum_nat_exps_before + sum_nat_exps_after)) / (sum_nat_exps * sum_nat_exps);
 
         }
         
-        return -(bp_safe_exp(z[i] + z[deriv_i]) / (sum_nat_exps * sum_nat_exps));
+        return -(flt_safe_exp(z[i] + z[deriv_i]) / (sum_nat_exps * sum_nat_exps));
     }
 
-    return bp_safe_exp(z[i]) / sum_nat_exps;
+    return flt_safe_exp(z[i]) / sum_nat_exps;
 }

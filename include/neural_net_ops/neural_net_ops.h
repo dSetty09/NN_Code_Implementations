@@ -28,13 +28,13 @@ static const unsigned char BIAS = 'B';
 
 static const int NO_DERIV = -1;
 
-static const float NEAR_ZERO = 1E-15;
+static const float NEAR_ZERO = 1e-6;
 
 static const float MAX_FLT_EXP = 88.722839;
+static const float MIN_FLT_EXP = -15.942385;
 
-static const float BP_LOG_MIN_INPUT = 0;
-static const float BP_LOG_MAX_INPUT = FLT_MAX;
-static const float BP_LOG_MAX_OUTPUT = 88.722839;
+static const float MIN_FLT_LOG_ARG = 1e-45;
+static const float MAX_FLT_LOG_ARG = 3e38;
 
 static const float BP_SQUARE_MAX_INPUT = 18446742974197923840.000000;
 static const float BP_SQUARE_MIN_INPUT = -18446742974197923840.000000;
@@ -95,29 +95,27 @@ int are_equal(float val1, float val2);
 float arr_max(float* arr, int num); 
 
 /*
- * Conducts an exponent operation that is "safe" for neural network backpropagation. 
- * In other words, x values for which e^x evaluates to around 0 will never be less than
- * some designated minimum value, ensuring that the gradient never reaches exactly 0 during 
- * training (note that this doesn't effectively mitigate the vanishing gradient problem, it just
- * ensures that a DivideByZero Exception doesn't occur during backpropagation) 
+ * Conducts an exponent operation that is "safe" for float operations. 
+ * In other words, this function will never output a value that is greater
+ * than the maximum representable float value and a value that is less than
+ * the smallest representable float value greater than zero.
  * 
  * @param x | The x value
- * @param deriv | Flag indicating whether taking derivative or not
  * 
- * @return e^x s.t. divide by zero exception is avoided. 
+ * @return e^x such that the value outputted is safe for float arithmetic operations. 
  */
-float bp_safe_exp(float x);
+float flt_safe_exp(float x);
 
 /*
- * Similar to above function, except that it ensures that log operation is "safe" for neural network
- * propagation.
+ * Similar to above function, except that it ensures that log operation is safe for 
+ * float arithmetic operations. 
  * 
  * @param x | The x value
  * @param deriv | Flag indicating whether taking derivative or not
  * 
  * @return log(x) s.t. divide by zero exception is avoided.
  */
-float bp_safe_log(float x, int deriv);
+float flt_safe_log(float x);
 
 /*
  * Similar to above function, except that it ensures that square operation is "safe" for neural network

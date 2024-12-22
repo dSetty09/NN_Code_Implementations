@@ -25,16 +25,16 @@ float arr_max(float* arr, int num) {
     return max;
 }
 
-float bp_safe_exp(float x) {
-    return (x > MAX_FLT_EXP) ? FLT_MAX : expf(x);
+float flt_safe_exp(float x) {
+    if (x < MIN_FLT_EXP) return FLT_EPSILON;
+    if (x > MAX_FLT_EXP) return FLT_MAX;
+    return expf(x);
 }
 
-float bp_safe_log(float x, int deriv) {
-    if (x <= BP_LOG_MAX_INPUT && x >= BP_LOG_MIN_INPUT) return (deriv) ? (1 / x + NEAR_ZERO) : logf(x + NEAR_ZERO);
-
-    if (x < BP_LOG_MIN_INPUT) return NAN;
-
-    return (deriv) ? NEAR_ZERO : BP_LOG_MAX_OUTPUT;
+float flt_safe_log(float x) {
+    if (x < MIN_FLT_LOG_ARG) return logf(MIN_FLT_LOG_ARG);
+    if (x > MAX_FLT_LOG_ARG) return logf(MAX_FLT_LOG_ARG);
+    return logf(x);
 }
 
 float bp_safe_square(float x, int deriv) {
