@@ -81,7 +81,8 @@ cmake --build build
 
 ---
 
-**Verifying Installation** After installing `gtest`, you can verify it by compiling and running a simple test program.**Example Test Program:** 
+**Verifying Installation** After installing `gtest`, you can verify it by compiling and running a simple test program.
+Example Test Program:
 
 ```cpp
 #include <gtest/gtest.h>
@@ -106,3 +107,24 @@ g++ -std=c++17 -o test_sample test_sample.cpp -lgtest -lgtest_main -pthread
 
 If the test runs successfully, your installation is complete!
 
+## Installing CMake if Needed
+**For macOS**
+1. **Using [Homebrew](https://brew.sh/)**:
+
+```bash
+brew install cmake
+```
+
+---
+
+**For Linux**
+1. **Using Advanced Package Tool (APT) for Ubuntu/Debian**
+
+```bash
+sudo apt install cmake
+```
+
+---
+
+**For Windows**
+1. **Use Binary Distribution from [CMake's Website](https://cmake.org/download/)
