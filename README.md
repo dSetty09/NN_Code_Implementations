@@ -107,6 +107,8 @@ g++ -std=c++17 -o test_sample test_sample.cpp -lgtest -lgtest_main -pthread
 
 If the test runs successfully, your installation is complete!
 
+---
+
 ## Installing CMake if Needed
 **For macOS**
 1. **Using [Homebrew](https://brew.sh/)**:
