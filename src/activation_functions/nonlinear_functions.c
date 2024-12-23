@@ -33,11 +33,8 @@ float step(float x, int deriv) {
 
 float relu(float x, int deriv) {
     if (deriv) {
-        if (x > 0) {
-            return 1;
-        } 
-
-        return NEAR_ZERO;
+        if (x > 0) return 1 + FLT_EPSILON;
+        return FLT_EPSILON;
     }
 
     if (x < 0) {
