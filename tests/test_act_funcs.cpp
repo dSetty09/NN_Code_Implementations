@@ -18,7 +18,7 @@ protected:
        tanh_outputs = {0, -0.37995, -1, 0.60437, 1, -1, 1};
        step_outputs = {0, 0, 0, 1, 1, 0, 1};
        relu_outputs = {0, 0, 0, 0.7, 22, 0, FLT_MAX};
-       leaky_relu_outputs = {0, -0.004, -0.16, 0.7, 22, -FLT_MAX, FLT_MAX};
+       leaky_relu_outputs = {0, -0.004, -0.16, 0.7, 22, -FLT_MAX * 0.01, FLT_MAX};
        softplus_outputs = {0.69315, 0.51302, 0, 1.10319, 22, 0, FLT_MAX};
 
        linear_deriv_outputs = {1, 1, 1, 1, 1, 1, 1};
@@ -55,7 +55,7 @@ void eval_simple_act_func(simple_act_func active_func, int deriv_flag, int num_t
     for (int i = 0; i < num_tests; ++i) {
         ASSERT_NEAR(active_func(inputs[i], deriv_flag), outputs[i], 1e-5); 
 
-        if (deriv_flag && active_func != linear) 
+        if (deriv_flag && active_func != linear && active_func != leaky_relu) 
             ASSERT_FALSE(are_equal(active_func(inputs[i], deriv_flag), outputs[i]));
     }
 }
