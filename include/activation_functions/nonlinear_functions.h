@@ -11,6 +11,9 @@ extern "C" {
 static const float SIG_MIN_INPUT = -88.72283;
 static const float SIG_MAX_INPUT = 88.72283;
 
+static const float TANH_MIN_INPUT = -44;
+static const float TANH_MAX_INPUT = 44;
+
 // Sigmoid Activation Function
 // --> Used for models where have to predict probability as output
 float sigmoid(float x, int deriv); 

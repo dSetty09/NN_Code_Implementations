@@ -7,21 +7,11 @@ float sigmoid(float x, int deriv) {
 }
 
 float hyperbolic_tangent(float x, int deriv) {
-    float result;
+    if (x < TANH_MIN_INPUT) x = TANH_MIN_INPUT;
+    if (x > TANH_MAX_INPUT) x = TANH_MAX_INPUT;
 
-    float e_neg_x = flt_safe_exp(-x);
-    float e_pos_x = flt_safe_exp(x);
-
-    if (deriv) {
-        float sum_squared = flt_safe_square(e_pos_x + e_neg_x);
-        float diff_squared = flt_safe_square(e_pos_x - e_neg_x);
-
-        result = (sum_squared - diff_squared) / sum_squared;
-        return result + NEAR_ZERO;
-    }
-
-    result = (e_pos_x - e_neg_x) / (e_pos_x + e_neg_x);
-    return result;
+    if (deriv) return (powf(expf(x)+expf(-x), 2) - powf(expf(x)-expf(-x), 2)) / (powf(expf(x)+expf(-x), 2));
+    return (expf(x)-expf(-x)) / (expf(x)+expf(-x));
 }
 
 float step(float x, int deriv) {
