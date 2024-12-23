@@ -1,24 +1,9 @@
 #include "../../include/activation_functions/nonlinear_functions.h"
 
 float sigmoid(float x, int deriv) {
-    float result;
-
-    float e_neg_x = flt_safe_exp(-x);
-    float sig_denom = 1 + flt_safe_exp(-x);
-
-    if (deriv) {
-        if (x < -35) {
-            return NEAR_ZERO;
-        }
-
-        float sig_denom_squared = flt_safe_square(sig_denom);
-
-        result = e_neg_x / sig_denom_squared;
-        return result + NEAR_ZERO;
-    }
-
-    result = 1 / sig_denom;
-    return result;
+    if (x < SIG_MIN_INPUT) x = SIG_MIN_INPUT;
+    if (x > SIG_MAX_INPUT) x = SIG_MAX_INPUT;
+    return (deriv) ? expf(-x) / powf(1 + expf(-x), 2) : 1 / (1 + expf(-x));
 }
 
 float hyperbolic_tangent(float x, int deriv) {
