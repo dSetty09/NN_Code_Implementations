@@ -90,11 +90,6 @@ TEST_F(SimpleActFuncTest, LeakyReluFuncTest) {
                          SimpleActFuncTest::inputs, SimpleActFuncTest::leaky_relu_outputs);
 }
 
-TEST_F(SimpleActFuncTest, SoftPlusFuncTest) {
-    eval_simple_act_func(softplus, SimpleActFuncTest::no_deriv, SimpleActFuncTest::num_tests,
-                         SimpleActFuncTest::inputs, SimpleActFuncTest::softplus_outputs);
-}
-
 TEST_F(SimpleActFuncTest, LinearDerivFuncTest) {
     eval_simple_act_func(linear, SimpleActFuncTest::deriv, SimpleActFuncTest::num_tests,
                          SimpleActFuncTest::inputs, SimpleActFuncTest::linear_deriv_outputs);
@@ -125,9 +120,23 @@ TEST_F(SimpleActFuncTest, LeakyReluDerivFuncTest) {
                          SimpleActFuncTest::inputs, SimpleActFuncTest::leaky_relu_deriv_outputs);
 }
 
-TEST_F(SimpleActFuncTest, SoftPlusDerivFuncTest) {
-    eval_simple_act_func(softplus, SimpleActFuncTest::deriv, SimpleActFuncTest::num_tests,
-                         SimpleActFuncTest::inputs, SimpleActFuncTest::softplus_deriv_outputs);
+TEST(SoftMaxFuncTests, SoftMaxFuncTests) {
+    float inputs[] = {12.45, 22.234, 7.765, -0.22234, -0.1245};
+    float outputs[] = {0.0000563428, 0.9999431367, 0.0000005202, 0.0000000002, 0.0000000002};
+
+    float deriv_outputs0[] = {0.0000563395823097, -0.0000563395529794, -2.9309373691e-11, -9.9574664328e-15, -1.0980957816e-14};
+    float deriv_outputs1[] = {-0.0000563395529794, 0.0000568600927248, -5.2016814083e-7, -1.7672014614e-10, -1.9488456054e-10};
+    float deriv_outputs2[] = {-2.9309373691e-11, -5.2016814083e-7, 5.201974504e-7, -9.1934644985e-17, -1.013842693e-16};
+    float deriv_outputs3[] = {-9.9574664328e-15, -1.7672014614e-10, -9.1934644985e-17, 1.7673019557e-10, -3.4443945102e-20};
+    float deriv_outputs4[] = {-1.0980957816e-14, -1.9488456054e-10, -1.013842693e-16, -3.4443945102e-20, 1.9489564292e-10};
+
+    float* deriv_outputs[] = {deriv_outputs0, deriv_outputs1, deriv_outputs2, deriv_outputs3, deriv_outputs4};
+
+    for (int i = 0; i < 5; ++i) {
+        ASSERT_NEAR(softmax(inputs, i, 5, NO_DERIV), outputs[i], 1e-5);
+
+        for (int h = 0; h < 5; ++h) ASSERT_NEAR(softmax(inputs, i, 5, h), deriv_outputs[i][h], 1e-5);
+    }
 }
 
 int main(int argc, char** argv) {

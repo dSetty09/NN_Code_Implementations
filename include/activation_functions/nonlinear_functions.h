@@ -49,7 +49,7 @@ float softplus(float x, int deriv);
 //     to determine the probability of a weighted sum value
 //     being the possible true output for a given input
 // ---> There are n classes
-float softmax(float* z, int i, unsigned int n, int deriv_i);
+float softmax(float* z, int i, unsigned int n, int deriv_idx);
 
 #ifdef __cplusplus
 }
