@@ -52,7 +52,12 @@ protected:
 void eval_simple_act_func(simple_act_func active_func, int deriv_flag, int num_tests, 
                           const std::vector<float>& inputs, const std::vector<float>& outputs) {
 
-    for (int i = 0; i < num_tests; ++i) ASSERT_NEAR(active_func(inputs[i], deriv_flag), outputs[i], 1e-5); 
+    for (int i = 0; i < num_tests; ++i) {
+        ASSERT_NEAR(active_func(inputs[i], deriv_flag), outputs[i], 1e-5); 
+
+        if (deriv_flag && active_func != linear) 
+            ASSERT_FALSE(are_equal(active_func(inputs[i], deriv_flag), outputs[i]));
+    }
 }
 
 TEST_F(SimpleActFuncTest, LinearFuncTest) {

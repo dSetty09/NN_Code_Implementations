@@ -6,7 +6,7 @@ float round_to_place(float val, float place) {
 }
 
 int are_equal(float val1, float val2) {
-    if (fabsf(val1 - val2) < 1e-6) {
+    if (fabsf(val1 - val2) < FLT_EPSILON) {
         return 1;
     }
 
