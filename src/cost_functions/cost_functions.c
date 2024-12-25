@@ -4,6 +4,6 @@ float se(float y_m, float y_hat_m, int deriv) {
     return (deriv) ? -2 * (y_m - y_hat_m) : powf(y_m - y_hat_m, 2);
 }
 
-float cross_entropy(float* yielded_distro, float* true_distro, int n, int deriving_output_index) {
-    return 1.0;
+float multiclass_ce(float* y_hat_pdistro, int true_cls, int deriv) {
+    return (deriv) ? - 1 / y_hat_pdistro[true_cls] : - logf(y_hat_pdistro[true_cls]);
 }
