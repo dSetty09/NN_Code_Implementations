@@ -6,6 +6,7 @@
 #define NEURAL_NET_OPS_H
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <math.h>
 #include <time.h>
@@ -41,6 +42,7 @@ static const float MAX_FLT_SQR_ARG = 18446743523953729536.000000;
 
 /* TYPE DEFINITIONS */
 typedef float (*simple_act_func) (float, int);
+typedef float (*softmax_act_func) (float*, int, unsigned int, int);
 
 /* STRUCT DEFINITIONS */
 
@@ -91,6 +93,33 @@ int are_equal(float val1, float val2);
  * @return the largest value in the float array
  */
 float arr_max(float* arr, int num); 
+
+/*
+ * Creates a deep copy from a specific array to
+ * a certain array.
+ * 
+ * @param from | The array deep copying from
+ * @param to | The array deep copying to
+ * @param n | The size of the array being duplicated
+ */
+void arr_dup(float* from, float** to, int n);
+
+/*
+ * Deletes the memory allocated for a specified array.
+ *
+ * @param arr | The array whose allocated memory is being freed.
+ * 
+ * @warning Only use for arrays that are dynamically allocated.
+ */
+void arr_delete(float* arr);
+
+/*
+ * Prints the content of a given array.
+ *
+ * @param arr | The array whose content is being printed.
+ * @param n | The size of the given array.
+ */
+void arr_print(float* arr, int n);
 
 /*
  * Conducts an exponent operation that is "safe" for float operations. 

@@ -25,6 +25,24 @@ float arr_max(float* arr, int num) {
     return max;
 }
 
+void arr_dup(float* from, float** to, int n) {
+    *to = (float*) malloc(sizeof(float) * n);
+    for (int i = 0; i < n; ++i) (*to)[i] = from[i];
+}
+
+void arr_delete(float* arr) {
+    free(arr);
+}
+
+void arr_print(float* arr, int n) {
+    for (int i = 0; i < n; ++i) { 
+        printf("%f", arr[i]);
+        if (i < n - 1) printf(", ");
+    }
+
+    printf("\n");
+}
+
 float flt_safe_exp(float x) {
     if (x < MIN_FLT_EXP) return FLT_EPSILON;
     if (x > MAX_FLT_EXP) return FLT_MAX;
