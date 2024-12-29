@@ -14,7 +14,8 @@ float wsum(Neuron* neuron, float* x, int deriv_wx_idx, int deriv_w, int deriv_x,
 }
 
 void update_gradients(Neuron* neuron, float* x, float cost_to_wsum_deriv) {
-    neuron->delta_b = cost_to_wsum_deriv * wsum(neuron, x, NO_DERIV, 0, 0, 1);
-
     for (int i = 0; i < neuron->W; ++i) neuron->delta_w[i] = cost_to_wsum_deriv * wsum(neuron, x, i, 1, 0, 0); 
+    for (int i = 0; i < neuron->W; ++i) neuron->delta_x[i] = cost_to_wsum_deriv * wsum(neuron, x, i, 0, 1, 0);
+
+    neuron->delta_b = cost_to_wsum_deriv * wsum(neuron, x, NO_DERIV, 0, 0, 1);
 }

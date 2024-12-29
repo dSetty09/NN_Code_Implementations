@@ -24,17 +24,16 @@ protected:
 
         arr_dup(NeuronUnitTests::w, &(neuron->w), 5);
 
-        neuron->delta_w = (float*) malloc(sizeof(float) * 5);    
-        neuron->delta_w[0] = 0; 
-        neuron->delta_w[1] = 0;
-        neuron->delta_w[2] = 0;
-        neuron->delta_w[3] = 0;
-        neuron->delta_w[4] = 0;
+        neuron->delta_w = (float*) calloc(sizeof(float), 5);    
+        neuron->delta_x = (float*) calloc(sizeof(float), 5);
     }
 
     void TearDown() override {
         arr_delete(neuron->w);
         arr_delete(neuron->delta_w);
+        arr_delete(neuron->delta_x);
+
+        free(neuron);
     }
 
     float w[5];
@@ -66,6 +65,7 @@ TEST_F(NeuronUnitTests, Gradients) {
     update_gradients(NeuronUnitTests::neuron, NeuronUnitTests::x, cost_to_wsum_deriv);
 
     for (int i = 0; i < 5; ++i) ASSERT_FLOAT_EQ(NeuronUnitTests::neuron->delta_w[i], 2 * x[i]);
+    for (int i = 0; i < 5; ++i) ASSERT_FLOAT_EQ(NeuronUnitTests::neuron->delta_x[i], 2 * w[i]);
     ASSERT_FLOAT_EQ(NeuronUnitTests::neuron->delta_b, 2);
 }
 
