@@ -13,9 +13,19 @@ float wsum(Neuron* neuron, float* x, int deriv_wx_idx, int deriv_w, int deriv_x,
     return sum;
 }
 
-void update_gradients(Neuron* neuron, float* x, float cost_to_wsum_deriv) {
-    for (int i = 0; i < neuron->W; ++i) neuron->delta_w[i] = cost_to_wsum_deriv * wsum(neuron, x, i, 1, 0, 0); 
-    for (int i = 0; i < neuron->W; ++i) neuron->delta_x[i] = cost_to_wsum_deriv * wsum(neuron, x, i, 0, 1, 0);
+float* update_gradients(Neuron* neuron, float* x, float* cost_act_derivs, int num_derivs) {
+    neuron->delta_a = 0;
+    for (int i = 0; i < num_derivs; ++i) neuron->delta_a += cost_act_derivs[i];  
 
-    neuron->delta_b = cost_to_wsum_deriv * wsum(neuron, x, NO_DERIV, 0, 0, 1);
+    float cost_wsum_deriv = neuron->delta_a * neuron->act_func(wsum(neuron, x, NO_DERIV, 0, 0, 0), 1);
+
+    for (int j = 0; j < neuron->W; ++j) 
+        neuron->delta_w[j] = cost_wsum_deriv * wsum(neuron, x, j, 1, 0, 0); 
+
+    neuron->delta_b = cost_wsum_deriv * wsum(neuron, x, NO_DERIV, 0, 0, 1);
+
+    float* cost_inputs_derivs = (float*) malloc(sizeof(float) * neuron->W);
+    for (int k = 0; k < neuron->W; ++k) cost_inputs_derivs[k] = cost_wsum_deriv * wsum(neuron, x, k, 0, 1, 0); 
+
+    return cost_inputs_derivs;
 }

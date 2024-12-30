@@ -26,6 +26,8 @@ protected:
 
         neuron->delta_w = (float*) calloc(sizeof(float), 5);    
         neuron->delta_x = (float*) calloc(sizeof(float), 5);
+
+        neuron->output = 0;
     }
 
     void TearDown() override {

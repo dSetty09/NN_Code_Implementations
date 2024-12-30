@@ -20,11 +20,13 @@ typedef struct neuron_node {
     float b; // the bias term
 
     float* delta_w; // the gradient of the weights connected to this neuron
-    float* delta_x; // the gradient of the inputs (i.e. activations from last layer) to this neuron. 
+    float delta_a; // the gradient of the activation for this neuron 
     float delta_b; // the gradient of the bias for this neuron
 
     simple_act_func act_func; // the activation function for the neuron, NULL if softmax defined
     softmax_act_func soft_act_func; // softmax activation function for neuron, NULL if act_func defined
+
+    float output; // the output of the neuron
 } Neuron;
 
 typedef struct kernel {
@@ -50,14 +52,16 @@ typedef struct kernel {
 float wsum(Neuron* neuron, float* x, int deriv_wx_idx, int deriv_w, int deriv_x, int deriv_b); 
 
 /*
- * Updates the weights, inputs, and bias gradients for the referenced neuron by finding the derivative of an
- * arbitrary cost function with respect to the each of the weights and the bias of the neuron. 
+ * Updates the weights, inputs, and bias gradients for the referenced neuron in relation to the result
+ * of the cost function result from the forward pass of the neural network. 
  * 
  * @param neuron | The neuron for which the gradients are being calculated.
  * @param x | A vector of inputs received from the preceding layer.
- * @param cost_to_wsum_deriv | The derivative of the cost function with respect to weighted sum of neuron.
+ * @param cost_act_derivs | The derivs of the cost function w/ respect to activation of this neuron. 
+ * 
+ * @return The derivatives of the cost function with respect to each input passed to this neuron.
  */
-void update_gradients(Neuron* neuron, float* x, float cost_to_wsum_deriv); 
+float* update_gradients(Neuron* neuron, float* x, float* cost_act_derivs, int num_derivs); 
 
 
 #ifdef __cplusplus

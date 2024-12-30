@@ -12,6 +12,19 @@ typedef struct dl {
     int num;
 } DenseLayer;
 
+/*
+ * Conducts a forward pass operation for each neuron in the dense layer. 
+ *
+ * @param dl | The dense layer of concern.
+ * @param x | The array of inputs given to this layer. 
+ */
+void forward_pass(DenseLayer* dl, float* x);
+
+/*
+ * DESCRIPTION DUE SOON
+ */
+void backprop(DenseLayer* dl, float** costs_inputs_derivs, int num_cost_act_derivs);
+
 #ifdef __cplusplus
 }
 #endif
