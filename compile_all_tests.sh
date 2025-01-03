@@ -14,9 +14,15 @@ make
 
 cd ..
 
+echo
+echo "-- Following running scripts have been created"
+
+declare -i max_name_size
+max_name_size=0
+
 for test in ./build/test*; do
     name="run_$(basename $test)"
-
+    
     echo "#!/bin/bash" > "$name.sh"
     echo >> "$name.sh"
     echo ": '" >> "$name.sh"
@@ -28,4 +34,6 @@ for test in ./build/test*; do
     echo >> "$name.sh"
 
     chmod +x "$name.sh"
+
+    echo -e "* \033[38;5;183m$name.sh\033[0m"
 done
