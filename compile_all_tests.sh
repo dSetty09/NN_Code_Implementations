@@ -36,5 +36,6 @@ for test in ./build/test*; do
     chmod +x "$name.sh"
 
     echo -e "* \033[38;5;183m$name.sh\033[0m"
-    echo
 done
+
+echo
