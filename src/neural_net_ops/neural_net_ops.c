@@ -86,6 +86,72 @@ float random_num(float min, float max, float precision) {
     return ret;
 }
 
+int* sample_indices(int num_samples, int num_total_data) {
+    int* sample = (int*) malloc(sizeof(int) * num_samples);
+    int* added = (int*) calloc(num_total_data, sizeof(int));
+
+    srand(time(NULL));
+
+    for (int i = 0; i < num_samples; ) {
+        int random_number = rand() % num_total_data; // Generate random num between 0 and num data, exclusive 
+
+        if (!added[random_number]) {
+            sample[i] = random_number;
+            added[random_number] = TRUE;
+            ++i;
+        }
+    }
+
+    free(added);
+
+    return sample;
+}
+
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void shuffle(int *arr, int n) {
+    srand(time(NULL)); // Seed the random number generator
+
+    for (int i = n - 1; i > 0; i--) {
+        int j = rand() % (i + 1); // Generate a random index between 0 and i
+        swap(&arr[i], &arr[j]); // Swap elements at i and j
+    }
+}
+
+int** generate_training_batches(int num_data, int batch_size, int* num_batches_ref, int* last_batch_size_ref) {
+    int* training_indices = (int*) malloc(sizeof(int) * num_data);
+    for (int i = 0; i < num_data; ++i) training_indices[i] = i;
+
+    shuffle(training_indices, num_data);
+
+    *num_batches_ref = num_data / batch_size;
+
+    *last_batch_size_ref = num_data % batch_size;
+    int last_batch_size = *last_batch_size_ref;
+
+    if (last_batch_size > 0) *num_batches_ref += 1;
+
+    int num_batches = *num_batches_ref;
+
+    int** batches = (int**) malloc(sizeof(int*) * num_batches);
+
+    for (int b = 0; b < num_batches; ++b) {
+        int size = (b < num_batches - 1) ? batch_size : last_batch_size;
+        batches[b] = (int*) malloc(sizeof(int) * size);
+    }
+
+    for (int i = 0, b = 0; i < num_data; i += batch_size, ++b) {
+        int last_elem = (b == num_batches - 1) ? i + last_batch_size : i + batch_size;
+        for (int j = i, k = 0; j < last_elem; ++j, ++k) batches[b][k] = training_indices[j];
+    }
+
+    return batches;
+}
+
 float mat_val(float* mat, int ncols, int i, int j) {
     return mat[ncols * i + j];
 }

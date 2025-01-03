@@ -165,6 +165,40 @@ float flt_safe_square(float x);
 float random_num(float min, float max, float precision);
 
 /*
+ * Randomly samples a certain number of indices within a certain range.
+ *
+ * @param num_samples | The number of sampled elements
+ * @param num_total_data | The number of total data
+ * 
+ * @return an array of indices
+ */
+int* sample_indices(int num_samples, int num_total_data);
+
+/*
+ * Swaps two elements. 
+ */
+void swap(int *a, int *b);
+
+/*
+ * Randomly shuffles the elements in an array
+ */
+void shuffle(int *arr, int n);
+
+/*
+ * Generates the training batches to be used by the neural network for one epoch.
+ *
+ * @warning Batch size must be less than the total number of data points.
+ *
+ * @param num_data | Total number of data.
+ * @param batch_size | The size of the batches.
+ * @param num_batches_ref | Reference to the number of batches.
+ * @param last_batch_size_ref | Reference to the size of the last batch.
+ * 
+ * @return Randomized batches of training data.
+ */
+int** generate_training_batches(int num_data, int batch_size, int* num_batches_ref, int* last_batch_size_ref);
+
+/*
  * Retrieves the value at a specific row and column index in a matrix.
  *
  * @param mat | The matrix from which we are retrieving a value
