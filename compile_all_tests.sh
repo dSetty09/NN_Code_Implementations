@@ -17,9 +17,6 @@ cd ..
 echo
 echo "-- Following running scripts have been created"
 
-declare -i max_name_size
-max_name_size=0
-
 for test in ./build/test*; do
     name="run_$(basename $test)"
     
