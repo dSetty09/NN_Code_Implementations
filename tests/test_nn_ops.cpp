@@ -47,8 +47,13 @@ TEST(RandomSampleTests, SampleMany) {
 
 TEST(BatchesTests, Standard) {
     int num_batches = 0;
-    int last_batch_size = 0;
-    int** batches = generate_training_batches(110, 20, &num_batches, &last_batch_size);
+    int* num_per_batch = NULL;
+    int** batches = generate_training_batches(110, 20, &num_batches, &num_per_batch);
+
+    ASSERT_EQ(num_batches, 6);
+
+    int last_batch_size = num_per_batch[num_batches - 1];
+    ASSERT_EQ(last_batch_size, 10);
 
     int* observed = (int*) calloc(110, sizeof(int));
     for (int i = 0; i < 110; ++i) observed[i] = FALSE; 
@@ -57,6 +62,8 @@ TEST(BatchesTests, Standard) {
 
     for (int b = 0; b < 6; ++b) {
         if (b < 5) {
+            ASSERT_EQ(num_per_batch[b], 20);
+
             for (int i = 0; i < 20; ++i) {
                 ASSERT_EQ(observed[batches[b][i]], FALSE);
                 observed[batches[b][i]] = TRUE;
@@ -64,6 +71,8 @@ TEST(BatchesTests, Standard) {
                 ++num_unique_observations;
             }
         } else {
+            ASSERT_EQ(num_per_batch[b], 10);
+
             for (int i = 0; i < 10; ++i) {
                 ASSERT_EQ(observed[batches[b][i]], FALSE);
                 observed[batches[b][i]] = TRUE;
@@ -76,6 +85,8 @@ TEST(BatchesTests, Standard) {
     ASSERT_EQ(num_unique_observations, 110);
 
     free(observed);
+    
+    free(num_per_batch);
 
     for (int b = 0; b < 6; ++b) free(batches[b]);
     free(batches);

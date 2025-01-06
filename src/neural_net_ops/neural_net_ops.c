@@ -122,7 +122,7 @@ void shuffle(int *arr, int n) {
     }
 }
 
-int** generate_training_batches(int num_data, int batch_size, int* num_batches_ref, int* last_batch_size_ref) {
+int** generate_training_batches(int num_data, int batch_size, int* num_batches_ref, int** num_per_batch_ref) {
     int* training_indices = (int*) malloc(sizeof(int) * num_data);
     for (int i = 0; i < num_data; ++i) training_indices[i] = i;
 
@@ -130,8 +130,7 @@ int** generate_training_batches(int num_data, int batch_size, int* num_batches_r
 
     *num_batches_ref = num_data / batch_size;
 
-    *last_batch_size_ref = num_data % batch_size;
-    int last_batch_size = *last_batch_size_ref;
+    int last_batch_size = num_data % batch_size;
 
     if (last_batch_size > 0) *num_batches_ref += 1;
 
@@ -139,9 +138,12 @@ int** generate_training_batches(int num_data, int batch_size, int* num_batches_r
 
     int** batches = (int**) malloc(sizeof(int*) * num_batches);
 
+    *num_per_batch_ref = (int*) malloc(sizeof(int) * num_batches);
+
     for (int b = 0; b < num_batches; ++b) {
         int size = (b < num_batches - 1) ? batch_size : last_batch_size;
         batches[b] = (int*) malloc(sizeof(int) * size);
+        (*num_per_batch_ref)[b] = size;
     }
 
     for (int i = 0, b = 0; i < num_data; i += batch_size, ++b) {

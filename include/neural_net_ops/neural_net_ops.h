@@ -192,11 +192,11 @@ void shuffle(int *arr, int n);
  * @param num_data | Total number of data.
  * @param batch_size | The size of the batches.
  * @param num_batches_ref | Reference to the number of batches.
- * @param last_batch_size_ref | Reference to the size of the last batch.
+ * @param num_per_batch_ref | Reference to list storing the number data points per batch.
  * 
  * @return Randomized batches of training data.
  */
-int** generate_training_batches(int num_data, int batch_size, int* num_batches_ref, int* last_batch_size_ref);
+int** generate_training_batches(int num_data, int batch_size, int* num_batches_ref, int** num_per_batch_ref);
 
 /*
  * Retrieves the value at a specific row and column index in a matrix.

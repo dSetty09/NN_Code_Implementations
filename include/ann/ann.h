@@ -32,10 +32,10 @@ typedef struct ann {
  * @param ann | The artificial neural network being trained
  * @param X_train | The inputs data for training the model
  * @param y_train | The output data for training the model 
+ * @param num_data | The total number of training data
+ * @param batch_size | The size of the training batches
  */
-void learn(ArtificialNeuralNetwork* ann, float** X_train, float* y_train) {
-
-}
+void learn(ArtificialNeuralNetwork* ann, float** X_train, float* y_train, int num_data, int batch_size); 
 
 #ifdef __cplusplus
 }
