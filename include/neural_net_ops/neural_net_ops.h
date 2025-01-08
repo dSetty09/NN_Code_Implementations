@@ -24,11 +24,9 @@ extern "C" {
 static const unsigned int TRUE = 1;
 static const unsigned int FALSE = 0;
 
-static const unsigned int EQUAL = 0;
-static const unsigned int LESS = 1;
-static const unsigned int GREATER = 2;
-static const unsigned int LESS_EQ = 3;
-static const unsigned int GREATER_EQ = 4; 
+static const unsigned int PAST_MAX_EPOCHS = 0;
+static const unsigned int PAST_MIN_DIFF = 1;
+static const unsigned int PAST_FAIR_ERROR = 2;
 
 static const unsigned char OUTPUT = 'O';
 static const unsigned char WEIGHT = 'W';
