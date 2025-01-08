@@ -34,8 +34,10 @@ typedef struct ann {
  * @param y_train | The output data for training the model 
  * @param num_data | The total number of training data
  * @param batch_size | The size of the training batches
+ * @param ec | The end condition for backpropagation learning
  */
-void learn(ArtificialNeuralNetwork* ann, float** X_train, float* y_train, int num_data, int batch_size); 
+void learn(ArtificialNeuralNetwork* ann, float** X_train, float* y_train, 
+           int num_data, int batch_size, int ec); 
 
 #ifdef __cplusplus
 }

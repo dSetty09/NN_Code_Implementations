@@ -154,6 +154,21 @@ int** generate_training_batches(int num_data, int batch_size, int* num_batches_r
     return batches;
 }
 
+int past_max_epochs(float curr_val, float lim_val) {
+    if (curr_val >= lim_val) return 1;
+    return 0;
+}
+
+int past_min_diff(float last_val, float curr_val, float min_diff) {
+    if (abs(last_val - curr_val) < min_diff) return 1;
+    return 0;
+}
+
+int past_fair_error(float curr_err, float fair_err) {
+    if (curr_err < fair_err) return 1;
+    return 0;
+}
+
 float mat_val(float* mat, int ncols, int i, int j) {
     return mat[ncols * i + j];
 }
