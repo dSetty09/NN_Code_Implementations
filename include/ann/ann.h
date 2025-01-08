@@ -26,6 +26,18 @@ typedef struct ann {
     int cost_func; // the cost function
 } ArtificialNeuralNetwork;
 
+
+/*
+ * Initializes a new ANN with new allocated space depending on what user specified.
+ *
+ * @param num_layers | The number of layers
+ * @param num_inputs | The number of inputs fed into the ANN
+ * @param cost_func | The cost function for the ANN
+ * 
+ * @return A reference to the initialized ANN
+ */
+ArtificialNeuralNetwork* init_ann(int num_layers, int num_inputs, int cost_func);
+
 /*
  * Enables an artificial neural network to learn from a given set or subset of training data.
  *
