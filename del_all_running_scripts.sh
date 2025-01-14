@@ -1,0 +1,8 @@
+#!/bin/sh
+
+: '
+THIS SH FILE ONLY WORKS AS INTENDED IF YOU ARE IN
+THE MAIN PROJECT DIRECTORY 
+'
+
+rm -rf run_test*.sh
