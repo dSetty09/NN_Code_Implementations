@@ -160,7 +160,7 @@ int past_max_epochs(float curr_val, float lim_val) {
 }
 
 int past_min_diff(float last_val, float curr_val, float min_diff) {
-    if (abs(last_val - curr_val) < min_diff) return 1;
+    if (fabsf(last_val - curr_val) < min_diff) return 1;
     return 0;
 }
 

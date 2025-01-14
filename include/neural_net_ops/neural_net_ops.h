@@ -6,6 +6,7 @@
 #define NEURAL_NET_OPS_H
 
 #include <stdio.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <math.h>

@@ -28,15 +28,16 @@ typedef struct ann {
 
 
 /*
- * Initializes a new ANN with new allocated space depending on what user specified.
+ * Initializes a new ANN according to the specifications declared by the user.
  *
  * @param num_layers | The number of layers
  * @param num_inputs | The number of inputs fed into the ANN
  * @param cost_func | The cost function for the ANN
+ * @param neuron_params | A 2d array of neuron parameters, where each row in the array corresponds to a layer
+ * @param num_per_layer | An array storing the number of neurons per layer
  * 
  * @return A reference to the initialized ANN
  */
-ArtificialNeuralNetwork* init_ann(int num_layers, int num_inputs, int cost_func);
 
 /*
  * Enables an artificial neural network to learn from a given set or subset of training data.
@@ -48,8 +49,8 @@ ArtificialNeuralNetwork* init_ann(int num_layers, int num_inputs, int cost_func)
  * @param batch_size | The size of the training batches
  * @param ec | The end condition for backpropagation learning
  */
-void learn(ArtificialNeuralNetwork* ann, float** X_train, float* y_train, 
-           int num_data, int batch_size, int ec); 
+void learn_classifier(ArtificialNeuralNetwork* ann, float** X_train, float* y_train, 
+           int num_data, int batch_size, int num_epochs, int ec); 
 
 #ifdef __cplusplus
 }

@@ -8,25 +8,30 @@ extern "C" {
 #endif
 
 
+/* USEFUL MACROS FOR FACILITATING NEURON CREATION */
+
+/*
+ * Expands to a compound array literal, converting the given arguments into a float array
+ */
+#define WEIGHTS(...) (float[]) {__VA_ARGS__}
+
+
 /* DEFINING STRUCTS FOR KEY NEURAL NETWORK UNITS */
 
 /*
  * A neuron in a dense layer within a neural network.
  */
 typedef struct neuron_node {
-    int index; // the index, or position, of the neuron within the layer it resides in
-
-    int W; // the number of weights 
-
     float* w; // the vector of weights connected to each neuron in the preceding layer
+    int num_weights; // the number of weights 
+
     float b; // the bias term
 
     float* delta_w; // the gradient of the weights connected to this neuron
     float deriv_a; // the derivative of the cost with respect to the activation for this neuron 
     float delta_b; // the gradient of the bias for this neuron
 
-    simple_act_func act_func; // the activation function for the neuron, NULL if softmax defined
-    softmax_act_func soft_act_func; // softmax activation function for neuron, NULL if act_func defined
+    void* act_func; // the activation function for this neuron
 
     float output; // the output of the neuron
 } Neuron;
@@ -34,6 +39,38 @@ typedef struct neuron_node {
 typedef struct kernel {
     float placeholder; // ITS A THING!!! :D
 } Kernel;
+
+
+/* DEFINING STRUCTS FOR MAKING NEURON CREATION PARAMETERS MORE READABLE */
+
+/*
+ * Parameters for constructing a neuron.
+ *
+ * Different ways to declare parameters:
+ * 
+ * - neuron = _neuron({.act_func=(void*) relu, .num_weights=5, .bias=0.877, WEIGHTS(0.632, 0.571, 0.991)});
+ * - NeuronParams = {.act_func=(void*) relu, .num_weights=5, .bias=0.877, WEIGHTS(0.632, 0.571, 0.991)}; 
+ * 
+ */
+typedef struct params {
+    void* act_func; // activation function
+    int num_weights; // number of weights
+
+    float bias; // bias parameter
+    float* weights; // weights optional keyword parameter
+} NeuronParams;
+
+
+/* DEFINING FUNCTION FOR CREATING NEURONS */
+
+/*
+ * Creates a neuron given a set of neuron parameters. 
+ *
+ * @param params | Parameters for creating the neuron.
+ * 
+ * @return A reference to the newly created neuron object.
+ */
+Neuron* _neuron(NeuronParams params);
 
 
 /* DEFINING FUNCTIONS FOR NEURON OPERATIONS */

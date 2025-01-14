@@ -8,26 +8,10 @@
 class NeuronUnitTests : public testing::Test {
 protected:
     void SetUp() override {
-        w[0] = 0.632; w[1] = 0.571; w[2] = 0.991; w[3] = 0.529; w[4] = 0.492;
-        b = 0.877;
-        x[0] = 1; x[1] = 2; x[2] = 3; x[3] = 4; x[4] = 5;
+        neuron = _neuron({.act_func=(void*) relu, .num_weights=5, .bias=0.877, 
+                          WEIGHTS(0.632, 0.571, 0.991, 0.529, 0.492)});
 
-        neuron = (Neuron*) malloc(sizeof(Neuron));
-
-        neuron->w = NULL;
-        neuron->W = 5;
-        neuron->b = b;
-        neuron->delta_w = NULL;
-        neuron->delta_b = 0;
-        neuron->act_func = relu;
-        neuron->soft_act_func = NULL;
-
-        arr_dup(NeuronUnitTests::w, &(neuron->w), 5);
-
-        neuron->delta_w = (float*) calloc(sizeof(float), 5);    
-
-        neuron->deriv_a = 0;
-        neuron->output = 0;
+        x = (float[]) {1, 2, 3, 4, 5};
     }
 
     void TearDown() override {
@@ -37,12 +21,29 @@ protected:
         free(neuron);
     }
 
-    float w[5];
-    float x[5];
-    float b;
+    float* x;
 
     Neuron* neuron;
 };
+
+TEST_F(NeuronUnitTests, Creation) {
+    float w[] = {0.632, 0.571, 0.991, 0.529, 0.492};
+    float num_weights = 5;
+    float b = 0.877;
+
+    for (int i = 0; i < 5; ++i) ASSERT_FLOAT_EQ(NeuronUnitTests::neuron->w[i], w[i]);
+    ASSERT_EQ(NeuronUnitTests::neuron->num_weights, num_weights); 
+
+    ASSERT_FLOAT_EQ(NeuronUnitTests::neuron->b, b);
+
+    for (int i = 0; i < 5; ++i) ASSERT_FLOAT_EQ(NeuronUnitTests::neuron->delta_w[i], 0);
+    ASSERT_FLOAT_EQ(NeuronUnitTests::neuron->delta_b, 0);
+    ASSERT_FLOAT_EQ(NeuronUnitTests::neuron->deriv_a, 0);
+
+    ASSERT_FLOAT_EQ(NeuronUnitTests::neuron->output, 0);
+
+    ASSERT_EQ(NeuronUnitTests::neuron->act_func, (void*) relu);
+}
 
 TEST_F(NeuronUnitTests, WeightedSum) {
     ASSERT_FLOAT_EQ(wsum(NeuronUnitTests::neuron, NeuronUnitTests::x, NO_DERIV, 0, 0, 0), 10.2);
@@ -59,16 +60,6 @@ TEST_F(NeuronUnitTests, InputDeriv) {
 TEST_F(NeuronUnitTests, BiasDeriv) {
     ASSERT_EQ(wsum(NeuronUnitTests::neuron, NeuronUnitTests::x, NO_DERIV, 0, 0, 1), 1);
 }
-
-// TEST_F(NeuronUnitTests, Gradients) {
-//     float cost_to_wsum_deriv = 2;
-
-//     update_gradients(NeuronUnitTests::neuron, NeuronUnitTests::x, cost_to_wsum_deriv);
-
-//     for (int i = 0; i < 5; ++i) ASSERT_FLOAT_EQ(NeuronUnitTests::neuron->delta_w[i], 2 * x[i]);
-//     for (int i = 0; i < 5; ++i) ASSERT_FLOAT_EQ(NeuronUnitTests::neuron->delta_x[i], 2 * w[i]);
-//     ASSERT_FLOAT_EQ(NeuronUnitTests::neuron->delta_b, 2);
-// }
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

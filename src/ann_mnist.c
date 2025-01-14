@@ -13,26 +13,30 @@
 #include "../include/ann/dense_layer.h"
 #include "../include/ann/ann.h"
 
-int main() {
-    load_mnist();
+// int main() {
+    // load_mnist();
 
-    ArtificialNeuralNetwork* ann = init_ann(3, 2, CROSS_ENTROPY);
+    // ArtificialNeuralNetwork* ann = create_ann(3, 2, CROSS_ENTROPY);
     
-    DenseLayer* layers = (DenseLayer*) calloc(ann->num_layers, sizeof(DenseLayer));
+    // TODO: create each neuron in each layer
+    // layers->neurons = (Neuron*) calloc(2, sizeof(Neuron));
+    // for (int i = 0; i < 2; ++i) {
+    //     Neuron* curr_neuron = layers->neurons;
+    //     layers->neurons 
+    // }
 
-    layers->neurons = (Neuron*) calloc(2, sizeof(Neuron));
-    layers->num = 2;
+    // layers->num = 2;
 
-    (layers + 1)->neurons = (Neuron*) calloc(3, sizeof(Neuron));
-    (layers + 1)->num = 3;
+    // (layers + 1)->neurons = (Neuron*) calloc(3, sizeof(Neuron));
+    // (layers + 1)->num = 3;
 
-    (layers + 2)->neurons = (Neuron*) calloc(2, sizeof(Neuron));
-    (layers + 2)->num = 2;
+    // (layers + 2)->neurons = (Neuron*) calloc(2, sizeof(Neuron));
+    // (layers + 2)->num = 2;
 
-    float** X_train = NULL;
-    float* y_train = NULL;
+    // float** X_train = NULL;
+    // float* y_train = NULL;
 
-    learn_classifier(ann, X_train, y_train, NUM_TRAIN, 50, PAST_MAX_EPOCHS);
+    // learn_classifier(ann, X_train, y_train, NUM_TRAIN, 250, 50, PAST_MAX_EPOCHS);
 
-    return 0;
-}
+    // return 0;
+// }
