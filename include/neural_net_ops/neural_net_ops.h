@@ -13,7 +13,6 @@
 #include <time.h>
 #include <float.h>
 #include <limits.h>
-#include <stdlib.h>
 
 #ifdef __cplusplus
 extern "C" {

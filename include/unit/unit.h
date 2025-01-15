@@ -8,7 +8,7 @@ extern "C" {
 #endif
 
 
-/* USEFUL MACROS FOR FACILITATING NEURON CREATION */
+/* USEFUL MACRO FOR FACILITATING NEURON CREATION */
 
 /*
  * Expands to a compound array literal, converting the given arguments into a float array
@@ -24,17 +24,16 @@ extern "C" {
 typedef struct neuron_node {
     float* w; // the vector of weights connected to each neuron in the preceding layer
     int num_weights; // the number of weights 
+    float* delta_w; // the gradient of the weights connected to this neuron
 
     float b; // the bias term
-
-    float* delta_w; // the gradient of the weights connected to this neuron
-    float deriv_a; // the derivative of the cost with respect to the activation for this neuron 
     float delta_b; // the gradient of the bias for this neuron
 
     void* act_func; // the activation function for this neuron
+    float deriv_a; // the derivative of the cost with respect to the activation for this neuron
 
     float output; // the output of the neuron
-} Neuron;
+} NeuronNode;
 
 typedef struct kernel {
     float placeholder; // ITS A THING!!! :D
@@ -44,33 +43,39 @@ typedef struct kernel {
 /* DEFINING STRUCTS FOR MAKING NEURON CREATION PARAMETERS MORE READABLE */
 
 /*
- * Parameters for constructing a neuron.
- *
- * Different ways to declare parameters:
- * 
- * - neuron = _neuron({.act_func=(void*) relu, .num_weights=5, .bias=0.877, WEIGHTS(0.632, 0.571, 0.991)});
- * - NeuronParams = {.act_func=(void*) relu, .num_weights=5, .bias=0.877, WEIGHTS(0.632, 0.571, 0.991)}; 
- * 
+ * Parameters or specification for constructing a neuron.
  */
-typedef struct params {
+typedef struct neuron_spec {
     void* act_func; // activation function
     int num_weights; // number of weights
 
     float bias; // bias parameter
     float* weights; // weights optional keyword parameter
-} NeuronParams;
+} Neuron;
 
 
-/* DEFINING FUNCTION FOR CREATING NEURONS */
+/* DEFINING FUNCTION FOR HANDLING NEURONS */
 
 /*
- * Creates a neuron given a set of neuron parameters. 
+ * Creates a neuron node given a specific neuron specification. 
  *
- * @param params | Parameters for creating the neuron.
+ * @param spec | The specification for the newly created neuron.
  * 
- * @return A reference to the newly created neuron object.
+ * Different ways to call function:
+ * 
+ * - neuron = _neuron({.act_func=(void*) relu, .num_weights=5, .bias=0.877, WEIGHTS(0.632, 0.571, 0.991)});
+ * - NeuronParams = {.act_func=(void*) relu, .num_weights=5, .bias=0.877, WEIGHTS(0.632, 0.571, 0.991)};
+ * 
+ * @return A newly created neuron node.
  */
-Neuron* _neuron(NeuronParams params);
+NeuronNode init_neuron(Neuron spec);
+
+/*
+ * Deletes occupied memory associated with a neuron.
+ *
+ * @param neuron | The referenced neuron.
+ */
+void del_neuron(NeuronNode neuron);
 
 
 /* DEFINING FUNCTIONS FOR NEURON OPERATIONS */
@@ -88,7 +93,7 @@ Neuron* _neuron(NeuronParams params);
  * 
  * @return The calculated weighted sum.
  */ 
-float wsum(Neuron* neuron, float* x, int deriv_wx_idx, int deriv_w, int deriv_x, int deriv_b); 
+float wsum(NeuronNode* neuron, float* x, int deriv_wx_idx, int deriv_w, int deriv_x, int deriv_b); 
 
 /*
  * Updates the weights, inputs, and bias gradients for the referenced neuron in relation to the result
@@ -101,7 +106,7 @@ float wsum(Neuron* neuron, float* x, int deriv_wx_idx, int deriv_w, int deriv_x,
  * 
  * @return The derivatives of the cost function with respect to each input passed to this neuron.
  */
-float* update_gradients(Neuron* neuron, float* x, float* cost_act_derivs, int num_derivs); 
+float* update_gradients(NeuronNode* neuron, float* x, float* cost_act_derivs, int num_derivs); 
 
 /*
  * Similar to the above function, except the neuron for which the gradients are being updated is a 
@@ -117,7 +122,7 @@ float* update_gradients(Neuron* neuron, float* x, float* cost_act_derivs, int nu
  * @param num_outputs | The number of cost to output derivatives passed to this function.
  * @param out_z | The weighted sums across the output layer this neuron resides in.
  */
-float* update_gradients_sm(Neuron* neuron, float* x, float* cost_outputs_derivs, int num_outputs, float* out_z);
+float* update_gradients_sm(NeuronNode* neuron, float* x, float* cost_outputs_derivs, int num_outputs, float* out_z);
 
 
 #ifdef __cplusplus
