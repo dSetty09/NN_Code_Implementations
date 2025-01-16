@@ -23,8 +23,6 @@ typedef struct ann {
     DenseLayer* layers; // the computing layers (i.e. hidden layers + output layer)
     int num_layers; // the number of computing layers
 
-    int num_inputs; // the number of inputs this ANN accepts
-
     void* cost_function; // the cost function
 } ArtificialNeuralNetwork;
 
@@ -42,9 +40,12 @@ typedef struct ann {
  * @warning The behavior of this function is undefined when at least one argument, that is not a "DenseLayer", 
  * is passed as a variable argument
  * 
+ * @attention The initialized ANN will select a number of inputs equal to the number of associated weights for 
+ * each neuron in the first dense layer, where each neuron has the same number of associated weights.
+ * 
  * @return An initialized ANN
  */
-ArtificialNeuralNetwork* init_ann(int cost_func, int num_inputs, int num_layers, ...);
+ArtificialNeuralNetwork* init_ann(int cost_func, int num_layers, ...);
 
 /*
  * Deletes the memory associated with an artificial neural network.
@@ -54,18 +55,36 @@ ArtificialNeuralNetwork* init_ann(int cost_func, int num_inputs, int num_layers,
 void del_ann(ArtificialNeuralNetwork* ann);
 
 
-/* FUNCTIONS FOR ANN OPERATIONS */
+/** FUNCTIONS FOR ANN OPERATIONS **/
+
+/* FUNCTIONS FOR ANN FORWARD PASS */
 
 /*
- * Returns a set of predictions from this ann for a set of data. 
+ * Initializes memory needed to store the prediction results.
+ *
+ * @param predictions_ref | A reference to a two dimensional array of predictions. 
+ * @param ann | The artificial neural network which will be making the predictions.
+ * @param num_predictions | The number of predictions being made.
+ */
+void alloc_predictions(float*** predictions_ref, ArtificialNeuralNetwork* ann, int num_predictions);
+
+/*
+ * Records a set of predictions from this ann for a set of data. 
  *
  * @param ann | The artificial neural network which is making the predictions.
  * @param X | The set of data for which the predictions are being made.
  * @param num_data | The number of data points for which predictions are being made.
- * 
- * @return A set of predictions for the given set of data.
+ * @param predictions | An array storing the predictions that will be made.
  */
-float** predict(ArtificialNeuralNetwork* ann, float** X, int num_data);
+void record_predictions(ArtificialNeuralNetwork* ann, float** X, int num_data, float** predictions);
+
+/*
+ * Frees the memory allocated to store a set of predictions.
+ *
+ * @param predictions | An array storing the predictions for which memory will be freed. 
+ * @param num_predictions | The number of predictions made.
+ */
+void discard_predictions(float** predictions, int num_predictions);
 
 /*
  * Enables an artificial neural network to learn from a given set or subset of training data.
