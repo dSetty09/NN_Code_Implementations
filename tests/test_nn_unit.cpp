@@ -15,7 +15,7 @@ protected:
     }
 
     void TearDown() override {
-        del_neuron(neuron);
+        del_neuron(&neuron);
     }
 
     float* x;

@@ -130,3 +130,9 @@ sudo apt install cmake
 
 **For Windows**
 1. **Use Binary Distribution from [CMake's Website](https://cmake.org/download/)**
+
+---
+
+**Miscellaneous Notes**
+1. Micro Optimizations
+  - Some structures could be passed by reference rather than passed by value to speed up certain operations.

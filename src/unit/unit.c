@@ -15,9 +15,9 @@ NeuronNode init_neuron(Neuron spec) {
     return ret;
 }
 
-void del_neuron(NeuronNode neuron) {
-    free(neuron.w);
-    free(neuron.delta_w);
+void del_neuron(NeuronNode* neuron) {
+    free(neuron->w);
+    free(neuron->delta_w);
 }
 
 

@@ -28,8 +28,8 @@ protected:
     }
 
     void TearDown() override {
-        del_dense_layer(dense_norm_layer);
-        del_dense_layer(dense_output_layer);
+        del_dense_layer(&dense_norm_layer);
+        del_dense_layer(&dense_output_layer);
     }
 
     float* x;
@@ -48,11 +48,13 @@ TEST_F(DenseLayerTests, Creation) {
     for (int i = 0; i < DenseLayerTests::dense_norm_layer.num_neurons; ++i) {
         NeuronNode curr_neuron = DenseLayerTests::dense_norm_layer.neurons[i];
 
-        for (int j = 0; j < 3; ++j) ASSERT_FLOAT_EQ(curr_neuron.w[j], w[i][j]);
+        ASSERT_EQ(curr_neuron.num_weights, 3);
+
+        for (int j = 0; j < num_weights; ++j) ASSERT_FLOAT_EQ(curr_neuron.w[j], w[i][j]);
 
         ASSERT_FLOAT_EQ(curr_neuron.b, b[i]);
 
-        for (int j = 0; j < 3; ++j) ASSERT_FLOAT_EQ(curr_neuron.delta_w[i], 0);
+        for (int j = 0; j < num_weights; ++j) ASSERT_FLOAT_EQ(curr_neuron.delta_w[j], 0);
         ASSERT_FLOAT_EQ(curr_neuron.delta_b, 0);
         ASSERT_FLOAT_EQ(curr_neuron.deriv_a, 0);
 

@@ -15,8 +15,8 @@ DenseLayer init_dense_layer(int num_neurons, ...) {
     return ret;
 }
 
-void del_dense_layer(DenseLayer dl) {
-    for (int i = 0; i < dl.num_neurons; ++i) del_neuron(dl.neurons[i]);
+void del_dense_layer(DenseLayer* dl) {
+    for (int i = 0; i < dl->num_neurons; ++i) del_neuron(dl->neurons + i);
 }
 
 

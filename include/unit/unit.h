@@ -75,7 +75,7 @@ NeuronNode init_neuron(Neuron spec);
  *
  * @param neuron | The referenced neuron.
  */
-void del_neuron(NeuronNode neuron);
+void del_neuron(NeuronNode* neuron);
 
 
 /* DEFINING FUNCTIONS FOR NEURON OPERATIONS */

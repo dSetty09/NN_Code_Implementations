@@ -46,7 +46,7 @@ DenseLayer init_dense_layer(int num_neurons, ...);
  *
  * @param dl | Reference to dense layer whose memory is being deleted.
  */
-void del_dense_layer(DenseLayer dl);
+void del_dense_layer(DenseLayer* dl);
 
 
 /* FUNCTIONS FOR DENSE LAYER OPERATIONS */
