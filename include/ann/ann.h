@@ -8,7 +8,8 @@
 extern "C" {
 #endif
 
-/* GLOBAL CONSTANTS */
+
+/* GLOBAL CONSTANTS (MODIFY AS YOU WISH) */
 
 static const unsigned int SE = 0;
 static const unsigned int MULTI_CLASS_CROSS_ENTROPY = 1; 
@@ -57,16 +58,35 @@ void del_ann(ArtificialNeuralNetwork* ann);
 
 /** FUNCTIONS FOR ANN OPERATIONS **/
 
+/*
+ * Prepares a given set of training_data for being processed by an artificial neural network.
+ *
+ * @param X_train_raw | An array of training data points.
+ * 
+ * @return Returns a given set of data as a pointer to pointers, which is a form of data an ANN can process.
+ */
+float** prep_training_data(float x_train_raw[__NUM_TRAIN__][__DATAPOINT_SIZE__]);
+
+/*
+ * Frees the memory that was associated with a given set of data when it was previously being prepped for
+ * ANN operations.
+ * 
+ * @param nrows | The number of rows in said data.
+ * @param X | The data for which associated memory is being freed.
+ */
+void discard_data(int nrows, float** X);
+
+
 /* FUNCTIONS FOR ANN FORWARD PASS */
 
 /*
- * Initializes memory needed to store the prediction results.
+ * Returns a buffer needed to store the results for a certain number of predictions.
  *
- * @param predictions_ref | A reference to a two dimensional array of predictions. 
- * @param ann | The artificial neural network which will be making the predictions.
  * @param num_predictions | The number of predictions being made.
+ * 
+ * @return A buffer with the allocated memory necessary to store results for a certain number of predictions.
  */
-void alloc_predictions(float*** predictions_ref, ArtificialNeuralNetwork* ann, int num_predictions);
+float** alloc_predictions(int num_predictions);
 
 /*
  * Records a set of predictions from this ann for a set of data. 
@@ -76,7 +96,7 @@ void alloc_predictions(float*** predictions_ref, ArtificialNeuralNetwork* ann, i
  * @param num_data | The number of data points for which predictions are being made.
  * @param predictions | An array storing the predictions that will be made.
  */
-void record_predictions(ArtificialNeuralNetwork* ann, float** X, int num_data, float** predictions);
+void record_predictions(ArtificialNeuralNetwork* ann, float* X[], int num_data, float** predictions);
 
 /*
  * Frees the memory allocated to store a set of predictions.
@@ -85,6 +105,30 @@ void record_predictions(ArtificialNeuralNetwork* ann, float** X, int num_data, f
  * @param num_predictions | The number of predictions made.
  */
 void discard_predictions(float** predictions, int num_predictions);
+
+
+/* FUNCTIONS SPECIFIC TO CLASSIFICATION */
+
+/*
+ * Return an array of classifications that are the most likely for their respective set of predictions.
+ *
+ * @param predictions | An array storing the likelihoods for each class being predicted. 
+ * @param num_predictions | The number of predictions that were made.
+ * @param num_classes | The number of classes. 
+ * 
+ * @return An array of classifications that are the most likely for their respective set of predictions.
+ */
+int* make_classifications(float** predictions, int num_predictions, int num_classes);
+
+/*
+ * Frees the allocated memory associated with an array of classifications.
+ *
+ * @param classifications | The array of classifications whose associated memory is being freed.
+ */
+void discard_classifications(int* classifications);
+
+
+/* FUNCTIONS FOR ANN BACKPROPAGATION */
 
 /*
  * Enables an artificial neural network to learn from a given set or subset of training data.

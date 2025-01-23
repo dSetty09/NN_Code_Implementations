@@ -8,9 +8,6 @@ extern "C" {
 #endif
 
 
-/* USEFUL MACROS */
-#define ARR(...) (float[]) {__VA_ARGS__}
-
 /* DENSE LAYER STRUCT */
 
 /*

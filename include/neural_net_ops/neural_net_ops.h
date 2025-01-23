@@ -8,11 +8,14 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 #include <math.h>
 #include <time.h>
 #include <float.h>
 #include <limits.h>
+
+#include "../nn_configs.h"
 
 #ifdef __cplusplus
 extern "C" {

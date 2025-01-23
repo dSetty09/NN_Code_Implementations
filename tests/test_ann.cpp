@@ -8,7 +8,7 @@
 #include "../include/ann/dense_layer.h"
 #include "../include/ann/ann.h"
 
-class NNLayerTests : public testing::Test {
+class NNTests : public testing::Test {
 protected:
     void SetUp() override {
         dense_h1_layer = init_dense_layer(2, (Neuron) {.weights=WEIGHTS(-0.795, 0.588, -0.704), .num_weights=3,
@@ -45,7 +45,7 @@ protected:
     ArtificialNeuralNetwork* ann;
 };
 
-TEST_F(NNLayerTests, Creation) {
+TEST_F(NNTests, Creation) {
     int num_layers = 3;
     int num_neurons_per_layer[3] = {2, 3, 2};
 
@@ -61,14 +61,14 @@ TEST_F(NNLayerTests, Creation) {
 
     void* act_funcs_per_layer[3] = {(void*) leaky_relu, (void*) leaky_relu, (void*) softmax};
 
-    ASSERT_EQ(NNLayerTests::ann->num_layers, 3);
-    ASSERT_EQ(NNLayerTests::ann->cost_function, (void*) multiclass_ce);
+    ASSERT_EQ(NNTests::ann->num_layers, 3);
+    ASSERT_EQ(NNTests::ann->cost_function, (void*) multiclass_ce);
 
     for (int i = 0; i < num_layers; ++i) {
-        ASSERT_EQ(NNLayerTests::ann->layers[i].num_neurons, num_neurons_per_layer[i]);
+        ASSERT_EQ(NNTests::ann->layers[i].num_neurons, num_neurons_per_layer[i]);
 
         for (int j = 0; j < num_neurons_per_layer[i]; ++j) {
-            NeuronNode curr_neuron = NNLayerTests::ann->layers[i].neurons[j];
+            NeuronNode curr_neuron = NNTests::ann->layers[i].neurons[j];
 
             ASSERT_EQ(curr_neuron.num_weights, num_weights_per_layer[i]);
 
@@ -84,6 +84,38 @@ TEST_F(NNLayerTests, Creation) {
             ASSERT_FLOAT_EQ(curr_neuron.output, 0);
         }
     }
+}
+
+TEST_F(NNTests, MakingClassificationPredictions) {
+    int num_inputs = 3;
+    int num_predictions = 2;
+    int num_classes = 2;
+
+    int num_data = 2;
+
+    float X_train_raw[__NUM_TRAIN__][__DATAPOINT_SIZE__] = {{0.149, -0.991, 0.809}, {-0.970, 0.604, 0.194}};
+    float** X_train = prep_training_data(X_train_raw);
+
+    for (int i = 0; i < __NUM_TRAIN__; ++i)
+        for (int j = 0; j < __DATAPOINT_SIZE__; ++j)
+            ASSERT_FLOAT_EQ(X_train[i][j], X_train_raw[i][j]);
+
+    float actual_predictions[2][2] = {{0.165999087977, 0.834000912023}, {0.167795776006, 0.832204223994}};
+    float** predictions = alloc_predictions(num_data);
+    record_predictions(NNTests::ann, X_train, num_data, predictions);
+
+    for (int i = 0; i < num_predictions; ++i) 
+        for (int j = 0; j < num_classes; ++j) 
+            ASSERT_FLOAT_EQ(actual_predictions[i][j], predictions[i][j]);
+
+    int actual_classifications[] = {1, 1};
+    int* classifications = make_classifications(predictions, num_predictions, num_classes);
+
+    for (int i = 0; i < num_predictions; ++i) ASSERT_EQ(classifications[i], actual_classifications[i]);
+
+    discard_classifications(classifications);
+    discard_predictions(predictions, num_predictions);
+    discard_data(num_predictions, X_train);
 }
 
 int main(int argc, char** argv) {
