@@ -1,0 +1,4 @@
+/* FILE CONTAINING GLOBAL CONSTANTS THAT CAN BE CONFIGURED OR CHANGED TO FIT NEURAL NETWORK USER'S NEEDS */
+
+static const unsigned int __NUM_TRAIN__ = 2;
+static const unsigned int __DATAPOINT_SIZE__ = 3;
