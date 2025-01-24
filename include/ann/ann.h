@@ -9,10 +9,49 @@ extern "C" {
 #endif
 
 
-/* GLOBAL CONSTANTS (MODIFY AS YOU WISH) */
-
+/* GLOBAL CONSTANTS  */
 static const unsigned int SE = 0;
 static const unsigned int MULTI_CLASS_CROSS_ENTROPY = 1; 
+
+static const unsigned int PAST_MAX_EPOCHS = 0;
+static const unsigned int LESS_THAN_MIN_DIFF = 1;
+static const unsigned int MEETS_FAIR_ERROR = 2;
+
+
+/* FUNCTIONS FOR TESTING END CONDITIONS TO BACKPROPAGATION */
+
+/*
+ * Tests whether the end condition value is past a specified max allowed number of epochs. 
+ *
+ * @param epochs_passed | The current number of epochs passed.
+ * @param max_epochs | The max allowed number of epochs.
+ * 
+ * @return True if the max allowed number of epochs has been passed or false otherwise.
+ */
+int past_max_epochs(float epochs_passed, float max_epochs);
+
+/*
+ * Tests whether the error of the neural network is changing significantly (i.e. if the current difference
+ * between the last and current error is larger than the minimum difference)
+ * 
+ * @param curr_diff | Current difference between the last and current error. 
+ * @param min_diff | Minimum difference that must be met.
+ * 
+ * @return True if the minimum difference has been met or false otherwise.
+ */
+int less_than_min_diff(float curr_diff, float min_diff);
+
+/*
+ * Tests whether the current error of the neural network is less than or equal to a specific fair error.
+ *
+ * @param curr_error | Current error. 
+ * @param fair_error | Fair error.
+ * 
+ * @return True if the fair error has been met or false otherwise.
+ */
+int meets_fair_error(float curr_error, float fair_error);
+
+typedef int (*end_condition) (float, float); // type definition corresponding to a pointer to an "end condition"
 
 
 /* DEFINED STRUCTS */
@@ -24,7 +63,7 @@ typedef struct ann {
     DenseLayer* layers; // the computing layers (i.e. hidden layers + output layer)
     int num_layers; // the number of computing layers
 
-    void* cost_function; // the cost function
+    int cost_func; // cost function 
 } ArtificialNeuralNetwork;
 
 
@@ -51,9 +90,19 @@ ArtificialNeuralNetwork* init_ann(int cost_func, int num_layers, ...);
 /*
  * Deletes the memory associated with an artificial neural network.
  *
- * @param ann | An artificial neural network whose associated memory is being deleted.
+ * @param ann | The artificial neural network whose associated memory is being deleted.
  */
 void del_ann(ArtificialNeuralNetwork* ann);
+
+
+/* FUNCTIONS FOR ANN VISUALIZATION */
+
+/*
+ * Displays all the parameters for a given artificial neural network in a neat format.
+ *
+ * @param ann | The artificial neural network whose parameters are being displayed.
+ */
+void display_parameters(ArtificialNeuralNetwork* ann);
 
 
 /** FUNCTIONS FOR ANN OPERATIONS **/
@@ -76,6 +125,24 @@ float** prep_training_data(float x_train_raw[__NUM_TRAIN__][__DATAPOINT_SIZE__])
  */
 void discard_data(int nrows, float** X);
 
+/*
+ * One-hot encodes a given array of classifications.
+ *
+ * @param y | The array which is being one-hot encoded.
+ * @param size | The size of the array.
+ * 
+ * @return The one-hot encoded matrix representing the given array
+ */
+float** one_hot_encoded_mat(float* y, int size);
+
+/*
+ * Frees the associated memory with the one hot encoded matrix.
+ *
+ * @param y_one_hot | The matrix whose associated memory is being freed.
+ * @param size | The size of the matrix in terms of number of rows.
+ */
+void discard_one_hot_encoded_mat(float** y_one_hot, int size);
+
 
 /* FUNCTIONS FOR ANN FORWARD PASS */
 
@@ -96,7 +163,7 @@ float** alloc_predictions(int num_predictions);
  * @param num_data | The number of data points for which predictions are being made.
  * @param predictions | An array storing the predictions that will be made.
  */
-void record_predictions(ArtificialNeuralNetwork* ann, float* X[], int num_data, float** predictions);
+void record_predictions(ArtificialNeuralNetwork* ann, float** X, int num_data, float** predictions);
 
 /*
  * Frees the memory allocated to store a set of predictions.
@@ -131,17 +198,39 @@ void discard_classifications(int* classifications);
 /* FUNCTIONS FOR ANN BACKPROPAGATION */
 
 /*
- * Enables an artificial neural network to learn from a given set or subset of training data.
+ * Resets the gradients of the given artificial neural network back to 0.
+ *
+ * @param ann | The artificial neural network whose gradients are being modified.
+ */
+void reset_gradients(ArtificialNeuralNetwork* ann);
+
+/*
+ * Conduct gradient descent on a batch of training data.
+ *
+ * @param ann | The artificial neural network whose gradients are being updated.
+ * @param X_train | The inputs data associated with a specific batch from the training data.
+ * @param y_train_enc | The output data associated with a specific batch from the training data, one-hot encoded.
+ */
+void calc_gradients(ArtificialNeuralNetwork* ann, float** X_train, float** y_train_enc);
+
+/*
+ * Updates the weight and bias parameters throughout the network according to the updated gradients.
+ *
+ * @param ann | The ann whose weights and biases are being updated.
+ */
+void adjust_weights_and_biases(ArtificialNeuralNetwork* ann);
+
+/*
+ * Updates parameters of artificial neural network to learn from a given set or subset of training data.
  *
  * @param ann | The artificial neural network being trained
  * @param X_train | The inputs data for training the model
  * @param y_train | The output data for training the model 
- * @param num_data | The total number of training data
  * @param batch_size | The size of the training batches
  * @param ec | The end condition for backpropagation learning
+ * @param ec_criteria | The end condition criteria
  */
-void fit(ArtificialNeuralNetwork* ann, float** X_train, float* y_train, 
-         int num_data, int batch_size, int num_epochs, int ec); 
+void fit(ArtificialNeuralNetwork* ann, float** X_train, float* y_train, int batch_size, int ec, float ec_criteria); 
 
 
 #ifdef __cplusplus

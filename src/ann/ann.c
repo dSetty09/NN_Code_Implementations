@@ -1,5 +1,19 @@
 #include "../../include/ann/ann.h"
 
+/* FUNCTIONS FOR TESTING END CONDITIONS TO BACKPROPAGATION */
+
+int past_max_epochs(float epochs_passed, float max_epochs) {
+    return epochs_passed > max_epochs;
+}
+
+int less_than_min_diff(float curr_diff, float min_diff) {
+    return curr_diff <= min_diff;
+}
+
+int meets_fair_error(float curr_error, float fair_error) {
+    return curr_error <= fair_error;
+}
+
 
 /* FUNCTIONS FOR HANDLING ANN STRUCTURE */
 
@@ -7,14 +21,7 @@ ArtificialNeuralNetwork* init_ann(int cost_func, int num_layers, ...) {
     ArtificialNeuralNetwork* ret = (ArtificialNeuralNetwork*) malloc(sizeof(ArtificialNeuralNetwork));
     ret->layers = NULL; ret->layers = (DenseLayer*) malloc(sizeof(DenseLayer) * num_layers);
     ret->num_layers = num_layers;
-
-    switch (cost_func) {
-        case SE:
-            ret->cost_function = (void*) se; 
-            break;
-        default:
-            ret->cost_function = (void*) multiclass_ce; 
-    }
+    ret->cost_func = cost_func; 
 
     va_list layers;
     va_start(layers, num_layers);
@@ -32,7 +39,33 @@ void del_ann(ArtificialNeuralNetwork* ann) {
 }
 
 
-/** FUNCTIONS FOR NEURAL NETWORK OPERATIONS **/
+/* FUNCTIONS FOR ANN VISUALIZATION */
+
+void display_parameters(ArtificialNeuralNetwork* ann) {
+    printf("ANN Parameters:\n\n");
+
+    for (int l = 0; l < ann->num_layers; ++l) {
+        DenseLayer* curr_layer = ann->layers + l;
+        printf("Layer %d:\n", l + 1);
+
+        for (int i = 0; i < curr_layer->num_neurons; ++i) {
+            NeuronNode* curr_neuron = curr_layer->neurons + i;
+            printf("\t* Neuron %d:\n", i + 1);
+
+            printf("\t\t- b=%f\n", curr_neuron->b);
+            for (int j = 0; j < curr_neuron->num_weights; ++j) printf("\t\t- w%d=%f\n", j, curr_neuron->w[j]);
+
+            printf("\t\t> delta_b=%f\n", curr_neuron->delta_b); 
+            for (int j = 0; j < curr_neuron->num_weights; ++j) 
+                printf("\t\t> delta_w%d=%f\n", j, curr_neuron->delta_w[j]);
+        }
+
+        printf("\n");
+    }
+}
+
+
+/* FUNCTIONS FOR NEURAL NETWORK OPERATIONS */
 
 float** prep_training_data(float X_train_raw[__NUM_TRAIN__][__DATAPOINT_SIZE__]) {
     float** ret = (float**) malloc(sizeof(float*) * __DATAPOINT_SIZE__);
@@ -48,6 +81,22 @@ float** prep_training_data(float X_train_raw[__NUM_TRAIN__][__DATAPOINT_SIZE__])
 void discard_data(int nrows, float** X) {
     for (int r = 0; r < nrows; ++r) free(X[r]);
     free(X);
+}
+
+float** one_hot_encoded_mat(float* y, int size) {
+    float** ret = (float**) malloc(sizeof(float*) * size);
+
+    for (int i = 0; i < size; ++i) {
+        ret[i] = (float*) malloc(sizeof(float) * __NUM_CLASSES__);
+        for (int j = 0; j < __NUM_CLASSES__; ++j) ret[i][j] = y[i] == __CLASS_LABELS__[j];
+    }
+
+    return ret;
+}
+
+void discard_one_hot_encoded_mat(float** y_one_hot, int size) {
+    for (int i = 0; i < size; ++i) free(y_one_hot[i]);
+    free(y_one_hot);
 }
 
 
@@ -109,33 +158,85 @@ void discard_classifications(int* classifications) {
 
 /* FUNCTIONS FOR BACKPROPAGATION */
 
-void learn_classifier(ArtificialNeuralNetwork* ann, float** X_train, float* y_train, 
-           int num_data, int batch_size, int num_epochs, int ec) {
+void reset_gradients(ArtificialNeuralNetwork* ann) {
+    for (int l = 0; l < ann->num_layers; ++l) {
+        for (int i = 0; i < ann->layers[l].num_neurons; ++i) {
+            ((ann->layers + l)->neurons + i)->delta_b = 0;
+            ((ann->layers + l)->neurons + i)->deriv_a = 0;
 
-    int num_batches = 0;
-    int* num_per_batch = NULL;
-    int** batches = generate_training_batches(num_data, batch_size, &num_batches, &num_per_batch);
+            for (int j = 0; j < ann->layers[l].neurons[i].num_weights; ++j)
+                ((ann->layers + l)->neurons + i)->delta_w[j] = 0;
+        }
+    }
+}
 
-    int end = FALSE; // flag indicating whether should end learning or not
+void calc_gradients(ArtificialNeuralNetwork* ann, float** X_train, float** y_train_enc) {
 
-    for (int b = 0; b < num_batches && !end; ++b) {
-        for (int d = 0; d < num_per_batch[b]; ++d) {
-            int data_index = batches[b][d];
-            
-            float* input = X_train[data_index];
-            float actual_output = y_train[data_index];
+}
+
+void adjust_weights_and_biases(ArtificialNeuralNetwork* ann) {
+
+}
+
+void fit(ArtificialNeuralNetwork* ann, float** X_train, float* y_train, int batch_size, int ec, float ec_criteria) {
+    int ec_met = 0; // flag indicating whether end condition met or not
+
+    int epochs_passed = 0;
+
+    float last_err = INFINITY;
+    float curr_err = INFINITY; 
+
+    while (!ec_met) {
+        int num_batches = 0;
+        int* num_per_batch = NULL;
+        int** batches = generate_training_batches(__NUM_TRAIN__, batch_size, &num_batches, &num_per_batch);
+
+        for (int b = 0; b < num_batches; ++b) {
+            float** X_train_batch = flt_addr_arr_extract(X_train, batches[b], num_per_batch[b]);
+
+            float* y_train_batch = flt_arr_extract(y_train, batches[b], num_per_batch[b]);
+            float** y_train_batch_enc = one_hot_encoded_mat(y_train_batch, num_per_batch[b]);
+
+            reset_gradients(ann);
+            calc_gradients(ann, X_train_batch, y_train_batch_enc);
+            adjust_weights_and_biases(ann);
+
+            float** y_hat_pdistros = NULL;
+
+            switch (ann->cost_func) {
+                case MULTI_CLASS_CROSS_ENTROPY:
+                    y_hat_pdistros = alloc_predictions(num_per_batch[b]);
+
+                    record_predictions(ann, X_train_batch, num_per_batch[b], y_hat_pdistros);
+                    curr_err = mean_multiclass_ce(y_train_batch_enc, y_hat_pdistros, num_per_batch[b], __NUM_CLASSES__);
+                    discard_predictions(y_hat_pdistros, num_per_batch[b]);
+
+                    break;
+                default:
+                    // do nothing 
+            }
+
+            discard_one_hot_encoded_mat(y_train_batch_enc, num_per_batch[b]);
+
+            free(X_train_batch);
+            free(y_train_batch);
+
+            ++epochs_passed;
+
+            switch (ec) {
+                case PAST_MAX_EPOCHS:
+                    ec_met = past_max_epochs(epochs_passed, ec_criteria);
+                    break;
+                case LESS_THAN_MIN_DIFF:
+                    ec_met = less_than_min_diff(fabsf(curr_err - last_err), ec_criteria);
+                    break;
+                default:
+                    ec_met = meets_fair_error(curr_err, ec_criteria);
+            }
+
+            last_err = curr_err;
         }
 
-        switch (ec) {
-        case PAST_FAIR_ERROR:
-            if (past_fair_error(0, 0)) end = TRUE; 
-            break;
-        case PAST_MIN_DIFF:
-            if (past_min_diff(0, 0, 0)) end = TRUE;
-            break;
-        default:
-            if (past_max_epochs(0, 0)) end = TRUE;
-            break;
-        }
-    } 
+        ++epochs_passed;
+    }
 }

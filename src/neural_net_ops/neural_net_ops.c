@@ -43,6 +43,18 @@ void arr_print(float* arr, int n) {
     printf("\n");
 }
 
+float* flt_arr_extract(float* arr, int* indices, int num_indices) {
+    float* ret = (float*) malloc(sizeof(float) * num_indices);
+    for (int i = 0; i < num_indices; ++i) ret[i] = arr[indices[i]];
+    return ret;
+}
+
+float** flt_addr_arr_extract(float** arr, int* indices, int num_indices) {
+    float** ret = (float**) malloc(sizeof(float*) * num_indices);
+    for (int i = 0; i < num_indices; ++i) ret[i] = arr[indices[i]];
+    return ret;
+}
+
 float flt_safe_exp(float x) {
     if (x < MIN_FLT_EXP) return FLT_EPSILON;
     if (x > MAX_FLT_EXP) return FLT_MAX;
@@ -152,21 +164,6 @@ int** generate_training_batches(int num_data, int batch_size, int* num_batches_r
     }
 
     return batches;
-}
-
-int past_max_epochs(float curr_val, float lim_val) {
-    if (curr_val >= lim_val) return 1;
-    return 0;
-}
-
-int past_min_diff(float last_val, float curr_val, float min_diff) {
-    if (fabsf(last_val - curr_val) < min_diff) return 1;
-    return 0;
-}
-
-int past_fair_error(float curr_err, float fair_err) {
-    if (curr_err < fair_err) return 1;
-    return 0;
 }
 
 float mat_val(float* mat, int ncols, int i, int j) {

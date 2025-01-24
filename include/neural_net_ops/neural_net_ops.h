@@ -27,10 +27,6 @@ extern "C" {
 static const unsigned int TRUE = 1;
 static const unsigned int FALSE = 0;
 
-static const unsigned int PAST_MAX_EPOCHS = 0;
-static const unsigned int PAST_MIN_DIFF = 1;
-static const unsigned int PAST_FAIR_ERROR = 2;
-
 static const unsigned char OUTPUT = 'O';
 static const unsigned char WEIGHT = 'W';
 static const unsigned char BIAS = 'B';
@@ -122,6 +118,28 @@ void arr_dup(float* from, float** to, int n);
 void arr_delete(float* arr);
 
 /*
+ * Returns a float array that consists of all elements at all requested indices.
+ *
+ * @param arr | The array extracting from.
+ * @param indices | The indices containing the elements to extract.
+ * @param num_indices | The number of indices.
+ * 
+ * @return A newly initialized float array containing the extracted elements.
+ */
+float* flt_arr_extract(float* arr, int* indices, int num_indices);
+
+/*
+ * Returns a float address array that consists of all elements at all requested indices.
+ *
+ * @param arr | The array extracting from.
+ * @param indices | The indices containing the elements to extract.
+ * @param num_indices | The number of indices.
+ * 
+ * @return A newly initialized float address array containing the extracted elements.
+ */
+float** flt_addr_arr_extract(float** arr, int* indices, int num_indices);
+
+/*
  * Prints the content of a given array.
  *
  * @param arr | The array whose content is being printed.
@@ -205,39 +223,6 @@ void shuffle(int *arr, int n);
  * @return Randomized batches of training data.
  */
 int** generate_training_batches(int num_data, int batch_size, int* num_batches_ref, int** num_per_batch_ref);
-
-/*
- * Returns true (1) if the current number of epochs is past the maximum number of epochs.
- * 
- * @param curr_val | The current number of epochs.
- * @param lim_val | The maximum number of epochs.
- * 
- * @return 1 if true or 0 if false.
- */
-int past_max_epochs(float curr_val, float lim_val);
-
-/*
- * Returns true (1) if the difference between the current value and last value is past the 
- * minimum difference allowed between them.
- * 
- * @param last_val | The last value.
- * @param curr_val | The current value.
- * @param min_diff | The allowed minimum difference.
- * 
- * @return 1 if true or 0 if false. 
- */
-int past_min_diff(float last_val, float curr_val, float min_diff); 
-
-/*
- * Returns true (1) if the current error is past or lower than the fair error (i.e. an error that
- * is deemed acceptable).  
- * 
- * @param curr_err | The current error.
- * @param fair_err | The fair error.
- * 
- * @return 1 if true or 0 if false.
- */
-int past_fair_error(float curr_err, float fair_err);
 
 /*
  * Retrieves the value at a specific row and column index in a matrix.

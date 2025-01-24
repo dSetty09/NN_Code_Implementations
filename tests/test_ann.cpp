@@ -62,7 +62,7 @@ TEST_F(NNTests, Creation) {
     void* act_funcs_per_layer[3] = {(void*) leaky_relu, (void*) leaky_relu, (void*) softmax};
 
     ASSERT_EQ(NNTests::ann->num_layers, 3);
-    ASSERT_EQ(NNTests::ann->cost_function, (void*) multiclass_ce);
+    ASSERT_EQ(NNTests::ann->cost_func, MULTI_CLASS_CROSS_ENTROPY);
 
     for (int i = 0; i < num_layers; ++i) {
         ASSERT_EQ(NNTests::ann->layers[i].num_neurons, num_neurons_per_layer[i]);
@@ -116,6 +116,44 @@ TEST_F(NNTests, MakingClassificationPredictions) {
     discard_classifications(classifications);
     discard_predictions(predictions, num_predictions);
     discard_data(num_predictions, X_train);
+}
+
+TEST_F(NNTests, ResettingGradients) {
+    reset_gradients(NNTests::ann);
+
+    for (int l = 0; l < NNTests::ann->num_layers; ++l) {
+        DenseLayer* curr_layer = NNTests::ann->layers + l;
+
+        for (int i = 0; i < curr_layer->num_neurons; ++i) {
+            NeuronNode* curr_neuron = curr_layer->neurons + i;
+
+            ASSERT_EQ(curr_neuron->delta_b, 0);
+            ASSERT_EQ(curr_neuron->deriv_a, 0);
+
+            for (int j = 0; j < curr_neuron->num_weights; ++j) ASSERT_EQ(curr_neuron->delta_w[j], 0); 
+        }
+    }
+}
+
+TEST(OneHotEncodingTest, OneHotEncoding) {
+    // IMPORTANT NOTE:
+    // -> This test requires that the nn_config global variables __NUM_CLASSES__ and __CLASS_LABELS__ be set to
+    //    3 and {1, 2, 3}, respectively, in order to work as intended.
+
+    float y[] = {2, 3, 3, 2, 1};
+    int size = 5;
+
+    float y_one_hot_exp[5][3] = {{0, 1, 0}, 
+                                 {0, 0, 1}, 
+                                 {0, 0, 1}, 
+                                 {0, 1, 0}, 
+                                 {1, 0, 0}};
+
+    float** y_one_hot_actual = one_hot_encoded_mat(y, size);
+
+    for (int i = 0; i < size; ++i) 
+        for (int j = 0; j < 3; ++j) 
+            ASSERT_EQ(y_one_hot_exp[i][j], y_one_hot_actual[i][j]);
 }
 
 int main(int argc, char** argv) {

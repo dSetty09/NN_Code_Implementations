@@ -36,6 +36,20 @@ float se(float y_m, float y_hat_m, int deriv);
  */
 float multiclass_ce(float* y_pdistro, float* y_hat_pdistro, int num_classes, int deriv_idx); 
 
+/*
+ * Calculates the mean entropy, or uncertainty, of the classification made from the neural network
+ * given a set of true and predicted probability distributions, where each true-predicted pair of distributions
+ * is associated with a particular datapoint.
+ * 
+ * @param y_pdistros | The true probability distributions for a specific set of data points.
+ * @param y_hat_pdistros | The predicted probability distributions for a specific set of data points.
+ * @param num_datapoints | The number of data points calculating entropy for.
+ * @param num_classes | The number of classes in the classification.
+ * 
+ * @return The mean cross entropy for a set of classifications.  
+ */
+float mean_multiclass_ce(float** y_pdistros, float** y_hat_pdistros, int num_datapoints, int num_classes);
+
 #ifdef __cplusplus
 }
 #endif
