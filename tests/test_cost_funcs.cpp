@@ -44,35 +44,55 @@ protected:
 };
 
 TEST_F(MultiClassCrossEntropyTests, ZeroUncertainty) {
-    ASSERT_NEAR(multiclass_ce(MultiClassCrossEntropyTests::certain_pdistro, 2, 0), 0, 1e-4);
+    float true_pdistro[] = {0, 0, 1};
+    ASSERT_NEAR(multiclass_ce(true_pdistro, MultiClassCrossEntropyTests::certain_pdistro, 3, NO_DERIV), 0, 1e-4);
 }
 
 TEST_F(MultiClassCrossEntropyTests, ZeroUncertaintyDeriv) {
-    ASSERT_NEAR(multiclass_ce(MultiClassCrossEntropyTests::certain_pdistro, 2, 1), -1, 1e-4);
+    float true_pdistro[] = {0, 0, 1};
+    ASSERT_FLOAT_EQ(multiclass_ce(true_pdistro, MultiClassCrossEntropyTests::certain_pdistro, 3, 0), 0);
+    ASSERT_FLOAT_EQ(multiclass_ce(true_pdistro, MultiClassCrossEntropyTests::certain_pdistro, 3, 1), 0);
+    ASSERT_FLOAT_EQ(multiclass_ce(true_pdistro, MultiClassCrossEntropyTests::certain_pdistro, 3, 2), -1.0000200004);
 }
 
-TEST_F(MultiClassCrossEntropyTests, MaxUncertainty) {
-    ASSERT_NEAR(multiclass_ce(MultiClassCrossEntropyTests::certain_pdistro, 1, 0), 11.512925, 1e-4);
+TEST_F(MultiClassCrossEntropyTests, HighUncertainty) {
+    float true_pdistro[] = {1, 0, 0};
+    ASSERT_FLOAT_EQ(multiclass_ce(true_pdistro, MultiClassCrossEntropyTests::certain_pdistro, 3, NO_DERIV), 
+                    11.512925465);
 }
 
-TEST_F(MultiClassCrossEntropyTests, MaxUncertaintyDeriv) {
-    ASSERT_LT(multiclass_ce(MultiClassCrossEntropyTests::certain_pdistro, 1, 1), -1000);
+TEST_F(MultiClassCrossEntropyTests, HighUncertaintyDeriv) {
+    float true_pdistro[] = {1, 0, 0};
+    ASSERT_FLOAT_EQ(multiclass_ce(true_pdistro, MultiClassCrossEntropyTests::certain_pdistro, 3, 0), -100000);
+    ASSERT_FLOAT_EQ(multiclass_ce(true_pdistro, MultiClassCrossEntropyTests::certain_pdistro, 3, 1), 0);
+    ASSERT_FLOAT_EQ(multiclass_ce(true_pdistro, MultiClassCrossEntropyTests::certain_pdistro, 3, 2), 0);
 }
 
 TEST_F(MultiClassCrossEntropyTests, LittleUncertainty) {
-    ASSERT_NEAR(multiclass_ce(MultiClassCrossEntropyTests::uncertain_pdistro, 2, 0), 0.356675, 1e-4);
+    float true_pdistro[] = {0, 0, 1};
+    ASSERT_FLOAT_EQ(multiclass_ce(true_pdistro, MultiClassCrossEntropyTests::uncertain_pdistro, 3, NO_DERIV), 
+                    0.356674943939);
 }
 
 TEST_F(MultiClassCrossEntropyTests, LittleUncertaintyDeriv) {
-    ASSERT_NEAR(multiclass_ce(MultiClassCrossEntropyTests::uncertain_pdistro, 2, 1), -1.428571, 1e-4);
+    float true_pdistro[] = {0, 0, 1};
+    ASSERT_FLOAT_EQ(multiclass_ce(true_pdistro, MultiClassCrossEntropyTests::uncertain_pdistro, 3, 0), 0);
+    ASSERT_FLOAT_EQ(multiclass_ce(true_pdistro, MultiClassCrossEntropyTests::uncertain_pdistro, 3, 1), 0);
+    ASSERT_FLOAT_EQ(multiclass_ce(true_pdistro, MultiClassCrossEntropyTests::uncertain_pdistro, 3, 2), 
+                    -1.42857142857);
 }
 
 TEST_F(MultiClassCrossEntropyTests, LargeUncertainty) {
-    ASSERT_NEAR(multiclass_ce(MultiClassCrossEntropyTests::uncertain_pdistro, 0, 0), 2.302585, 1e-4);
+    float true_pdistro[] = {1, 0, 0};
+    ASSERT_FLOAT_EQ(multiclass_ce(true_pdistro, MultiClassCrossEntropyTests::uncertain_pdistro, 3, NO_DERIV), 
+                    2.30258509299);
 }
 
 TEST_F(MultiClassCrossEntropyTests, LargeUncertaintyDeriv) {
-    ASSERT_NEAR(multiclass_ce(MultiClassCrossEntropyTests::uncertain_pdistro, 0, 1), -10, 1e-4);
+    float true_pdistro[] = {1, 0, 0};
+    ASSERT_FLOAT_EQ(multiclass_ce(true_pdistro, MultiClassCrossEntropyTests::uncertain_pdistro, 3, 0), -10);
+    ASSERT_FLOAT_EQ(multiclass_ce(true_pdistro, MultiClassCrossEntropyTests::uncertain_pdistro, 3, 1), 0);
+    ASSERT_FLOAT_EQ(multiclass_ce(true_pdistro, MultiClassCrossEntropyTests::uncertain_pdistro, 3, 2), 0);
 }
 
 int main(int argc, char** argv) {

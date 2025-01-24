@@ -34,11 +34,3 @@ float wsum(NeuronNode* neuron, float* x, int deriv_wx_idx, int deriv_w, int deri
 
     return sum;
 }
-
-float* update_gradients(NeuronNode* neuron, float* x, float* cost_act_derivs, int num_derivs) {
-    return NULL;
-}
-
-float* update_gradients_sm(NeuronNode* neuron, float* x, float* cost_outputs_derivs, int num_outputs, float* out_z) {
-    return NULL;
-}

@@ -22,17 +22,19 @@ float se(float y_m, float y_hat_m, int deriv);
 
 /*
  * Calculates the expected entropy, or uncertainty, of the classification made from the neural network
- * using the predicted probability distribution yielded from the neural network classification.
- * If calculating the derivative, calculates the derivative of the expected entropy with respect to the 
- * predicted probability distribution yielded from the neural network classification.  
+ * using a given true probability distribution and a given predicted probability distribution yielded from 
+ * a neural network classification. If calculating the derivative, calculates the derivative of the expected 
+ * entropy with respect to a probability from the predicted probability distribution yielded from the neural 
+ * network classification.  
  * 
- * @param y_hat_distro | The predicted probability distribution for the classification
- * @param true_cls | The true classification that the neural network was supposed to output 
- * @param deriv | Flag indicating whether taking derivative.
+ * @param y_pdistro | The true probability distribution for the classification
+ * @param y_hat_distro | Predicted prob distro for the classification (i.e. activated outputs from output layer)
+ * @param num_classes | The number of classes in the classification.
+ * @param deriv_idx | Index of the probability output taking derivative with respect to.
  * 
  * @return The cross entropy for a classification or its deriviative with respect to predicted prob distro 
  */
-float multiclass_ce(float* y_hat_pdistro, int true_cls, int deriv); 
+float multiclass_ce(float* y_pdistro, float* y_hat_pdistro, int num_classes, int deriv_idx); 
 
 #ifdef __cplusplus
 }

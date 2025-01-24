@@ -95,36 +95,6 @@ void del_neuron(NeuronNode* neuron);
  */ 
 float wsum(NeuronNode* neuron, float* x, int deriv_wx_idx, int deriv_w, int deriv_x, int deriv_b); 
 
-/*
- * Updates the weights, inputs, and bias gradients for the referenced neuron in relation to the result
- * of the cost function result from the forward pass of the neural network. 
- * 
- * @param neuron | The neuron for which the gradients are being calculated.
- * @param x | A vector of inputs received from the preceding layer.
- * @param cost_act_derivs | The derivs of the cost function w/ respect to activation of this neuron. 
- * @param num_derivs | The number of cost to activation derivatives passed to this function.
- * 
- * @return The derivatives of the cost function with respect to each input passed to this neuron.
- */
-float* update_gradients(NeuronNode* neuron, float* x, float* cost_act_derivs, int num_derivs); 
-
-/*
- * Similar to the above function, except the neuron for which the gradients are being updated is a 
- * neuron that has the softmax activation function. As a result, this function has an additional parameter
- * which represents the weighted sums across the layer this neuron resides in. 
- * 
- * @warning Because the softmax is intended to be used for neurons in the output layer, the referenced 
- * neuron should reside in the output layer of a neural network classifier.
- * 
- * @param neuron | The neuron for which the gradients are being calculated.
- * @param x | A vector of inputs received from the preceding layer.
- * @param cost_outputs_derivs | The derivs of the cost function w/ respect to each output in this layer. 
- * @param num_outputs | The number of cost to output derivatives passed to this function.
- * @param out_z | The weighted sums across the output layer this neuron resides in.
- */
-float* update_gradients_sm(NeuronNode* neuron, float* x, float* cost_outputs_derivs, int num_outputs, float* out_z);
-
-
 #ifdef __cplusplus
 }
 #endif
